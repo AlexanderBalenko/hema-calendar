@@ -3,3 +3,5 @@
 # турниров рано или поздно разошлись бы.
 src/generated/
 out/
+
+tsconfig.tsbuildinfo
