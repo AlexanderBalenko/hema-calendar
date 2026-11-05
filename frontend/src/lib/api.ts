@@ -1,17 +1,18 @@
 /**
  * Единственное место, где известен адрес API, и единственный разборщик ответа.
  *
- * Адрес НЕ зашивается в бандл на сборке: клиент выводит его из текущего хоста, иначе образ,
- * собранный с localhost, с чужого компьютера ловит «не удалось соединиться» (грабли портала).
- * Серверный рендер ходит по внутреннему адресу контейнера — он задаётся переменной API_URL.
+ * Адрес НЕ зашивается в бандл на сборке: браузер ходит на СВОЙ origin («/api/…»), а фронт
+ * переправляет запрос бэкенду (rewrite в next.config.mjs). Иначе образ, собранный с localhost,
+ * с чужого компьютера ловит «не удалось соединиться» — грабли портала; а угадывание порта по
+ * имени хоста привело к тому, что календарь на стенде стучался в API ПОРТАЛА (8080) и получал
+ * 404 на очередь модерации.
+ *
+ * Серверный рендер ходит по внутреннему адресу контейнера — переменная API_URL.
  */
 const INTERNAL_API_URL = process.env.API_URL ?? 'http://localhost:8080';
 
 export function apiBase(): string {
-  if (typeof window === 'undefined') return INTERNAL_API_URL;
-  const configured = process.env.NEXT_PUBLIC_API_URL;
-  if (configured) return configured;
-  return `${window.location.protocol}//${window.location.hostname}:8080`;
+  return typeof window === 'undefined' ? INTERNAL_API_URL : '';
 }
 
 export class ApiError extends Error {

@@ -24,6 +24,9 @@ services:
       - ASPNETCORE_URLS=http://+:8080
       - ConnectionStrings__Default=Host=postgres;Port=5432;Database=hema_calendar;Username=calendar;Password=calendar
       - Cors__Origins=http://localhost:3001
+      # Браузер ходит в API через фронт, поэтому адрес клиента бэкенд берёт из X-Forwarded-For —
+      # иначе лимитер заявок считает всех одним посетителем (см. Program.cs).
+      - Proxy__Enabled=true
       # Ключ модератора — ТОЛЬКО для локального стенда. На проде задаётся своим значением из
       # секретов CI: с этим ключом видны контакты заявителей.
       - Admin__Key=${CALENDAR_ADMIN_KEY:-dev-admin-key}
@@ -37,6 +40,9 @@ services:
     environment:
       # Серверный рендер ходит внутрь сети, браузер — на опубликованный порт (см. src/lib/api.ts).
       - API_URL=http://backend:8080
+      # «Сегодня» для сетки месяца считает сервер: под UTC вечером по Москве подсвечивался бы
+      # вчерашний день. Аудитория сервиса — русскоязычная, поэтому пояс московский.
+      - TZ=Europe/Moscow
     depends_on:
       - backend
 
