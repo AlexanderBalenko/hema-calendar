@@ -26,8 +26,8 @@ test.describe('Календарь', () => {
     await expect(page.locator('h1').first()).toContainText(MONTHS[moscow.getUTCMonth()]);
     await expect(page.locator('h1').first()).toContainText(String(moscow.getUTCFullYear()));
 
-    await expect(page.getByText('Пн', { exact: true })).toBeVisible();
-    await expect(page.getByText('Вс', { exact: true })).toBeVisible();
+    await expect(page.getByText('пн', { exact: true })).toBeVisible();
+    await expect(page.getByText('вс', { exact: true })).toBeVisible();
     // Сегодняшнее число подсвечено ровно одно.
     await expect(page.locator('.bg-primary.rounded-full')).toHaveCount(1);
   });
@@ -47,7 +47,8 @@ test.describe('Календарь', () => {
   test('турнир открывается своей страницей, и она собрана заранее', async ({ page }) => {
     await page.goto('/?view=list&period=past');
     const first = page.locator('a[href*="/events/"]').first();
-    const title = (await first.innerText()).trim();
+    // В строке списка несколько колонок; название — вторая, после даты.
+    const title = (await first.locator('span').nth(1).innerText()).trim();
     const href = await first.getAttribute('href');
     await first.click();
 

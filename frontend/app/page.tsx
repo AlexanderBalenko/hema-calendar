@@ -7,6 +7,7 @@ import { EventList } from '@/src/components/event-list';
 import { FilterBar } from '@/src/components/filter-bar';
 import { MonthGrid } from '@/src/components/month-grid';
 import { MonthNav } from '@/src/components/month-nav';
+import { MonthStrip } from '@/src/components/month-strip';
 import { BUILT_AT, DIRECTORIES, EVENTS } from '@/src/lib/data';
 import { parseFilters, parseMonthKey, selectEvents, type RawParams } from '@/src/lib/filters';
 import { todayLocal } from '@/src/lib/month-layout';
@@ -47,6 +48,11 @@ function Calendar({ params }: { params: RawParams }) {
   const events = useMemo(() => selectEvents(EVENTS, filters, today),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- фильтры пересобираются из адреса
     [params, today]);
+  // Для полоски месяцев — те же фильтры, но без ограничения по датам: она показывает, в каких
+  // месяцах года турниры вообще есть.
+  const inYear = useMemo(() => selectEvents(EVENTS, { ...filters, view: 'list', period: 'all' }, today),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- то же состояние из адреса
+    [params, today]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -55,6 +61,8 @@ function Calendar({ params }: { params: RawParams }) {
         : <h1 className="font-display text-xl text-foreground">Турниры</h1>}
 
       <FilterBar filters={filters} directories={DIRECTORIES} today={today} />
+
+      {filters.view === 'month' && <MonthStrip filters={filters} events={inYear} today={today} />}
 
       {filters.view === 'month' && (
         <>

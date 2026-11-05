@@ -1,19 +1,33 @@
 import Link from 'next/link';
 
 import type { CalendarEvent } from '@/src/lib/data';
-import { formatDateRange, layoutMonth, type MonthSegment, type MonthWeekLayout } from '@/src/lib/month-layout';
+import {
+  formatDateRange,
+  layoutMonth,
+  MONTH_LABELS,
+  type MonthDayCell,
+  type MonthSegment,
+  type MonthWeekLayout,
+} from '@/src/lib/month-layout';
 import { formatPlace } from '@/src/lib/text';
 
-const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'] as const;
-
 /**
- * Сетка месяца. Клиентского состояния здесь нет вовсе: сегменты — обычные ссылки, месяц
- * переключается ссылками же (фильтры живут в адресе), поэтому компонент серверный и в бандл не
- * попадает.
+ * Вид «Месяц»: один месяц на экран, семь равных колонок, полосы-сегменты вместо баров и нитей.
+ * Отрисовка повторяет календарь портала hema.ru (slices/events/calendar-month-view.tsx) —
+ * плашки дней без линеек, полосы поверх них абсолютом, числа кружками: календарь часть
+ * портала, и выглядеть он должен так же.
  *
- * Геометрия целиком приходит из `layoutMonth`; компонент только раскрашивает. Высота строки не
- * задаётся числом — её задаёт сетка ярусов, поэтому неделя с шестью турнирами просто вырастает.
+ * Чего здесь нет из портального: рельса состояний, звезды флагмана, иконок типа события и
+ * всплывающей карточки — всё это про залогиненного человека и его отметки, которых у
+ * календаря нет.
+ *
+ * Клиентского состояния нет: сегменты — обычные ссылки, месяц переключается ссылками же,
+ * поэтому компонент серверный и в бандл не попадает.
  */
+const SEGMENT_HEIGHT = 22;
+const LANE_STEP = 24;
+const WEEK_HEADER = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+
 export function MonthGrid({
   year,
   month,
@@ -29,21 +43,21 @@ export function MonthGrid({
 
   return (
     // Семь колонок на телефоне нечитаемы, а прятать месяц целиком — хуже: даём горизонтальную
-    // прокрутку, минимальная ширина подобрана так, чтобы в ячейку влезало название турнира.
+    // прокрутку, минимальная ширина подобрана так, чтобы в полосу влезало название турнира.
     <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-      <div className="min-w-[680px]">
-        <div className="grid grid-cols-7 border-b border-border">
-          {WEEKDAYS.map((label, i) => (
-            <div
+      <div className="flex min-w-[680px] flex-col gap-1">
+        <div className="grid" style={{ gridTemplateColumns: 'repeat(7, 1fr)' }}>
+          {WEEK_HEADER.map((label, i) => (
+            <span
               key={label}
-              className={`px-2 py-1 text-xs uppercase tracking-wide ${i >= 5 ? 'text-weekend' : 'text-text-muted'}`}
+              className={`px-1.5 text-[11px] leading-none ${i >= 5 ? 'text-calendar-weekend' : 'text-text-muted'}`}
             >
               {label}
-            </div>
+            </span>
           ))}
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-1">
           {weeks.map((week) => (
             <WeekRow key={week.weekStart} week={week} today={today} />
           ))}
@@ -54,70 +68,74 @@ export function MonthGrid({
 }
 
 function WeekRow({ week, today }: { week: MonthWeekLayout<CalendarEvent>; today: string }) {
-  return (
-    <div className="relative min-h-[92px] border-b border-border last:border-b-0">
-      {/* Фон: ячейки дней. Абсолютный слой, чтобы строка росла по числу ярусов, а ячейки
-          тянулись на всю её высоту. */}
-      <div aria-hidden className="absolute inset-0 grid grid-cols-7">
-        {week.days.map((day) => (
-          <div
-            key={day.date}
-            className={[
-              'border-l border-border/60 px-2 py-1 first:border-l-0',
-              day.isWeekend ? 'bg-background-secondary' : '',
-              day.isCurrentMonth ? '' : 'opacity-40',
-            ].join(' ')}
-          >
-            <span
-              className={[
-                'inline-flex h-6 w-6 items-center justify-center rounded-full text-xs tabular-nums',
-                day.isToday ? 'bg-primary font-medium text-primary-foreground' : '',
-                !day.isToday && day.isPast ? 'text-text-faint' : '',
-                !day.isToday && !day.isPast ? (day.isWeekend ? 'text-weekend' : 'text-text-secondary') : '',
-              ].join(' ')}
-            >
-              {day.day}
-            </span>
-          </div>
-        ))}
-      </div>
+  // Высота строки растёт по числу ярусов: лимита «+ ещё N» нет намеренно — спрятанное событие
+  // никто не находит.
+  const height = week.laneCount === 0 ? 44 : 24 + week.laneCount * LANE_STEP + 8;
 
-      {/* Сегменты поверх фона. gridRow — ярус из раскладки, gridColumn — колонки дня: событие
-          никогда не вылезает за свою неделю, многодневное приезжает отдельным сегментом в каждой
-          строке со своими «продолжается слева/справа». */}
-      <div className="relative grid grid-cols-7 gap-y-[3px] px-[3px] pb-2 pt-8">
-        {week.segments.map((segment) => (
-          <SegmentBar key={`${segment.event.slug}-${week.weekStart}`} segment={segment} today={today} />
-        ))}
-      </div>
+  return (
+    <div className="relative grid gap-1" style={{ gridTemplateColumns: 'repeat(7, 1fr)', height }}>
+      {week.days.map((day) => (
+        <DayCell key={day.date} day={day} />
+      ))}
+      {week.segments.map((segment) => (
+        <Segment key={`${segment.event.slug}-${week.weekStart}`} segment={segment} today={today} />
+      ))}
     </div>
   );
 }
 
-function SegmentBar({ segment, today }: { segment: MonthSegment<CalendarEvent>; today: string }) {
+/** Цвет плашки дня: будни — фон второго уровня, выходные — карточка, прошедшее — общий фон. */
+function DayCell({ day }: { day: MonthDayCell }) {
+  const background = day.isPast ? 'bg-background' : day.isWeekend ? 'bg-card' : 'bg-background-secondary';
+
+  return (
+    <div
+      className={`relative rounded-md ${background} ${day.isToday ? 'ring-1 ring-primary/40' : ''}`}
+      style={{ gridColumn: day.column + 1 }}
+    >
+      <span
+        className={[
+          'ml-1 mt-1 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full px-1 text-[11px] leading-none tabular-nums',
+          day.isToday ? 'bg-primary text-primary-foreground' : '',
+          !day.isToday && !day.isCurrentMonth ? 'text-text-faint' : '',
+          !day.isToday && day.isCurrentMonth && day.isWeekend ? 'text-calendar-weekend' : '',
+          !day.isToday && day.isCurrentMonth && !day.isWeekend ? 'text-text-secondary' : '',
+        ].join(' ')}
+      >
+        {/* Первое число подписано месяцем: иначе на стыке месяцев не понять, где чей день. */}
+        {day.day === 1 ? `${day.day} ${MONTH_LABELS[day.month].slice(0, 3)}` : day.day}
+      </span>
+    </div>
+  );
+}
+
+function Segment({ segment, today }: { segment: MonthSegment<CalendarEvent>; today: string }) {
   const { event } = segment;
   const isPast = event.endsAt < today;
   const place = formatPlace(event.city, event.locationManual);
+  const width = (segment.endColumn - segment.startColumn + 1) / 7;
 
   return (
     <Link
       href={`/events/${event.slug}`}
       title={`${event.title} · ${formatDateRange(event.startsAt, event.endsAt)}${place ? ` · ${place}` : ''}`}
-      style={{ gridColumn: `${segment.startColumn + 1} / ${segment.endColumn + 2}`, gridRow: segment.lane + 1 }}
       className={[
-        'truncate px-2 py-[3px] text-xs leading-tight transition-colors',
-        // Прошедшее приглушено, но не до невидимости: на полупрозрачной заливке длинная плашка
-        // через всю неделю читалась как тень, а не как турнир.
+        'absolute flex items-center overflow-hidden px-1.5 text-[11px] transition-colors',
+        // Обрезанный край — сигнал продолжения: с той стороны полоса остаётся прямоугольной.
+        segment.continuesLeft ? 'rounded-l-none' : 'rounded-l-[4px]',
+        segment.continuesRight ? 'rounded-r-none' : 'rounded-r-[4px]',
         isPast
-          ? 'bg-border text-text-secondary hover:bg-border-light'
-          : 'bg-primary/20 text-primary-light hover:bg-primary/35',
-        // Обрезанный край — сигнал продолжения: с той стороны плашка остаётся прямоугольной.
-        segment.continuesLeft ? 'rounded-l-none' : 'rounded-l-md',
-        segment.continuesRight ? 'rounded-r-none' : 'rounded-r-md',
+          ? 'bg-calendar-past text-calendar-pastText'
+          : 'bg-calendar-bar text-foreground hover:bg-calendar-barHover',
       ].join(' ')}
+      style={{
+        left: `calc(${(segment.startColumn / 7) * 100}% + 2px)`,
+        width: `calc(${width * 100}% - 4px)`,
+        top: 24 + segment.lane * LANE_STEP,
+        height: SEGMENT_HEIGHT,
+      }}
     >
-      {segment.continuesLeft && <span aria-hidden className="mr-1 text-text-muted">‹</span>}
-      {event.title}
+      <span className="truncate">{event.title}</span>
     </Link>
   );
 }

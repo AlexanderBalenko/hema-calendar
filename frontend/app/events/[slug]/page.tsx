@@ -77,7 +77,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                   {n.minAge != null && ` · от ${n.minAge}`}
                   {n.maxAge != null && ` до ${n.maxAge}`}
                 </span>
-                {n.notes && n.notes !== n.weapon && <span className="text-text-faint"> — {n.notes}</span>}
+                {n.notes && n.notes !== n.weapon && <span className="whitespace-pre-line text-text-faint"> — {n.notes}</span>}
               </li>
             ))}
           </ul>
