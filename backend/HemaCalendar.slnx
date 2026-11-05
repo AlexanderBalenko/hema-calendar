@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="src/HemaCalendar.Api/HemaCalendar.Api.csproj" />
-  <Project Path="tests/HemaCalendar.Api.Tests/HemaCalendar.Api.Tests.csproj" />
-</Solution>

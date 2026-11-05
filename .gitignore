@@ -17,3 +17,7 @@ next-env.d.ts
 .vs/
 .idea/
 .DS_Store
+
+# Кэш питона
+__pycache__/
+*.pyc
