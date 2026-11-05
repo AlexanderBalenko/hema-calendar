@@ -1,0 +1,8 @@
+{
+  "name": "hema-calendar-e2e",
+  "private": true,
+  "description": "Браузерный смоук календаря (Playwright). Гоняется в контейнере zenika/alpine-chrome:with-node на опубликованных портах стенда — Node на хосте не нужен. Запуск: sh scripts/e2e-smoke.sh из корня репозитория.",
+  "devDependencies": {
+    "@playwright/test": "1.49.1"
+  }
+}
