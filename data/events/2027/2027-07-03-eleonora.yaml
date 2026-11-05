@@ -8,16 +8,24 @@ url: https://vk.com/turnireleonora
 source: spreadsheet
 source_key: 2027-07-03:элеонора
 nominations:
+- text: Спортивная шпага мужчины ЛЗ.
+  gender: male
+- text: Спортивная шпага женщины ЛЗ.
+  gender: female
+- weapon: longsword
+  notes: Длинный меч общий
 - weapon: longsword
   gender: female
-  notes: |-
-    Спортивная шпага мужчины ЛЗ.
-    Спортивная шпага женщины ЛЗ.
-    Длинный меч общий
-    Длинный меч женщины
-    Военная сабля мужчины
-    военная сабля женщины
-    Рапира соло общая
-    Рапира
+  notes: Длинный меч женщины
+- weapon: saber
+  gender: male
+  notes: Военная сабля мужчины
+- weapon: saber
+  gender: female
+  notes: военная сабля женщины
+- weapon: rapier
+  notes: Рапира соло общая
+- weapon: rapier
+  notes: Рапира
 - weapon: dagger
   notes: дага общая

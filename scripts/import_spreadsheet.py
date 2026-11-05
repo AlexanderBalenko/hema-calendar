@@ -84,7 +84,10 @@ def nominations_from_text(text: str) -> list[dict]:
     if not text or text.strip() in ("", "(номинации не указаны)"):
         return []
     synonyms = [
-        ("длинн", "longsword"), ("меч и баклер", "buckler"), ("баклер", "buckler"),
+        # «Федершверт»/«федер» — тренировочный длинный меч: в таблицах им называют ту же
+        # номинацию, и без синонима она уезжала текстом мимо фильтра по оружию.
+        ("длинн", "longsword"), ("федер", "longsword"),
+        ("меч и баклер", "buckler"), ("баклер", "buckler"),
         ("рапир", "rapier"), ("сабл", "saber"), ("мессер", "messer"), ("дюссак", "dussack"),
         ("копь", "spear"), ("кинжал", "dagger"), ("дага", "dagger"), ("монтанте", "montante"),
         ("сайдсворд", "sidesword"),
@@ -94,7 +97,10 @@ def nominations_from_text(text: str) -> list[dict]:
     guarded = re.sub(r"меч\s+и\s+баклер", "меч-и-баклер", text, flags=re.IGNORECASE)
 
     result: list[dict] = []
-    for part in re.split(r"[;,/]| и ", guarded):
+    # Перевод строки — такой же разделитель, как запятая: в таблицах три номинации часто
+    # написаны в одной ячейке столбиком («Федершверт мужчины 18+⏎Рапира ренессанса 15+»), и
+    # без этого они приезжали одной номинацией с трёхстрочной заметкой.
+    for part in re.split(r"[;,/\n]| и ", guarded):
         fragment = part.strip().replace("меч-и-баклер", "меч и баклер")
         low = fragment.lower()
         if not low:

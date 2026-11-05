@@ -7,9 +7,12 @@ url: https://vk.com/club232204886
 source: spreadsheet
 source_key: 2026-11-14:level-one-kuban
 nominations:
+- weapon: longsword
+  gender: male
+  notes: Федершверт мужчины 18+
 - weapon: rapier
   gender: male
-  notes: |-
-    Федершверт мужчины 18+
-    Рапира ренессанса мужчины 15+
-    Военная Сабля мужчины. 15+
+  notes: Рапира ренессанса мужчины 15+
+- weapon: saber
+  gender: male
+  notes: Военная Сабля мужчины. 15+
