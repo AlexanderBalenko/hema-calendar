@@ -1,0 +1,44 @@
+# Стенд календаря целиком: своя база, свой API, свой фронт. Портал для работы не нужен —
+# в этом и смысл отдельного сервиса (решение заказчика 05.11.2026).
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: hema_calendar
+      POSTGRES_USER: calendar
+      POSTGRES_PASSWORD: calendar
+    # 5433 снаружи: порт 5432 на машине разработчика занят базой портала.
+    ports:
+      - "5433:5432"
+    volumes:
+      - calendar_pg:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    # 8085 снаружи: 8080 занят порталом, 8081 — его imgproxy. Порт стенда, на проде за
+    # обратным прокси это неважно.
+    ports:
+      - "8085:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__Default=Host=postgres;Port=5432;Database=hema_calendar;Username=calendar;Password=calendar
+      - Cors__Origins=http://localhost:3001
+      # Ключ модератора — ТОЛЬКО для локального стенда. На проде задаётся своим значением из
+      # секретов CI: с этим ключом видны контакты заявителей.
+      - Admin__Key=${CALENDAR_ADMIN_KEY:-dev-admin-key}
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3001:3000"
+    environment:
+      # Серверный рендер ходит внутрь сети, браузер — на опубликованный порт (см. src/lib/api.ts).
+      - API_URL=http://backend:8080
+    depends_on:
+      - backend
+
+volumes:
+  calendar_pg:

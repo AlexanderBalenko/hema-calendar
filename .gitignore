@@ -1,0 +1,19 @@
+# .NET
+bin/
+obj/
+*.user
+
+# Node / Next
+node_modules/
+.next/
+next-env.d.ts
+
+# Локальное окружение и секреты
+.env
+.env.local
+*.local.json
+
+# Инструменты
+.vs/
+.idea/
+.DS_Store
