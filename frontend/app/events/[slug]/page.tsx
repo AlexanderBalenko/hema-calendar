@@ -1,20 +1,48 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { fetchEvent } from '@/src/lib/api';
+import full from '@/src/generated/events.json';
+import type { CalendarEvent } from '@/src/lib/data';
 import { formatDateRange } from '@/src/lib/month-layout';
 import { formatPlace } from '@/src/lib/text';
 
-export const dynamic = 'force-dynamic';
+/**
+ * Страница турнира — статическая: на сборке их получается по одной на каждый турнир календаря.
+ * Именно их находят поиском («Saber Meister 2026»), поэтому здесь полная разметка с датами и
+ * местом, а не клиентская отрисовка.
+ *
+ * Полный набор с описаниями импортируется ЗДЕСЬ, в серверном компоненте: в браузер он не едет,
+ * туда попадает только разметка этой страницы.
+ */
+const EVENTS = (full as unknown as { events: CalendarEvent[] }).events;
 
 const GENDER_LABEL: Record<string, string> = { Any: 'общая', Male: 'мужская', Female: 'женская' };
 
+function find(slug: string): CalendarEvent | undefined {
+  return EVENTS.find((event) => event.slug === slug);
+}
+
+export function generateStaticParams() {
+  return EVENTS.map((event) => ({ slug: event.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const event = find(slug);
+  if (!event) return { title: 'Турнир не найден' };
+  const place = formatPlace(event.city, event.locationManual);
+  return {
+    title: `${event.title} — ${formatDateRange(event.startsAt, event.endsAt, true)}`,
+    description: [place, event.organizerName].filter(Boolean).join(' · ') || undefined,
+  };
+}
+
 export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const data = await fetchEvent(slug).catch(() => null);
-  if (!data) notFound();
+  const event = find(slug);
+  if (!event) notFound();
 
-  const { event, description } = data;
   const place = formatPlace(event.city, event.locationManual);
 
   return (
@@ -31,7 +59,9 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         {event.organizerName && <p className="text-sm text-text-muted">Организатор: {event.organizerName}</p>}
       </header>
 
-      {description && <p className="whitespace-pre-line rounded-xl bg-card p-4 text-sm text-text-secondary">{description}</p>}
+      {event.description && (
+        <p className="whitespace-pre-line rounded-xl bg-card p-4 text-sm text-text-secondary">{event.description}</p>
+      )}
 
       {event.nominations.length > 0 && (
         <section className="rounded-xl bg-card p-4">
@@ -60,7 +90,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         </a>
       )}
 
-      {/* Результатов здесь нет и не будет: сервис их не хранит (docs/Calendar.md §2). */}
+      {/* Результатов здесь нет и не будет: календарь их не хранит (docs/Calendar.md §2). */}
     </article>
   );
 }

@@ -153,15 +153,17 @@ export function Dropdown<T extends string | number>({
  */
 export function CityPicker({
   cities,
-  cityId,
+  city,
   onPick,
 }: {
   cities: readonly City[];
-  cityId: number | null;
-  onPick: (cityId: number | null) => void;
+  /** Название города, а не номер: номер менялся бы при каждой пересборке справочника, и
+   *  сохранённая кем-то ссылка после обновления данных показывала бы другой город. */
+  city: string | null;
+  onPick: (city: string | null) => void;
 }) {
   const [text, setText] = useState('');
-  const selected = cityId ? cities.find((c) => c.id === cityId) : undefined;
+  const selected = city ? cities.find((c) => c.name === city) : undefined;
 
   if (selected) {
     return (
@@ -195,7 +197,7 @@ export function CityPicker({
                 type="button"
                 onClick={() => {
                   setText('');
-                  onPick(city.id);
+                  onPick(city.name);
                 }}
                 className="block w-full px-3 py-1 text-left text-sm text-text-secondary hover:bg-background-secondary hover:text-foreground"
               >

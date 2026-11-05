@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
-import type { Directories } from '@/src/lib/api';
+import type { Directories } from '@/src/lib/data';
 import { CityPicker, Segmented, Toggle } from './controls';
 import {
   filtersToSearch,
@@ -46,7 +46,7 @@ export function FilterBar({
     list.includes(value) ? list.filter((item) => item !== value) : [...list, value];
 
   const activeCount = filters.weapons.length + filters.regions.length
-    + (filters.cityId ? 1 : 0) + (filters.team ? 1 : 0) + (filters.beginner ? 1 : 0) + (filters.q ? 1 : 0);
+    + (filters.city ? 1 : 0) + (filters.team ? 1 : 0) + (filters.beginner ? 1 : 0) + (filters.q ? 1 : 0);
 
   return (
     <div
@@ -99,8 +99,8 @@ export function FilterBar({
           <div className="flex flex-wrap items-center gap-2">
             <CityPicker
               cities={directories.cities}
-              cityId={filters.cityId}
-              onPick={(cityId) => apply({ ...filters, cityId })}
+              city={filters.city}
+              onPick={(city) => apply({ ...filters, city })}
             />
             <Toggle
               label="Командные"
@@ -115,7 +115,7 @@ export function FilterBar({
             {hasActiveFilters(filters) && (
               <button
                 type="button"
-                onClick={() => apply({ ...filters, weapons: [], regions: [], cityId: null, team: false, beginner: false, q: '' })}
+                onClick={() => apply({ ...filters, weapons: [], regions: [], city: null, team: false, beginner: false, q: '' })}
                 className="ml-auto text-sm text-text-muted hover:text-primary"
               >
                 Сбросить

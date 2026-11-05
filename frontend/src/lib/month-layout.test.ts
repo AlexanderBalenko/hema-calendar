@@ -75,7 +75,7 @@ describe('границы сетки месяца', () => {
   });
 });
 
-const EVENT = (id: string, startsAt: string, endsAt = startsAt) => ({ id, startsAt, endsAt });
+const EVENT = (slug: string, startsAt: string, endsAt = startsAt) => ({ slug, startsAt, endsAt });
 
 describe('layoutMonth', () => {
   it('раскладывает месяц по неделям и помечает чужие числа', () => {
@@ -107,14 +107,14 @@ describe('layoutMonth', () => {
     const firstWeek = weeks[0].segments;
     assert.equal(firstWeek.length, 1);
     assert.deepEqual(
-      { ...firstWeek[0], event: firstWeek[0].event.id },
+      { ...firstWeek[0], event: firstWeek[0].event.slug },
       { event: 'a', lane: 0, startColumn: 2, endColumn: 6, continuesLeft: false, continuesRight: true },
     );
 
     const secondWeek = weeks[1].segments;
     assert.equal(secondWeek.length, 1);
     assert.deepEqual(
-      { ...secondWeek[0], event: secondWeek[0].event.id },
+      { ...secondWeek[0], event: secondWeek[0].event.slug },
       { event: 'a', lane: 0, startColumn: 0, endColumn: 1, continuesLeft: true, continuesRight: false },
     );
 
@@ -132,7 +132,7 @@ describe('layoutMonth', () => {
       EVENT('after', '2026-12-29'),
       EVENT('tail', '2026-10-25', '2026-10-26'),
     ], '2026-11-05');
-    const ids = weeks.flatMap((w) => w.segments.map((s) => s.event.id));
+    const ids = weeks.flatMap((w) => w.segments.map((s) => s.event.slug));
     assert.deepEqual(ids, ['tail'], 'октябрьский хвост виден, всё остальное — нет');
     assert.equal(weeks[0].segments[0].continuesLeft, true);
   });
@@ -146,13 +146,13 @@ describe('layoutMonth', () => {
     ], '2026-11-05');
 
     const week = weeks[1];
-    const lanes = Object.fromEntries(week.segments.map((s) => [s.event.id, s.lane]));
+    const lanes = Object.fromEntries(week.segments.map((s) => [s.event.slug, s.lane]));
     assert.equal(lanes.long, 0, 'раньше начинается — выше');
     assert.equal(lanes.overlap, 1, 'пересекается — следующий ярус');
     assert.equal(lanes.sunday, 0, 'не пересекается с первым — садится на тот же ярус, а не в новый');
     assert.equal(week.laneCount, 2, 'трёх событий в неделе хватает на два яруса');
     // 9 ноября — уже следующая строка-неделя, ярус снова нулевой.
-    assert.equal(weeks[2].segments.find((s) => s.event.id === 'next')?.lane, 0);
+    assert.equal(weeks[2].segments.find((s) => s.event.slug === 'next')?.lane, 0);
   });
 
   it('при равном начале короткое событие выше — под ним остаётся место для даты', () => {
@@ -160,14 +160,14 @@ describe('layoutMonth', () => {
       EVENT('long', '2026-11-02', '2026-11-06'),
       EVENT('short', '2026-11-02'),
     ], '2026-11-05');
-    const lanes = Object.fromEntries(weeks[1].segments.map((s) => [s.event.id, s.lane]));
+    const lanes = Object.fromEntries(weeks[1].segments.map((s) => [s.event.slug, s.lane]));
     assert.deepEqual(lanes, { short: 0, long: 1 });
   });
 
   it('порядок не зависит от порядка входа', () => {
     const events = [EVENT('b', '2026-11-03'), EVENT('a', '2026-11-03'), EVENT('c', '2026-11-03')];
-    const direct = layoutMonth(2026, 10, events, '2026-11-05')[1].segments.map((s) => s.event.id);
-    const reversed = layoutMonth(2026, 10, [...events].reverse(), '2026-11-05')[1].segments.map((s) => s.event.id);
+    const direct = layoutMonth(2026, 10, events, '2026-11-05')[1].segments.map((s) => s.event.slug);
+    const reversed = layoutMonth(2026, 10, [...events].reverse(), '2026-11-05')[1].segments.map((s) => s.event.slug);
     assert.deepEqual(direct, ['a', 'b', 'c']);
     assert.deepEqual(direct, reversed);
   });

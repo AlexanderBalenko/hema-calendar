@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import type { CalendarEvent } from '@/src/lib/api';
+import type { CalendarEvent } from '@/src/lib/data';
 import { formatDateRange, MONTH_TITLES, parseDate } from '@/src/lib/month-layout';
 import { formatPlace, weaponSummary } from '@/src/lib/text';
 
@@ -21,7 +21,7 @@ export function EventList({ events, today }: { events: CalendarEvent[]; today: s
         lastMonth = key;
 
         return (
-          <li key={event.id} className="flex flex-col gap-2">
+          <li key={event.slug} className="flex flex-col gap-2">
             {divider && (
               <h2 className="mt-2 border-b border-border pb-1 text-xs uppercase tracking-wide text-text-muted">
                 {divider}

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import type { CalendarEvent } from '@/src/lib/api';
+import type { CalendarEvent } from '@/src/lib/data';
 import { formatDateRange, layoutMonth, type MonthSegment, type MonthWeekLayout } from '@/src/lib/month-layout';
 import { formatPlace } from '@/src/lib/text';
 
@@ -87,7 +87,7 @@ function WeekRow({ week, today }: { week: MonthWeekLayout<CalendarEvent>; today:
           строке со своими «продолжается слева/справа». */}
       <div className="relative grid grid-cols-7 gap-y-[3px] px-[3px] pb-2 pt-8">
         {week.segments.map((segment) => (
-          <SegmentBar key={`${segment.event.id}-${week.weekStart}`} segment={segment} today={today} />
+          <SegmentBar key={`${segment.event.slug}-${week.weekStart}`} segment={segment} today={today} />
         ))}
       </div>
     </div>

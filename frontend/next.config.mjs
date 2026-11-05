@@ -1,12 +1,19 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  // standalone — чтобы образ не тащил node_modules целиком: сервис маленький, и контейнер должен
-  // быть под сотню мегабайт.
-  output: 'standalone',
 
-  // Переписывания (rewrites) тут намеренно НЕТ: Next вычисляет их на сборке, и адрес бэкенда
-  // запёкся бы в образ. Браузерные запросы к API проводит app/api/[...path]/route.ts — он читает
-  // API_URL в момент запроса.
+// На GitHub Pages сайт лежит в подкаталоге (`/hema-calendar`), а на своём домене — в корне.
+// Адрес задаётся сборке переменной, потому что он часть собранных файлов: ссылки и пути к
+// скриптам пишутся в разметку на сборке, а не вычисляются в браузере.
+const basePath = process.env.PAGES_BASE_PATH ?? '';
+
+const nextConfig = {
+  // Статическая сборка: у календаря нет сервера вовсе. Данные — файлы репозитория, собранные
+  // в JSON (scripts/build_json.py); страницы турниров получаются готовыми на сборке.
+  output: 'export',
+  basePath,
+  // Каждая страница — свой каталог с index.html: так статический хостинг отдаёт /events/foo/
+  // без правил переписывания.
+  trailingSlash: true,
+  images: { unoptimized: true },
 };
 
 export default nextConfig;

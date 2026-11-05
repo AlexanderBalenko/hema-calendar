@@ -4,10 +4,12 @@
  * отфильтрованный календарь люди присылают друг другу ссылкой. Отсюда же требование к разбору —
  * он обязан переживать любой мусор в параметрах: ссылку правят руками.
  *
- * Модуль чистый (без React и next/navigation) — он же покрыт юнит-тестами.
+ * Отбор турниров тоже здесь: данных у календаря нет на сервере, они целиком в браузере, и
+ * фильтрация — обычная работа со списком, а не запрос. Модуль чистый (без React), он же покрыт
+ * юнит-тестами.
  */
-import type { CalendarQuery } from './api.ts';
-import { addDays, dayNumber, fromDayNumber, monthGridBounds, parseDate } from './month-layout.ts';
+import type { CalendarEvent } from './data.ts';
+import { addDays, monthGridBounds, parseDate } from './month-layout.ts';
 
 export type ViewMode = 'month' | 'list';
 /** Период для списка: будущие, прошедшие или весь календарь целиком. */
@@ -22,7 +24,9 @@ export type CalendarFilters = {
   weapons: string[];
   /** Названия макрорегионов. */
   regions: string[];
-  cityId: number | null;
+  /** Название города, а не номер: номер зависел бы от порядка сборки справочника, и
+   *  сохранённая ссылка после обновления данных показывала бы другой город. */
+  city: string | null;
   team: boolean;
   beginner: boolean;
   q: string;
@@ -69,7 +73,6 @@ export function parseMonthKey(value: string, today: string): { year: number; mon
 
 export function parseFilters(params: RawParams, today: string): CalendarFilters {
   const periodRaw = first(params.period);
-  const cityRaw = Number(first(params.city));
   const { year, month } = parseMonthKey(first(params.month), today);
 
   return {
@@ -78,7 +81,7 @@ export function parseFilters(params: RawParams, today: string): CalendarFilters 
     period: periodRaw === 'past' || periodRaw === 'all' ? periodRaw : DEFAULT_PERIOD,
     weapons: list(params.weapons),
     regions: list(params.regions),
-    cityId: Number.isInteger(cityRaw) && cityRaw > 0 ? cityRaw : null,
+    city: first(params.city).trim() || null,
     team: first(params.team) === '1',
     beginner: first(params.beginner) === '1',
     q: first(params.q).trim().slice(0, 100),
@@ -97,7 +100,7 @@ export function filtersToSearch(filters: CalendarFilters, today: string): string
   if (filters.view === 'list' && filters.period !== DEFAULT_PERIOD) params.set('period', filters.period);
   if (filters.weapons.length) params.set('weapons', filters.weapons.join(','));
   if (filters.regions.length) params.set('regions', filters.regions.join(','));
-  if (filters.cityId) params.set('city', String(filters.cityId));
+  if (filters.city) params.set('city', filters.city);
   if (filters.team) params.set('team', '1');
   if (filters.beginner) params.set('beginner', '1');
   if (filters.q) params.set('q', filters.q);
@@ -108,43 +111,63 @@ export function filtersToSearch(filters: CalendarFilters, today: string): string
 
 /** Есть ли хоть один фильтр по существу (вид, месяц и период фильтрами не считаются). */
 export function hasActiveFilters(filters: CalendarFilters): boolean {
-  return filters.weapons.length > 0 || filters.regions.length > 0 || filters.cityId !== null
+  return filters.weapons.length > 0 || filters.regions.length > 0 || filters.city !== null
     || filters.team || filters.beginner || filters.q.length > 0;
 }
 
-/**
- * Запрос к API. Границы дат берутся из вида, а не из фильтров: месяц грузит ровно свою сетку
- * (вместе с хвостами соседних месяцев — иначе многодневный турнир с 30 октября не нарисуется в
- * первой строке ноября), а список — выбранный период.
- */
-export function filtersToQuery(filters: CalendarFilters, today: string): CalendarQuery {
-  const base: CalendarQuery = {
-    weapons: filters.weapons.length ? filters.weapons : undefined,
-    regions: filters.regions.length ? filters.regions : undefined,
-    cityId: filters.cityId ?? undefined,
-    team: filters.team || undefined,
-    beginner: filters.beginner || undefined,
-    q: filters.q || undefined,
-  };
-
+/** Границы показываемого отрезка: сетка месяца грузит и хвосты соседних месяцев, иначе
+ *  многодневный турнир с 30 октября не нарисуется в первой строке ноября. */
+export function visibleRange(filters: CalendarFilters, today: string): { from: string | null; to: string | null } {
   if (filters.view === 'month') {
     const { year, month } = parseMonthKey(filters.month, today);
     const { firstWeek, lastWeek } = monthGridBounds(year, month);
-    return { ...base, from: firstWeek, to: addDays(lastWeek, 6) };
+    return { from: firstWeek, to: addDays(lastWeek, 6) };
   }
-
-  if (filters.period === 'future') return { ...base, from: today };
-  if (filters.period === 'past') return { ...base, to: fromDayNumber(dayNumber(today) - 1) };
-  return base;
+  if (filters.period === 'future') return { from: today, to: null };
+  // «Прошедшие» — то, что ЗАКОНЧИЛОСЬ раньше сегодня: турнир, который идёт прямо сейчас,
+  // прошедшим называть нельзя.
+  if (filters.period === 'past') return { from: null, to: today };
+  return { from: null, to: null };
 }
 
+const fold = (value: string) => value.toLowerCase().replace(/ё/g, 'е');
+
 /**
- * Добор по периоду на клиенте. Параметры `from`/`to` у API — пересечение с диапазоном, а не
- * «начался в нём»: турнир, который идёт прямо сейчас, попадает и в `to=вчера`. В «прошедших» ему
- * не место — он не прошёл, он идёт. Поэтому список после запроса ещё раз просеивается.
+ * Отбор турниров по фильтрам. Раньше это делал SQL на сервере; правила сохранены один в один,
+ * включая главное: даты сравниваются ПЕРЕСЕЧЕНИЕМ с отрезком, а не попаданием начала в него —
+ * турнир, который идёт через границу месяца, обязан быть виден в обоих.
  */
-export function isInPeriod(event: { startsAt: string; endsAt: string }, period: Period, today: string): boolean {
-  if (period === 'past') return event.endsAt < today;
-  if (period === 'future') return event.endsAt >= today;
-  return true;
+export function selectEvents(
+  events: readonly CalendarEvent[],
+  filters: CalendarFilters,
+  today: string,
+): CalendarEvent[] {
+  const { from, to } = visibleRange(filters, today);
+  const needle = fold(filters.q);
+  const weapons = new Set(filters.weapons);
+  const regions = new Set(filters.regions);
+  const city = filters.city ? fold(filters.city) : null;
+
+  const selected = events.filter((event) => {
+    if (from && event.endsAt < from) return false;
+    if (to && event.startsAt > to) return false;
+    // «Прошедшие» просеиваются по концу, а не по началу: иначе идущий сейчас турнир попадает
+    // и в будущие, и в прошедшие сразу.
+    if (filters.view === 'list' && filters.period === 'past' && event.endsAt >= today) return false;
+
+    if (city && fold(event.city ?? '') !== city) return false;
+    if (regions.size && !regions.has(event.macroRegion ?? '')) return false;
+    if (weapons.size && !event.nominations.some((n) => n.weaponCode && weapons.has(n.weaponCode))) return false;
+    if (filters.team && !event.nominations.some((n) => n.isTeam)) return false;
+    if (filters.beginner && !event.nominations.some((n) => n.isBeginnerFriendly)) return false;
+    if (needle) {
+      const haystack = `${event.title} ${event.organizerName ?? ''}`;
+      if (!fold(haystack).includes(needle)) return false;
+    }
+    return true;
+  });
+
+  // Прошедшее читают от свежего к старому: 2020 год в начале списка никому не нужен.
+  if (filters.view === 'list' && filters.period === 'past') return selected.reverse();
+  return selected;
 }

@@ -14,7 +14,8 @@
  */
 
 export type LayoutEvent = {
-  id: string;
+  /** Устойчивый опознаватель: у календаря это слаг, он же имя файла и адрес страницы. */
+  slug: string;
   /** Дата или ISO datetime — используется только календарный день. */
   startsAt: string;
   endsAt: string;
@@ -128,8 +129,8 @@ type Classified<T extends LayoutEvent> = {
 };
 
 /** Стабильный тай-брейк: при полностью совпадающих датах порядок не должен зависеть от входа. */
-function byId<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
-  return a.event.id < b.event.id ? -1 : a.event.id > b.event.id ? 1 : 0;
+function bySlug<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
+  return a.event.slug < b.event.slug ? -1 : a.event.slug > b.event.slug ? 1 : 0;
 }
 
 /**
@@ -137,7 +138,7 @@ function byId<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number
  * осталось окошко с датой дня.
  */
 function compareSegments<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
-  return a.start - b.start || a.end - b.end || byId(a, b);
+  return a.start - b.start || a.end - b.end || bySlug(a, b);
 }
 
 export type MonthDayCell = {
