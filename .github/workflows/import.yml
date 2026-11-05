@@ -1,0 +1,94 @@
+# Пополнение календаря из внешних источников — раз в сутки и по кнопке.
+#
+# Импорт ничего не публикует сам: он правит файлы в `data/` и открывает пул-реквест. Решение
+# «это настоящий турнир, заводим» принимает человек, глядя на дифф, — это и есть модерация,
+# ради которой раньше жили очередь, ключ и админка.
+#
+# Источники включаются переменными репозитория (Settings → Variables):
+#   GOOGLE_SHEET_ID / GOOGLE_SHEET_GID — таблица организаторов с анонсами;
+#   FORM_SHEET_ID / FORM_SHEET_GID     — ответы формы заявок с сайта.
+# Хемагон источников не требует и работает всегда.
+#
+# Пул-реквест, созданный встроенным токеном, НЕ запускает другие workflow (ограничение
+# GitHub), поэтому проверка данных прогоняется здесь же, а её вывод уезжает в тело
+# пул-реквеста: иначе о замечаниях никто бы не узнал до слияния.
+
+name: Импорт турниров
+
+on:
+  schedule:
+    # 04:30 UTC — ночь по Москве: источники в это время свободны, а к утру PR уже ждёт.
+    - cron: '30 4 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml
+
+      - name: Хемагон — прошедшие турниры
+        run: python scripts/import_hemagon.py | tee -a /tmp/import.log
+
+      - name: Таблица организаторов — анонсы
+        if: vars.GOOGLE_SHEET_ID != ''
+        run: |
+          python scripts/import_spreadsheet.py \
+            --google "${{ vars.GOOGLE_SHEET_ID }}" --gid "${{ vars.GOOGLE_SHEET_GID || '0' }}" \
+            | tee -a /tmp/import.log
+
+      - name: Заявки с сайта — ответы формы
+        if: vars.FORM_SHEET_ID != ''
+        run: |
+          python scripts/import_spreadsheet.py \
+            --google "${{ vars.FORM_SHEET_ID }}" --gid "${{ vars.FORM_SHEET_GID || '0' }}" \
+            --source submission | tee -a /tmp/import.log
+
+      - name: Проверить, что получилось
+        id: check
+        # Проверка не должна рубить прогон: её вывод нужен в пул-реквесте, а решать человеку.
+        continue-on-error: true
+        run: python scripts/validate_data.py | tee -a /tmp/import.log
+
+      - name: Открыть пул-реквест
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain -- data)" ]; then
+            echo "Источники не принесли ничего нового."
+            exit 0
+          fi
+
+          branch="import/$(date +%Y-%m-%d)-${{ github.run_number }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add data
+          git commit -m "Импорт турниров $(date +%Y-%m-%d)"
+          git push -u origin "$branch"
+
+          {
+            echo "Автоматический импорт из внешних источников."
+            echo
+            echo '```'
+            cat /tmp/import.log
+            echo '```'
+            echo
+            echo "Смотреть на дифф: что завелось новым файлом, что поправилось в существующих."
+            echo "Проверка данных прогнана здесь же — её вывод выше (пул-реквесты от бота"
+            echo "не запускают CI, это ограничение GitHub)."
+          } > /tmp/pr-body.md
+
+          gh pr create --title "Импорт турниров $(date +%Y-%m-%d)" --body-file /tmp/pr-body.md

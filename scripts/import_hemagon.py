@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
-"""Импорт турниров с hemagon.com в календарь.
+"""Импорт турниров с hemagon.com в файлы календаря (data/events).
 
 Хемагон отдаёт ТОЛЬКО состоявшиеся турниры (анонсов в его API нет вовсе) — отсюда едет прошлое
 календаря, а будущее приходит из таблиц организаторов (import_spreadsheet.py).
 
     python scripts/import_hemagon.py --dry-run
-    python scripts/import_hemagon.py --api http://localhost:8085 --key dev-admin-key
+    python scripts/import_hemagon.py
 
-Повторный прогон не плодит дублей: сервис узнаёт свои записи по паре «источник + ключ», где
-ключ — idString хемагона.
+Пишет и правит файлы в рабочей копии; дальше их показывает пул-реквест, и решает человек.
+Повторный прогон не плодит дублей: своё узнаётся по паре «источник + ключ», где ключ —
+idString хемагона. Поля, которых источник не дал, в файле остаются нетронутыми.
 """
 import argparse
 import json
-import os
+import pathlib
 import re
 import sys
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+from import_common import Importer  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -120,34 +125,41 @@ def nominations_of(detail: dict) -> list[dict]:
                 min_age = int(match.group(1))
 
         if any(marker in low for marker in FEMALE_MARKERS):
-            gender = "Female"
+            gender = "female"
         elif any(marker in low for marker in MALE_MARKERS):
-            gender = "Male"
+            gender = "male"
         else:
-            gender = "Any"
+            gender = "any"
 
-        result.append({
-            "weaponCode": code,
+        nomination: dict = {}
+        if code:
+            nomination["weapon"] = code
+        else:
             # Нераспознанное оружие не выбрасываем: пишем словами, как в источнике, — иначе
             # номинация исчезает молча и турнир выглядит пустым.
-            "weaponText": None if code else (weapon_raw or title or None),
-            "gender": gender,
-            "minAge": min_age,
-            "maxAge": max_age,
-            "isTeam": any(marker in low for marker in TEAM_MARKERS),
-            "isBeginnerFriendly": any(marker in low for marker in BEGINNER_MARKERS),
-            # Категория из названия оружия («longsword - advanced») остаётся в заметке: сам код
-            # оружия её не хранит, а для человека это половина смысла номинации.
-            "notes": title or (weapon_raw if " - " in weapon_raw else None),
-        })
+            nomination["text"] = weapon_raw or title
+        if gender != "any":
+            nomination["gender"] = gender
+        if min_age is not None:
+            nomination["min_age"] = min_age
+        if max_age is not None:
+            nomination["max_age"] = max_age
+        if any(marker in low for marker in TEAM_MARKERS):
+            nomination["team"] = True
+        if any(marker in low for marker in BEGINNER_MARKERS):
+            nomination["beginners"] = True
+        # Категория из названия оружия («longsword - advanced») остаётся в заметке: сам код
+        # оружия её не хранит, а для человека это половина смысла номинации.
+        notes = title or (weapon_raw if " - " in weapon_raw else "")
+        if notes and notes != nomination.get("text"):
+            nomination["notes"] = notes
+        result.append(nomination)
     return result
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Импорт турниров с хемагона")
-    parser.add_argument("--api", default=os.environ.get("CALENDAR_API", "http://localhost:8085"))
-    parser.add_argument("--key", default=os.environ.get("CALENDAR_ADMIN_KEY", "dev-admin-key"))
-    parser.add_argument("--dry-run", action="store_true", help="только разбор, без записи")
+    parser = argparse.ArgumentParser(description="Импорт турниров с хемагона в data/events")
+    parser.add_argument("--dry-run", action="store_true", help="только разбор, без записи файлов")
     parser.add_argument("--pages", type=int, default=0, help="ограничить число страниц (для проверки)")
     args = parser.parse_args()
 
@@ -163,7 +175,9 @@ def main() -> None:
         page += 1
     print(f"всего в API: {len(items)}")
 
-    batch, skipped_country, skipped_test, unknown_cities = [], 0, 0, set()
+    importer = Importer("hemagon", dry_run=args.dry_run)
+    skipped_country, skipped_test, unknown_cities = 0, 0, set()
+
     for item in items:
         # Страна — отдельным полем элемента списка: {"label": "Russia", "value": "RU"}.
         country = ((item.get("country") or {}).get("value") or "RU").upper()
@@ -193,51 +207,26 @@ def main() -> None:
         author = (detail.get("author") or {}).get("name")
         link = (detail.get("link") or {}).get("url")
 
-        batch.append({
-            "source": "Hemagon",
-            "sourceKey": item["idString"],
+        importer.put({
             "title": (item.get("title") or "").strip(),
-            "startsAt": start,
-            "endsAt": end,
-            "cityName": city_ru or city_en or None,
-            "organizerName": (author or "").strip() or None,
-            "externalUrl": link or HEMAGON_PAGE.format(item["idString"]),
+            "starts": start,
+            "ends": end,
+            # Город — только из справочника: непереведённое название уходит в place, иначе
+            # проверка данных справедливо скажет, что такого города у нас нет.
+            "city": city_ru,
+            "place": None if city_ru else (city_en or None),
+            "organizer": (author or "").strip() or None,
+            "url": link or HEMAGON_PAGE.format(item["idString"]),
             "description": (detail.get("description") or "").strip() or None,
             "nominations": nominations_of(detail),
-        })
+        }, item["idString"])
 
-    print(f"к загрузке: {len(batch)}; пропущено по стране: {skipped_country}, тестовых: {skipped_test}")
+    print(f"пропущено по стране: {skipped_country}, тестовых: {skipped_test}")
     if unknown_cities:
-        print(f"[внимание] города без перевода (поедут строкой): {sorted(unknown_cities)}")
-
+        print(f"[внимание] городов нет в справочнике (поедут местом строкой): {sorted(unknown_cities)}")
+    print(importer.report())
     if args.dry_run:
-        for event in batch[:10]:
-            print("  ", event["startsAt"], "|", event["title"][:40], "|", event["cityName"], "|", len(event["nominations"]), "номинаций")
-        print("(dry-run: ничего не записано)")
-        return
-
-    sent = {"created": 0, "updated": 0, "skipped": 0}
-    warnings = []
-    for start in range(0, len(batch), 100):
-        chunk = batch[start:start + 100]
-        request = urllib.request.Request(
-            f"{args.api.rstrip('/')}/api/admin/events/import",
-            data=json.dumps(chunk, ensure_ascii=False).encode("utf-8"), method="POST",
-            headers={"Content-Type": "application/json", "X-Calendar-Admin-Key": args.key})
-        try:
-            with urllib.request.urlopen(request, timeout=120) as response:
-                result = json.loads(response.read().decode())
-        except urllib.error.HTTPError as error:
-            raise SystemExit(f"сервис ответил {error.code}: {error.read().decode()[:300]}")
-        for field in sent:
-            sent[field] += result[field]
-        warnings.extend(result["warnings"])
-
-    print(f"создано {sent['created']}, обновлено {sent['updated']}, пропущено {sent['skipped']}")
-    for warning in warnings[:20]:
-        print("  ", warning)
-    if len(warnings) > 20:
-        print(f"   … ещё {len(warnings) - 20}")
+        print("(dry-run: файлы не тронуты)")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 """Импорт анонсов турниров из таблиц организаторов.
 
-Два источника, один формат записи в сервис:
-  * Google-таблица — публичный CSV-экспорт (колонки «Город/Название/Дата начала/…»);
+Три источника, один формат записи в файлы календаря:
+  * Google-таблица организаторов — публичный CSV-экспорт (колонки «Город/Название/Дата
+    начала/…»);
+  * ответы формы заявок — та же Google-таблица с теми же колонками, но `--source submission`:
+    по пометке видно, турнир прислали или нашли;
   * присланный график — .xlsx с матрицей номинаций по колонкам оружия.
 
     python scripts/import_spreadsheet.py --google <id> --gid <gid> --dry-run
@@ -17,13 +20,15 @@ import csv
 import datetime as dt
 import io
 import json
-import os
 import pathlib
 import re
 import sys
 import urllib.error
-import urllib.parse
 import urllib.request
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+from import_common import Importer  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -102,27 +107,30 @@ def nominations_from_text(text: str) -> list[dict]:
         # Пол пишут отдельной буквой («сабля Ж», «дага М.»), поэтому сравниваем слова
         # целиком: подстрока «м» нашлась бы в любом «мече», а «ж» — в «кинжале».
         words = [w for w in re.split(r"[^а-яёa-z0-9]+", low) if w]
-        gender = ("Female" if any(w == "ж" or w.startswith(("жен", "девуш")) for w in words)
-                  else "Male" if any(w == "м" or w.startswith("муж") for w in words) else None)
+        gender = ("female" if any(w == "ж" or w.startswith(("жен", "девуш")) for w in words)
+                  else "male" if any(w == "м" or w.startswith("муж") for w in words) else None)
 
         if code is None and result and is_qualifier(fragment):
             previous = result[-1]
             if gender:
                 previous["gender"] = gender
-            previous["isTeam"] = previous["isTeam"] or any(m in low for m in TEAM_MARKERS)
-            previous["isBeginnerFriendly"] = previous["isBeginnerFriendly"] or any(m in low for m in BEGINNER_MARKERS)
-            previous["notes"] = f"{previous['notes']}, {fragment}"[:500] if previous["notes"] else fragment[:500]
+            if any(m in low for m in TEAM_MARKERS):
+                previous["team"] = True
+            if any(m in low for m in BEGINNER_MARKERS):
+                previous["beginners"] = True
+            previous["notes"] = f"{previous.get('notes', '')}, {fragment}".strip(", ")[:500]
             continue
 
-        result.append({
-            "weaponCode": code,
-            "weaponText": None if code else fragment[:120],
-            "gender": gender or "Any",
-            "minAge": None, "maxAge": None,
-            "isTeam": any(m in low for m in TEAM_MARKERS),
-            "isBeginnerFriendly": any(m in low for m in BEGINNER_MARKERS),
-            "notes": fragment[:500] or None,
-        })
+        nomination: dict = {"weapon": code} if code else {"text": fragment[:120]}
+        if gender:
+            nomination["gender"] = gender
+        if any(m in low for m in TEAM_MARKERS):
+            nomination["team"] = True
+        if any(m in low for m in BEGINNER_MARKERS):
+            nomination["beginners"] = True
+        if fragment and fragment != nomination.get("text"):
+            nomination["notes"] = fragment[:500]
+        result.append(nomination)
     return result
 
 
@@ -138,12 +146,12 @@ def read_google(sheet_id: str, gid: str) -> list[dict]:
             continue
         rows.append({
             "title": title,
-            "startsAt": start,
-            "endsAt": parse_date(row.get("Дата завершения")) or start,
-            "cityName": (row.get("Город") or "").strip() or None,
-            "organizerName": (row.get("Организатор") or "").strip() or None,
-            "externalUrl": (row.get("Ссылка") or "").strip() or None,
-            "locationManual": (row.get("Адрес") or "").strip() or None,
+            "starts": start,
+            "ends": parse_date(row.get("Дата завершения")) or start,
+            "city": (row.get("Город") or "").strip() or None,
+            "organizer": (row.get("Организатор") or "").strip() or None,
+            "url": (row.get("Ссылка") or "").strip() or None,
+            "place": (row.get("Адрес") or "").strip() or None,
             "nominations": nominations_from_text(row.get("Номинации") or ""),
         })
     return rows
@@ -164,36 +172,36 @@ def read_xlsx(path: str) -> list[dict]:
             if mark in (None, ""):
                 continue
             low = str(mark).strip().lower()
-            nominations.append({
-                "weaponCode": code,
-                "weaponText": None,
-                "gender": "Any",
-                "minAge": None, "maxAge": None,
-                "isTeam": any(m in low for m in TEAM_MARKERS),
-                "isBeginnerFriendly": any(m in low for m in BEGINNER_MARKERS),
-                "notes": f"{kind or ''} {mark}".strip()[:500] or None,
-            })
+            nomination: dict = {"weapon": code}
+            if any(m in low for m in TEAM_MARKERS):
+                nomination["team"] = True
+            if any(m in low for m in BEGINNER_MARKERS):
+                nomination["beginners"] = True
+            notes = f"{kind or ''} {mark}".strip()[:500]
+            if notes:
+                nomination["notes"] = notes
+            nominations.append(nomination)
         rows.append({
             "title": str(title).strip(),
-            "startsAt": start.date().isoformat(),
-            "endsAt": (end.date() if isinstance(end, dt.datetime) else start.date()).isoformat(),
-            "cityName": str(place or "").strip() or None,
-            "organizerName": str(club or "").strip() or None,
-            "externalUrl": None,
-            "locationManual": None,
+            "starts": start.date().isoformat(),
+            "ends": (end.date() if isinstance(end, dt.datetime) else start.date()).isoformat(),
+            "city": str(place or "").strip() or None,
+            "organizer": str(club or "").strip() or None,
             "nominations": nominations,
         })
     return rows
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Импорт анонсов из таблиц организаторов")
-    parser.add_argument("--api", default=os.environ.get("CALENDAR_API", "http://localhost:8085"))
-    parser.add_argument("--key", default=os.environ.get("CALENDAR_ADMIN_KEY", "dev-admin-key"))
+    parser = argparse.ArgumentParser(description="Импорт анонсов из таблиц организаторов в data/events")
     parser.add_argument("--google", help="идентификатор Google-таблицы")
     parser.add_argument("--gid", default="0", help="лист таблицы")
     parser.add_argument("--xlsx", help="путь к .xlsx с графиком")
-    parser.add_argument("--with-past", action="store_true", help="грузить и прошедшие строки")
+    parser.add_argument("--with-past", action="store_true", help="брать и прошедшие строки")
+    # Ответы формы заявок читаются тем же кодом: это та же таблица с теми же колонками.
+    # Отличается только пометка источника — по ней видно, турнир прислали или нашли.
+    parser.add_argument("--source", default="spreadsheet", choices=["spreadsheet", "submission"],
+                        help="чем пометить записи в файлах")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -202,43 +210,26 @@ def main() -> None:
 
     rows = read_google(args.google, args.gid) if args.google else read_xlsx(args.xlsx)
 
-    # Ручной список «это одно и то же»: автоматическое сравнение связывает названия только
-    # похожие, а «турнир MwS» и «Меч ренессанса: Спор чести» не похожи ничем, кроме сути.
+    # Ручной список «это одно и то же»: автоматическое сравнение связывает похожие названия, а
+    # «турнир MwS» и «Меч ренессанса: Спор чести» не похожи ничем, кроме сути.
     skip_path = pathlib.Path(__file__).resolve().parent / "data" / "skip_keys.json"
     skip = json.loads(io.open(skip_path, encoding="utf-8").read()) if skip_path.exists() else {}
     today = dt.date.today().isoformat()
-    future = [r for r in rows if args.with_past or r["startsAt"] >= today]
-    print(f"строк в источнике: {len(rows)}; к загрузке: {len(future)}"
+    future = [r for r in rows if args.with_past or r["starts"] >= today]
+    print(f"строк в источнике: {len(rows)}; к разбору: {len(future)}"
           f"{'' if args.with_past else ' (только будущие — прошлое приезжает с хемагона)'}")
 
-    batch = []
+    importer = Importer(args.source, dry_run=args.dry_run)
     for row in future:
-        key = source_key(row["title"], row["startsAt"])
+        key = source_key(row["title"], row["starts"])
         if key in skip:
             print(f"  пропускаю «{row['title']}»: {skip[key]}")
             continue
-        batch.append(dict(row, source="Spreadsheet", sourceKey=key))
+        importer.put(row, key)
 
+    print(importer.report())
     if args.dry_run:
-        for event in batch:
-            print("  ", event["startsAt"], "|", event["title"][:40], "|", event["cityName"], "|",
-                  len(event["nominations"]), "номинаций")
-        print("(dry-run: ничего не записано)")
-        return
-
-    request = urllib.request.Request(
-        f"{args.api.rstrip('/')}/api/admin/events/import",
-        data=json.dumps(batch, ensure_ascii=False).encode("utf-8"), method="POST",
-        headers={"Content-Type": "application/json", "X-Calendar-Admin-Key": args.key})
-    try:
-        with urllib.request.urlopen(request, timeout=120) as response:
-            result = json.loads(response.read().decode())
-    except urllib.error.HTTPError as error:
-        raise SystemExit(f"сервис ответил {error.code}: {error.read().decode()[:300]}")
-
-    print(f"создано {result['created']}, обновлено {result['updated']}, пропущено {result['skipped']}")
-    for warning in result["warnings"][:20]:
-        print("  ", warning)
+        print("(dry-run: файлы не тронуты)")
 
 
 if __name__ == "__main__":
