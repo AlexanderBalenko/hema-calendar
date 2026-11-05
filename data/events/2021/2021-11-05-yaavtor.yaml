@@ -1,0 +1,31 @@
+title: ЯАвтор
+starts: 2021-11-05
+ends: 2021-11-06
+city: Асбест
+organizer: Денис Матяж
+url: https://hemagon.com/tournament/ia_avtor_2021
+description: ЯАвтор
+source: hemagon
+source_key: ia_avtor_2021
+nominations:
+- weapon: saber
+  notes: Военная сабля, Advanced
+- weapon: saber
+  notes: Военная сабля, Basic
+- weapon: saber
+  gender: female
+  notes: Военная сабля, Women
+- weapon: rapier
+  notes: Рапира и дага, Advanced
+- weapon: rapier
+  notes: Рапира и дага, Basic
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага, Women
+- weapon: longsword
+  notes: Длинный меч, Advanced
+- weapon: longsword
+  notes: Длинный меч, Basic
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, Women

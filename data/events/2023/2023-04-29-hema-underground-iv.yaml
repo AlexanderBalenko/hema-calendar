@@ -1,0 +1,25 @@
+title: HEMA Underground IV
+starts: 2023-04-29
+ends: 2023-04-30
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://hemagon.com/tournament/undergroundIV
+description: 'В череде мероприятий для начинающих фехтовальщиков соскучились по открытым турнирам? Мы
+  так точно ;) Поэтому встречайте: Открытый турнир клуба CounterTime - HEMA Underground IV'
+source: hemagon
+source_key: undergroundIV
+nominations:
+- weapon: rapier
+  notes: Рапира Ренессанса. Общая
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины

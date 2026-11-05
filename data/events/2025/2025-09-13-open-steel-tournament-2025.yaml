@@ -1,0 +1,34 @@
+title: Open Steel Tournament 2025
+starts: 2025-09-13
+ends: 2025-09-14
+city: Воронеж
+organizer: Steel VRN
+url: https://hemagon.com/tournament/ost25
+description: |-
+  Open Steel Tournament - турнир по Историческим Европейским Боевым Искусствам (HEMA)
+
+  Номинации:
+  - военная сабля (м, ж)
+  - длинный меч (м,ж)
+
+  Вас ждут:
+  - Отдельные мужские и женские номинации
+  - Групповой этап + олимпийка в каждой номинации
+  - Квалификационный этап с дальнейшим разделением на лиги Advanced и Basic (!!при наличии достаточного числа участников)
+
+  Место проведения: г. Воронеж, ул. Дорожная 15А/3
+source: hemagon
+source_key: ost25
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля (мужчины)
+- weapon: saber
+  gender: female
+  notes: Военная сабля (женщины)
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (женщины)

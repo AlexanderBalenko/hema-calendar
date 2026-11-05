@@ -1,0 +1,26 @@
+title: HEMA HSE
+starts: 2025-12-13
+city: Москва
+organizer: UHFC - Euro
+url: https://vk.ru/hema_hse?from=groups
+description: |-
+  Открытый кубок ВШЭ по историческому фехтованию
+
+  НИУ ВШЭ и МОО ДФ приглашает спортсменов на соревнования по дуэльной сабле в мужском и женском эшелоне.
+
+  Место проведения:
+  Москва
+  НИУ ВШЭ,
+  Покровский бульвар 11, главный атриум
+
+  Дата проведения:
+  13 декабря 2025
+source: hemagon
+source_key: hema-hse
+nominations:
+- weapon: saber
+  gender: male
+  notes: Сабля, мужчины
+- weapon: saber
+  gender: female
+  notes: Сабля, женщины

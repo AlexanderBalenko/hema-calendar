@@ -1,0 +1,39 @@
+title: Primavera XII
+starts: 2025-03-15
+ends: 2025-03-16
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://vk.com/primavera_female_tournament
+description: |-
+  Дорогие воительницы, приглашаем вас принять участие в Primavera! В этом году событие пройдет в околофестивальном формате, чтобы не боями едиными... :)
+
+  В городе на Неве состоятся двенадцатые ежегодные соревнования, и помимо сражений вас ждет фотозона, а также два мастер-класса и секретная афтерпати. Вместе с двумя командными и четырьмя личными номинациями это позволит провести весенние выходные в Питере "с огоньком", вне зависимости от погоды!
+
+  Ждем вас в гостях в уютном зале CounterTime на Петроградской стороне по адресу ул. Большая Пушкарская, 10Е.
+
+  📌 Оплату взносов мы начнем принимать с 19.02.25 (среда) через сайт.
+
+  🌹 #Fight_like_a_girl ⚔
+source: hemagon
+source_key: primavera-xii
+nominations:
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, абсолют
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, лига B
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, абсолют
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, лига B
+- weapon: rapier
+  gender: female
+  team: true
+  notes: Рапира Ренессанса, командный зачет
+- weapon: buckler
+  gender: female
+  team: true
+  notes: Меч и баклер, командный зачет

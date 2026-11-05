@@ -1,0 +1,23 @@
+title: Блиц
+starts: 2024-11-09
+ends: 2024-11-10
+city: Новосибирск
+organizer: Golden Falcon Org
+url: https://vk.com/external_gf_tournament
+source: hemagon
+source_key: blitz-nsk-singlehanded-2024
+nominations:
+- weapon: saber
+  notes: Сабля - Базовая
+- weapon: rapier
+  notes: Рапира - Базовая
+- weapon: rapier
+  gender: female
+  notes: Рапира - Женщины
+- weapon: saber
+  gender: female
+  notes: Сабля - Женщины
+- weapon: saber
+  notes: Сабля - Продвинутая
+- weapon: rapier
+  notes: Рапира - Продвинутая

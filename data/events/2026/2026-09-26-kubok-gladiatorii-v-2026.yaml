@@ -1,0 +1,60 @@
+title: Кубок Гладиатории V 2026
+starts: 2026-09-26
+ends: 2026-09-27
+city: Краснодар
+organizer: Тарас Верпеко
+url: https://vk.com/gladiocup
+description: |-
+  Турнир по историческому фехтованию "Кубок Гладиатории V" 2026 г. Краснодар
+
+  Турнир приурочен к дню рождение Центра Исторического Фехтования "Гладиатория". В сентябре 2026 года центру исполняется 5 лет.
+
+  Турнир состоится 26 и 27 сентября 2026 года по следующим номинациям для мужчин и женщин раздельно:
+  - Длинный меч **
+  - Сабля *
+  - Рапира и дага *
+  - Меч и баклер *
+  - HEMAkids: сабля
+
+  В рамках турнира «Кубок Гладиатории V» 2026 при поддержке фонда "Путь Меча" пройдёт отборочный этап Всероссийского турнира "МЕЧ РОССИИ ХЕМА" в номинациях:
+
+  - Длинный меч
+  - Сабля
+  - Рапира и дага
+source: hemagon
+source_key: kubok-gladiatorii-v-2026
+nominations:
+- weapon: longsword
+  notes: Длинный меч (Pool)
+- weapon: longsword
+  notes: Длинный меч (Basic)
+- weapon: longsword
+  notes: Длинный меч (Advanced)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Woman)
+- weapon: rapier
+  notes: Рапира и дага (Man)
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага (Woman)
+- weapon: saber
+  notes: Сабля (Man)
+- weapon: saber
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: 'HEMAkids: сабля (9-11 лет)'
+- weapon: saber
+  min_age: 12
+  max_age: 16
+  beginners: true
+  notes: 'HEMAkids: сабля (12-16 лет)'
+- weapon: saber
+  gender: female
+  notes: Сабля (Woman)
+- weapon: buckler
+  notes: Меч и баклер (Man)
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер (Woman)

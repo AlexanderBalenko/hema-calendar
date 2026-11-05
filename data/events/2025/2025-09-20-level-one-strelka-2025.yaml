@@ -1,0 +1,43 @@
+title: 'Level One: Strelka 2025'
+starts: 2025-09-20
+ends: 2025-09-21
+city: Нижний Новгород
+organizer: Андрей Люлин
+url: https://vk.com/level_one_strelka?from=groups
+description: |-
+  Турнир для начинающих фехтовальщиков в славном городе Нижнем Новгороде.
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет, проверить свои силы и сразиться за победу!
+
+
+  Дата проведения: 20-21 сентября 2025
+
+  Номинации:
+  Длинный меч, М и Ж
+  Дуэльная сабля, М и Ж
+  Рапира соло, М и Ж
+
+  До встречи!
+source: hemagon
+source_key: level-one-strelka-2025
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса, Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса, Женщины
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля, Мужчины
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, Женщины
+- weapon: longsword
+  notes: Семинар Андрея Люлина

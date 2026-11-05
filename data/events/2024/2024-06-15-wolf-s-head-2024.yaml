@@ -1,0 +1,37 @@
+title: Wolf's Head 2024
+starts: 2024-06-15
+ends: 2024-06-16
+city: Тбилиси
+organizer: Mika Kunenok
+url: https://docs.google.com/document/d/11mTsL5VGxKeL6Ybddd_vgHHw5Dne9JVG8BCQb1noynI/
+description: |-
+  And once again, Tbilisi opens its gates in anticipation of fencers to determine the strongest in fair combat. We are pleased to invite you to the second Wolf’s Head HEMA Tournament! This time the tournament will be organized by two clubs: St. George HEMA School and Golden Falcon. And this means that the tournament will be even more extensive and spectacular than last year.
+
+  This year, the tournament will feature two new disciplines. In addition to the classic longsword battles, we will hold a “judicial duel” discipline - with shorter swords and winner determination by the number of won rounds. We won't leave saber fencers without a pleasant surprise either. This year, there will be two saber disciplines at Wolf’s Head: classic rules with afterblow and A. Hutton’s rules with priority.
+
+  Discover new horizons in a country with breathtaking landscapes and excellent wine. And most importantly, don't miss the chance to compete with new opponents. Polish your swords and sabers to a shine, pack your bags with gear, and get ready for an exciting journey to the capital of Georgia.
+source: hemagon
+source_key: wolf-head-2024
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Longsword Men
+- weapon: longsword
+  gender: female
+  notes: Longsword Women
+- weapon: longsword
+  notes: Longsword Judical Mixed
+- weapon: longsword
+  gender: female
+  notes: Longsword Judical Duel Women
+- weapon: saber
+  gender: male
+  notes: Saber Men
+- weapon: saber
+  notes: Saber A. Hutton Mixed
+- weapon: saber
+  gender: female
+  notes: Saber Women
+- weapon: saber
+  gender: female
+  notes: Saber A. Hutton Women

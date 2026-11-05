@@ -1,0 +1,24 @@
+title: Блинный меч 2
+starts: 2026-02-21
+ends: 2026-02-22
+city: Вологда
+organizer: Андрей Люлин
+url: https://vk.com/event229290196
+description: Не было - не было, и вот опять! Вновь на Вологодчине пройдет рейтинговый Масленичный турнир.
+source: hemagon
+source_key: blinniymech2
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч "открытый" - Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч "открытый" - Женщины
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч "новички" - Мужчины
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч "новички" - Женщины

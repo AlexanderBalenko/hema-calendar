@@ -1,0 +1,57 @@
+title: ЯKids 2024
+starts: 2024-05-10
+ends: 2024-05-11
+city: Асбест
+organizer: Денис Матяж
+url: https://sites.google.com/view/ikids-2024
+source: hemagon
+source_key: IKids-2024
+nominations:
+- weapon: rapier
+  min_age: 8
+  max_age: 11
+  beginners: true
+  notes: Шпага, 8-11 лет
+- weapon: rapier
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Шпага, 12-14 лет
+- weapon: rapier
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Рапира, 15-17 лет, девушки
+- weapon: rapier
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Рапира, 15-17 лет, общая
+- weapon: saber
+  min_age: 8
+  max_age: 11
+  beginners: true
+  notes: Сабля, 8-11 лет
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Сабля, 12-14 лет
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля, 15-17 лет, девушки
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля, 15-17 лет, общая
+- weapon: rapier
+  team: true
+  notes: Рапира, командная
+- weapon: saber
+  team: true
+  notes: Сабля, командная

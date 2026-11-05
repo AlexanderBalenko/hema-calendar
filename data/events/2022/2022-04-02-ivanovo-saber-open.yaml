@@ -1,0 +1,17 @@
+title: Ivanovo Saber Open
+starts: 2022-04-02
+ends: 2022-04-03
+city: Иваново
+organizer: Иван Кашицын
+url: https://hemagon.com/tournament/ivanovo-saber-open
+description: Турнир по фехтованию на сабле XIX века по аутентичным правилам А. Хаттона.
+source: hemagon
+source_key: ivanovo-saber-open
+nominations:
+- weapon: saber
+  notes: Saber - Advanced
+- weapon: saber
+  notes: Saber Basic
+- weapon: saber
+  gender: female
+  notes: Saber Woman

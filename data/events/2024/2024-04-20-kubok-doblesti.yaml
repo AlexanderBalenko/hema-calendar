@@ -1,0 +1,42 @@
+title: Кубок Доблести
+starts: 2024-04-20
+ends: 2024-04-21
+city: Тюмень
+organizer: Денис Матяж
+url: https://hemagon.com/tournament/valor-2024
+description: |-
+  Регламент:
+  20 апреля:
+  • Длинный меч
+  • Меч и баклер
+  21 апреля:
+  • Длинный меч команды
+
+  Регистрация проводится лично каждым участником по ссылке:
+  https://forms.gle/gPub8jKoCpK1B2tu9
+source: hemagon
+source_key: valor-2024
+nominations:
+- weapon: longsword
+  notes: Длинный меч, отборочный этап
+- weapon: longsword
+  notes: Длинный меч, basic
+- weapon: longsword
+  notes: Длинный меч, advanced
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер, женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер, мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, women
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч, командный мужской
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч, командный женский

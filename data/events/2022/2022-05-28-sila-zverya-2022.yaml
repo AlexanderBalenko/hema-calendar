@@ -1,0 +1,64 @@
+title: Сила Зверя 2022
+starts: 2022-05-28
+ends: 2022-05-29
+city: Челябинск
+organizer: HEMA RF
+url: https://hemagon.com/tournament/beastpower2022
+description: Это турнир про медвежью силу, кошачью ловкость и скорость хищных птиц. Турнир, где каждый
+  сможет почувствовать себя охотником. Но помните, что здесь не будет легкой добычи.
+source: hemagon
+source_key: beastpower2022
+nominations:
+- weapon: rapier
+  min_age: 6
+  max_age: 8
+  beginners: true
+  notes: Шпага. 6-8 лет
+- weapon: rapier
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Шпага. 9-11 лет
+- weapon: rapier
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Рапира. 12-14 лет
+- weapon: saber
+  min_age: 9
+  max_age: 14
+  beginners: true
+  notes: Сабля. 9-14 лет
+- weapon: rapier
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Рапира. 15-17 лет
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля. 15-17 лет - юноши
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля. 15-17 лет - девушки + Военная сабля. Женщины
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса. Мужчины
+- weapon: buckler
+  notes: Меч и баклер

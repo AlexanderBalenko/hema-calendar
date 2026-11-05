@@ -1,0 +1,45 @@
+title: Открытый чемпионат УрФО по дуэльному фехтованию 2020
+starts: 2020-11-21
+ends: 2020-11-22
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/urfo2020
+description: |-
+  Открытый чемпионат УрФО по дуэльному фехтованию состоится 21-22 ноября 2020 года в Челябинске.
+
+  Вас ждет 4 номинации с делением на эшелоны Basic, Advanced и Woman:
+  - Рапира Ренессанса
+  - Военная сабля
+  - Длинный меч
+  - Меч и баклер
+
+  Подготовку и проведение осуществляет спортивный клуб «Золотой сокол».
+source: hemagon
+source_key: urfo2020
+nominations:
+- weapon: saber
+  notes: Военная сабля. Basic
+- weapon: saber
+  notes: Военная сабля. Advanced
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Woman
+- weapon: longsword
+  notes: Длинный меч. Basic
+- weapon: longsword
+  notes: Длинный меч. Advanced
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Woman
+- weapon: rapier
+  notes: Рапира Ренессанса. Basic
+- weapon: rapier
+  notes: Рапира Ренессанса. Advanced
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса. Woman
+- weapon: buckler
+  notes: Меч и баклер. Общий
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Woman

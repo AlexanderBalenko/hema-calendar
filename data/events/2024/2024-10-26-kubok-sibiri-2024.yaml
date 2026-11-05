@@ -1,0 +1,27 @@
+title: Кубок Сибири 2024
+starts: 2024-10-26
+ends: 2024-10-27
+city: Новосибирск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/siberian-cup-2024-ls-sb
+source: hemagon
+source_key: siberian-cup-2024-ls-sb
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч - Мужчины (отборы)
+- weapon: longsword
+  gender: female
+  notes: Длинный Меч - Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и Баклер - Мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и Баклер - Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч - Advanced мужчины
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч - Basic Мужчины

@@ -1,0 +1,54 @@
+title: Кубок Сердец
+starts: 2026-03-21
+ends: 2026-03-22
+city: Севастополь
+organizer: Сергей Сопин
+url: https://vk.com/kubok_serdets
+description: |-
+  Турнир по фехтованию "Кубок Сердец"
+  Ждем всех неравнодушных к нашему делу принять участие и побороться за пьедестал!
+
+  Номинации:
+  - Длинный меч (М/Ж)
+  - Военная сабля (М/Ж)
+  - Сабля Хаттона (М/Ж)
+  - Рапира Ренессанса (М/Ж)
+  - Меч и Баклер  (М/Ж)
+
+  Вас ждут:
+  -  Мужские, женские и общие номинации
+  - Возможность набраться фехтовального опыта
+  - Много красочных боев
+source: hemagon
+source_key: kubok-serdets
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (Мужчины)
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса (Женщины)
+- weapon: saber
+  gender: male
+  notes: Сабля Военная (Мужчины)
+- weapon: saber
+  gender: male
+  notes: Сабля Хаттона (Мужчины)
+- weapon: saber
+  gender: female
+  notes: Сабля Хаттона (Женщины)
+- weapon: saber
+  gender: female
+  notes: Сабля Военная (Женщины)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (Мужчины)
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер (Женщины)

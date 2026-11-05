@@ -1,0 +1,45 @@
+title: HEMA Panda 2026
+starts: 2026-01-24
+city: Ярославль
+organizer: Иван Кашицын
+url: https://vk.com/hema_panda
+description: |-
+  Приглашаем маленьких, фехтовальщиков побольше и почти совсем взрослых фехтовальщиков на главное событие Нового года - турнир HEMA PANDA!
+
+  Приготовьтесь к фехтовальным поединкам, где смелость, ловкость и немного удачи встречаются на одной дорожке!
+  Будущие чемпионы смогут продемонстрировать свои навыки, а мы обещаем море эмоций, общения и, конечно же, захватывающих моментов!
+
+  Номинации проводятся без электрофиксации
+source: hemagon
+source_key: hema-panda-2026
+nominations:
+- weapon: rapier
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Шпага 9-11 лет
+- weapon: rapier
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Шпага 12-14 лет
+- weapon: rapier
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Рапира Паризе 15-17 лет
+- weapon: saber
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Сабля 9-11 лет
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Сабля 12-14 лет
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля 15-17 лет

@@ -1,0 +1,22 @@
+title: Ламповый Турнир 2023
+starts: 2023-02-18
+city: Санкт-Петербург
+organizer: Pavel Shilin
+url: https://hemagon.com/tournament/vibey_tournament
+description: |-
+  HEMA турнир от ФРК "Мистраль", проводится в двух номинациях:
+  «Хольмганг» - Участники сражаются одноручными мечами; каждого участника защищает секундант со щитом, но без оружия; секунданта также можно атаковать.
+  "Парадоксы защиты" - смешанная номинация, предполагающая разные типы оружия у участников.
+source: hemagon
+source_key: vibey_tournament
+nominations:
+- text: Katana
+  notes: Парадоксы защиты
+- text: Katana
+  notes: Хольмганг
+- text: Katana
+  gender: female
+  notes: Парадоксы защиты (женщины)
+- text: Katana
+  gender: female
+  notes: Хольмганг (женщины)

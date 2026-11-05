@@ -1,0 +1,64 @@
+title: Torneo di scherma di sciabola e spada 2024
+starts: 2024-04-28
+ends: 2024-04-29
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://vk.com/parisefencing
+description: |-
+  Турнир по итальянской дуэльной сабле и рапире по правилам Мазаньелло Паризе (Италия, XIX в)
+
+  Приглашаем вас принять участие и почувствовать дух Италии XIX века.
+
+  Вас ждут правила, основанные на трактате маэстро М.Паризе "Trattato della Scherma di Spada e Sciabola", номинации по сабле и рапире и много хорошего фехтования!
+source: hemagon
+source_key: parise2024
+nominations:
+- weapon: rapier
+  gender: female
+  notes: Spada. Signore (женщины)
+- weapon: rapier
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Spada. Giovani (юноши, 14-17 лет)
+- weapon: rapier
+  gender: female
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Spada. Signorine (девушки, 14-17 лет)
+- weapon: rapier
+  gender: male
+  notes: 'Spada. Signori: qualificazione (мужчины: квалификация)'
+- weapon: rapier
+  gender: male
+  notes: Spada. Signori (мужчины)
+- weapon: saber
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Sciabola. Giovani (юноши, 14-17 лет)
+- weapon: saber
+  gender: female
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Sciabola. Signorine (девушки, 14-17 лет)
+- weapon: saber
+  gender: female
+  notes: 'Sciabola. Signore: qualificazione (женщины: квалификация)'
+- weapon: saber
+  gender: female
+  notes: 'Sciabola. Signore: maestri (женщины: маэстро)'
+- weapon: saber
+  gender: female
+  notes: 'Sciabola. Signore: dilettanti (женщины: любители)'
+- weapon: saber
+  gender: male
+  notes: 'Sciabola. Signori: qualificazione (мужчины: квалификация)'
+- weapon: saber
+  gender: male
+  notes: 'Sciabola. Signori: maestri (мужчины: маэстро)'
+- weapon: saber
+  gender: male
+  notes: 'Sciabola. Signori: dilettanti (мужчины: любители)'

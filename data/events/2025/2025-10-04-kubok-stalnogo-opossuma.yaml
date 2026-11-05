@@ -1,0 +1,35 @@
+title: Кубок Стального Опоссума
+starts: 2025-10-04
+ends: 2025-10-05
+city: Барнаул
+organizer: Стальной Опоссум
+url: https://vk.com/long22
+description: |-
+  Дуэльная Сабля М
+  Дуэльная Сабля Ж
+  Длинный меч М
+  Длинный меч Ж
+  Меч и Баклер М
+  Меч и Баклер Ж
+  ИСБ Три на Три
+source: hemagon
+source_key: kubok-stalnogo-opossuma
+nominations:
+- weapon: saber
+  gender: female
+  notes: Итальянская Дуэльная Сабля Женщины
+- weapon: saber
+  gender: male
+  notes: Итальянская Дуэльная Сабля Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный Меч Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч Мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и Баклер Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и Баклер Мужчины

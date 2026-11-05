@@ -1,0 +1,27 @@
+title: Кубок Сибири 2025
+starts: 2025-02-22
+ends: 2025-02-23
+city: Новосибирск
+organizer: Golden Falcon Org
+url: https://vk.com/dff_siberian_cup
+source: hemagon
+source_key: kubok-sibiri-2025
+nominations:
+- weapon: saber
+  notes: Сабля - Продвинутая
+- weapon: saber
+  notes: Сабля - Отборы
+- weapon: saber
+  notes: Сабля - Базовая
+- weapon: rapier
+  notes: Рапира и Дага - Базовая
+- weapon: rapier
+  notes: Рапира и Дага - Отборы
+- weapon: rapier
+  notes: Рапира и Дага - Продвинутая
+- weapon: saber
+  gender: female
+  notes: Сабля - Женская
+- weapon: rapier
+  gender: female
+  notes: Рапира и Дага - Женская

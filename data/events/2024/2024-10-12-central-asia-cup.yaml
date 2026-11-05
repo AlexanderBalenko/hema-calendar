@@ -1,0 +1,45 @@
+title: Central Asia Cup
+starts: 2024-10-12
+ends: 2024-10-13
+city: Алматы
+organizer: Golden Falcon Org
+url: https://vk.com/centralasiahemacup
+description: |-
+  Кубок Центральной Азии - самый большой турнир по HEMA в регионе. Вас ждут семинары от приглашенных экспертов и турнир!
+
+  Номинации:
+  - Длинный меч (классические правила)
+  - Длинный меч (дуэльный кодекс)
+  - Сабля Хаттона
+  - Рапира соло (тяжелая)
+source: hemagon
+source_key: КЦА
+nominations:
+- weapon: longsword
+  notes: Длинный меч. Классика. Отборки
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Классика. Женщины
+- weapon: longsword
+  notes: Длинный меч. Итальянский дуэльный кодекс
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Итальянский дуэльный кодекс. Женщины
+- weapon: saber
+  notes: Сабля Хаттона. Отборки
+- weapon: saber
+  gender: female
+  notes: Сабля Хаттона. Женщины
+- weapon: rapier
+  notes: Рапира Ренессанса, тяжелая
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса, тяжелая. Женщины
+- weapon: longsword
+  notes: Длинный меч. Классика. Advance
+- weapon: longsword
+  notes: Длинный меч. Классика. Basic
+- weapon: saber
+  notes: Сабля Хаттона. Advance
+- weapon: saber
+  notes: Сабля Хаттона. Basic

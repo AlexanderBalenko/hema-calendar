@@ -1,0 +1,49 @@
+title: Astana Open 2026
+starts: 2026-04-18
+ends: 2026-04-19
+city: Астана
+organizer: Golden Falcon Org
+url: https://vk.com/astanaopen
+description: |-
+  Приглашаем атлетов и клубы принять участие в международном HEMA-турнире Astana Open!
+
+  Astana Open - один из крупнейших турниров по историческому фехтованию в Казахстане, который пройдет уже в четвертый раз!
+  В этом году мы ожидаем новых гостей из разных странах, и как обычно — много общения, встреч со старыми знакомыми и захватывающих поединков.
+
+  Когда: 18-19 апреля 2026 г.
+  Где: г.Астана
+
+  Дисциплины:
+  — Длинный меч: классика
+  — Итальянская дуэльная сабля
+  — Фехтшуле
+source: hemagon
+source_key: astana-open-2026
+nominations:
+- weapon: longsword
+  notes: 'Длинный меч: классика. Отборки'
+- weapon: longsword
+  notes: 'Длинный меч: классика. Basic'
+- weapon: longsword
+  gender: male
+  notes: Фехтшуле. Мужчины
+- weapon: longsword
+  notes: 'Длинный меч: классика. Advanced'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: классика. Женщины'
+- weapon: longsword
+  gender: female
+  notes: Фехтшуле. Женщины
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля. Мужчины. Отборки
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля. Мужчины. Basic
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля. Мужчины. Advanced
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля. Женщины

@@ -1,0 +1,73 @@
+title: Сила зверя 2024
+starts: 2024-05-25
+ends: 2024-05-26
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://vk.com/wall-2059182_6049
+description: |-
+  ⚔ Начинающие фехтовальщики и их тренеры!
+  Мы приглашаем вас на турнир “Сила Зверя” 25-26 мая в Челябинске
+
+  Это турнир для новичков, которые занимаются меньше 1 года, где вы получите максимум боевого опыта. Потому что на турнире будут номинации на 4 видах оружия по 8 разным рулсетам. А бои проводятся по швейцарской круговой системе. То есть, все получат одинаковое количество боев, независимо от количества побед.
+
+  Не бойтесь экспериментировать и пробовать все, чему вас научил тренер!
+source: hemagon
+source_key: beastpower2024
+nominations:
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля. Женщины
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: rapier
+  gender: male
+  notes: 'Рапира Ренессанса: тяжелая. Мужчины'
+- weapon: rapier
+  notes: 'Рапира Ренессанса: легкая. Общая'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: классика. Мужчины'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: классика. Женщины'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: итальянский дуэльный кодекс. Мужчины'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: итальянский дуэльный кодекс. Женщины'
+- weapon: longsword
+  gender: male
+  notes: 'Федершверт: фехтшуле. Мужчины'
+- weapon: longsword
+  gender: female
+  notes: 'Федершверт: фехтшуле. Женщины'
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Мужчины
+- weapon: saber
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Спортивная сабля   (9 - 11 лет)
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Итальянская дуэльная сабля (12 - 14 лет)
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Итальянская дуэльная сабля (15 - 17 лет). Мужчины
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Итальянская дуэльная сабля (15 - 17 лет). Женщины

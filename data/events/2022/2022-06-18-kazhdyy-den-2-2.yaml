@@ -1,0 +1,24 @@
+title: Каждый день 2.2
+starts: 2022-06-18
+ends: 2022-06-19
+city: Краснодар
+organizer: Тарас Верпеко
+url: https://hemagon.com/tournament/everyday2-2
+description: |-
+  Это турнир для желающих набить как можно больше фрагов, чтобы зарядить себя перед турниром-флагманом.
+
+  Испытай себя и одержи победу, если сил хватит.
+source: hemagon
+source_key: everyday2-2
+nominations:
+- weapon: longsword
+  notes: Длинный меч (Общая номинация)
+- weapon: longsword
+  team: true
+  notes: Длинный меч (Командная номинация)
+- weapon: saber
+  notes: Военная сабля
+- weapon: rapier
+  notes: Рапира и дага
+- weapon: buckler
+  notes: Меч и баклер

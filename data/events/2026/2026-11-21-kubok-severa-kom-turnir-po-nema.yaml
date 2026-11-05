@@ -1,0 +1,17 @@
+title: Кубок Севера - ком.турнир по НЕМА
+starts: 2026-11-21
+ends: 2026-11-22
+city: Санкт-Петербург
+organizer: CounterTime Ист.фех. HEMA
+source: spreadsheet
+source_key: 2026-11-21:кубок-севера-ком-турнир-по-нема
+nominations:
+- weapon: longsword
+  team: true
+  notes: турнир ком (м + ж)
+- weapon: saber
+  team: true
+  notes: турнир ком (м + ж)
+- weapon: rapier
+  team: true
+  notes: турнир ком (м)

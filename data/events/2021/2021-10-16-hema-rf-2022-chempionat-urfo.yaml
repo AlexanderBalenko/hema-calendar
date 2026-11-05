@@ -1,0 +1,29 @@
+title: 'HEMA RF 2022: Чемпионат УрФО'
+starts: 2021-10-16
+ends: 2021-10-17
+city: Челябинск
+organizer: HEMA RF
+url: https://hemagon.com/tournament/urfo2021
+description: Чемпионат УрФО по фехтованию состоится 16-17 октября 2021 года в Челябинске. В соревнованиях
+  могут участвовать бойцы Уральского региона, чтобы отобраться на главный Чемпионат России - HEMA RF.
+source: hemagon
+source_key: urfo2021
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины

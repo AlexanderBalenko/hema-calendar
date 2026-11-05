@@ -1,0 +1,39 @@
+- code: longsword
+  name: Длинный меч
+  order: 0
+- code: dussack
+  name: Дюссак
+  order: 1
+- code: dagger
+  name: Кинжал
+  order: 2
+- code: spear
+  name: Копьё
+  order: 3
+- code: messer
+  name: Мессер
+  order: 4
+- code: buckler
+  name: Меч и баклер
+  order: 5
+- code: montante
+  name: Монтанте
+  order: 6
+- code: rapier
+  name: Рапира
+  order: 7
+- code: saber
+  name: Сабля
+  order: 8
+- code: sidesword
+  name: Сайдсворд
+  order: 9
+- code: sport-foil
+  name: Спортивная рапира
+  order: 10
+- code: sport-saber
+  name: Спортивная сабля
+  order: 11
+- code: sport-epee
+  name: Спортивная шпага
+  order: 12

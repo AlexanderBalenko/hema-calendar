@@ -1,0 +1,34 @@
+title: Меч России ХЕМА
+starts: 2025-12-20
+ends: 2025-12-21
+city: Москва
+organizer: UHFC - Euro
+url: https://vk.com/mrhema
+description: |-
+  Новый амбициозный проект, объединяющий фехтовальщиков со всех уголков страны.
+
+  Отборочные этапы на севере и юге, на Урале и в Сибири, центральной России и грандиозный праздник фехтования — Турнир Чемпионов в Москве!
+  Лучшие, ловкие, сильные и быстрые смогут дойти до финала. Кто же станет лучшим фехтовальщиком по версии турнира — МЕЧ РОССИИ ХЕМА?
+
+  Турнир пройдет в Москве, 20-21 декабря в спортивном зале по адресу ул. Сущевский вал, 56, Москва.
+source: hemagon
+source_key: mech-rossii-khema
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (Мужчины)
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса (Женщины)
+- weapon: saber
+  gender: male
+  notes: Сабля (Мужчины)
+- weapon: saber
+  gender: female
+  notes: Сабля (Женщины)

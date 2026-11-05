@@ -1,0 +1,18 @@
+title: Fechtterra VI
+starts: 2019-12-07
+ends: 2019-12-08
+city: Санкт-Петербург
+organizer: Организатор Фехтерры
+url: https://hemagon.com/tournament/fechtterra-2019
+description: Гильдия Вольных Фехтовальщиков FreiFechterGilde (FFG) и NF HEMA представляют шестой ежегодный
+  турнир FechTerra Санкт-Петербург - самый престижный турнир по длинному мечу в России.
+source: hemagon
+source_key: fechtterra-2019
+nominations:
+- weapon: longsword
+  notes: Advanced longsword
+- weapon: longsword
+  notes: Basic longsword
+- weapon: longsword
+  gender: female
+  notes: Women longsword

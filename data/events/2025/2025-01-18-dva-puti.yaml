@@ -1,0 +1,15 @@
+title: Два пути
+starts: 2025-01-18
+city: Алматы
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/dva-puti
+description: |-
+  Есть два пути, на одном мечи и баклеры крученые, а на втором рапиры с дагами точеные. Куда сам пойдешь, а куда друга отправишь?
+  Кочующий турнир который планируется проводить каждый год поочередно в Алматы и в Астане.
+source: hemagon
+source_key: dva-puti
+nominations:
+- weapon: rapier
+  notes: Рапира с кинжалом
+- weapon: buckler
+  notes: Меч и баклер

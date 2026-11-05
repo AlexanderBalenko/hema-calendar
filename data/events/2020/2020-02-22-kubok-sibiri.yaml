@@ -1,0 +1,38 @@
+title: Кубок Сибири
+starts: 2020-02-22
+ends: 2020-02-23
+city: Новосибирск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/siberian-cup-2020
+description: Кубок Сибири по дуэльному фехтованию
+source: hemagon
+source_key: siberian-cup-2020
+nominations:
+- weapon: rapier
+  notes: Рапира ренессанса. Advanced
+- weapon: rapier
+  notes: Рапира ренессанса. Basic
+- weapon: rapier
+  gender: female
+  notes: Рапира ренессанса. Женская
+- weapon: saber
+  notes: Военная сабля. Advanced
+- weapon: saber
+  notes: Военная сабля. Basic
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женская
+- weapon: rapier
+  notes: Рапира дага. Advanced
+- weapon: rapier
+  notes: Рапира дага. Basic
+- weapon: rapier
+  gender: female
+  notes: Рапира дага. Женская
+- weapon: longsword
+  notes: Длинный меч. Advanced
+- weapon: longsword
+  notes: Длинный меч. Basic
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женская

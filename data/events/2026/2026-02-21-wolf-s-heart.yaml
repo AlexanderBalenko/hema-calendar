@@ -1,0 +1,32 @@
+title: Wolf's Heart
+starts: 2026-02-21
+ends: 2026-02-22
+city: Тбилиси
+organizer: Mika Kunenok
+url: https://www.facebook.com/groups/wolfshead.hema
+description: |-
+  «WOLF’S HEART» | Tbilisi | 21-22 February 2026 🐺❤️
+
+  St. George HEMA School invites you to the «Wolf’s Heart» tournament! Prepare your longswords and sabers for a battle to determine the strongest in two categories - beginner and intermediate/open.
+
+  You can register for the Beginner group if your HEMA experience is no more than 2 years and you have no medals from major tournaments (with 20+ participants). This is your moment to shine!
+  In the Intermediate/open group, we challenge ourselves in honest combat against the most experienced fighters.
+
+  🤺 Tournament Format: A proven format with group stages followed by a direct elimination bracket. Maximum fights for everyone!
+
+  🏅 The prizes will definitely please you ;)
+
+  Get ready for a battle of hearts and steel! ❤️‍🔥
+source: hemagon
+source_key: wolfs-heart-2026
+nominations:
+- weapon: longsword
+  notes: Longsword Open
+- weapon: longsword
+  beginners: true
+  notes: Longsword Beginner
+- weapon: saber
+  beginners: true
+  notes: Saber Beginner
+- weapon: saber
+  notes: Saber Open

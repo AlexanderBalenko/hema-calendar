@@ -1,0 +1,44 @@
+title: 'Level One: Nordwest'
+starts: 2025-05-02
+ends: 2025-05-04
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://vk.com/level_one_nordwest?trackcode=def5c333aS0R4E1eYa3PYh6crmLpZgloOkWE9CBkWve1eLO8agLCTMxVuHIN1NhqBZOdbOJVO3IKS4bsI3hA96Ry7MgLYA
+description: Гранд-финал серии L1 в Петербурге состоится 2-4 мая 2025!
+source: hemagon
+source_key: level-one-nordwest
+nominations:
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, женщины
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля, мужчины
+- weapon: saber
+  gender: female
+  team: true
+  notes: Дуэльная сабля, команды (жен)
+- weapon: saber
+  gender: male
+  team: true
+  notes: Дуэльная сабля, команды (муж)
+- weapon: longsword
+  gender: male
+  notes: Федершверт, мужчины
+- weapon: longsword
+  gender: female
+  notes: Федершверт, женщины
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Федершверт, команды (муж)
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Федершверт, команды (жен)
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса, женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса, мужчины

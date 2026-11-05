@@ -1,0 +1,34 @@
+title: 'HEMA RF 2022: Кубок Черноморья'
+starts: 2021-09-25
+ends: 2021-09-26
+city: Краснодар
+organizer: HEMA RF
+url: https://hemagon.com/tournament/cupofblacksea2021
+description: |-
+  Море, волны и звон мечей.
+  Мы приглашаем вас на отборочный турнир по историческому европейскому фехтованию в Краснодаре.
+
+  В соревнованиях могут участвовать бойцы Южного региона, чтобы отобраться на главный Чемпионат России - HEMA RF.
+
+  Ждём вас на «Кубке Черноморья».
+source: hemagon
+source_key: cupofblacksea2021
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины

@@ -1,0 +1,585 @@
+- name: Абакан
+  region: Сибирь
+  country: RU
+- name: Алматы
+  region: Зарубежье
+  country: KZ
+- name: Альметьевск
+  region: Поволжье
+  country: RU
+- name: Анадырь
+  region: Дальний Восток
+  country: RU
+- name: Ангарск
+  region: Сибирь
+  country: RU
+- name: Арзамас
+  region: Поволжье
+  country: RU
+- name: Армавир
+  region: Юг европейской части
+  country: RU
+- name: Архангельск
+  region: Север европейской части
+  country: RU
+- name: Асбест
+  region: Урал
+  country: RU
+- name: Астана
+  region: Зарубежье
+  country: KZ
+- name: Астрахань
+  region: Юг европейской части
+  country: RU
+- name: Ачинск
+  region: Сибирь
+  country: RU
+- name: Балаково
+  region: Поволжье
+  country: RU
+- name: Балашиха
+  region: Центр
+  country: RU
+- name: Барнаул
+  region: Сибирь
+  country: RU
+- name: Батайск
+  region: Юг европейской части
+  country: RU
+- name: Белгород
+  region: Центр
+  country: RU
+- name: Бердск
+  region: Сибирь
+  country: RU
+- name: Березники
+  region: Урал
+  country: RU
+- name: Бийск
+  region: Сибирь
+  country: RU
+- name: Биробиджан
+  region: Дальний Восток
+  country: RU
+- name: Благовещенск
+  region: Дальний Восток
+  country: RU
+- name: Братск
+  region: Сибирь
+  country: RU
+- name: Брянск
+  region: Центр
+  country: RU
+- name: Великий Новгород
+  region: Север европейской части
+  country: RU
+- name: Владивосток
+  region: Дальний Восток
+  country: RU
+- name: Владикавказ
+  region: Юг европейской части
+  country: RU
+- name: Владимир
+  region: Центр
+  country: RU
+- name: Волгоград
+  region: Юг европейской части
+  country: RU
+- name: Волгодонск
+  region: Юг европейской части
+  country: RU
+- name: Волжский
+  region: Юг европейской части
+  country: RU
+- name: Вологда
+  region: Север европейской части
+  country: RU
+- name: Воронеж
+  region: Центр
+  country: RU
+- name: Гатчина
+  region: Север европейской части
+  country: RU
+- name: Геническ
+  region: Юг европейской части
+  country: RU
+- name: Горловка
+  region: Юг европейской части
+  country: RU
+- name: Горно-Алтайск
+  region: Сибирь
+  country: RU
+- name: Грозный
+  region: Юг европейской части
+  country: RU
+- name: Дербент
+  region: Юг европейской части
+  country: RU
+- name: Дзержинск
+  region: Поволжье
+  country: RU
+- name: Димитровград
+  region: Поволжье
+  country: RU
+- name: Долгопрудный
+  region: Центр
+  country: RU
+- name: Домодедово
+  region: Центр
+  country: RU
+- name: Донецк
+  region: Юг европейской части
+  country: RU
+- name: Евпатория
+  region: Юг европейской части
+  country: RU
+- name: Екатеринбург
+  region: Урал
+  country: RU
+- name: Елец
+  region: Центр
+  country: RU
+- name: Ессентуки
+  region: Юг европейской части
+  country: RU
+- name: Жуковский
+  region: Центр
+  country: RU
+- name: Златоуст
+  region: Урал
+  country: RU
+- name: Иваново
+  region: Центр
+  country: RU
+- name: Ижевск
+  region: Поволжье
+  country: RU
+- name: Иркутск
+  region: Сибирь
+  country: RU
+- name: Йошкар-Ола
+  region: Поволжье
+  country: RU
+- name: Казань
+  region: Поволжье
+  country: RU
+- name: Калининград
+  region: Север европейской части
+  country: RU
+- name: Калуга
+  region: Центр
+  country: RU
+- name: Каменск-Уральский
+  region: Урал
+  country: RU
+- name: Камышин
+  region: Юг европейской части
+  country: RU
+- name: Камышлов
+  region: Урал
+  country: RU
+- name: Каспийск
+  region: Юг европейской части
+  country: RU
+- name: Кемерово
+  region: Сибирь
+  country: RU
+- name: Керчь
+  region: Юг европейской части
+  country: RU
+- name: Киров
+  region: Поволжье
+  country: RU
+- name: Кисловодск
+  region: Юг европейской части
+  country: RU
+- name: Ковров
+  region: Центр
+  country: RU
+- name: Коломна
+  region: Центр
+  country: RU
+- name: Комсомольск-на-Амуре
+  region: Дальний Восток
+  country: RU
+- name: Копейск
+  region: Урал
+  country: RU
+- name: Королёв
+  region: Центр
+  country: RU
+- name: Кострома
+  region: Центр
+  country: RU
+- name: Красногорск
+  region: Центр
+  country: RU
+- name: Краснодар
+  region: Юг европейской части
+  country: RU
+- name: Краснотурьинск
+  region: Урал
+  country: RU
+- name: Красноярск
+  region: Сибирь
+  country: RU
+- name: Курган
+  region: Урал
+  country: RU
+- name: Курск
+  region: Центр
+  country: RU
+- name: Кызыл
+  region: Сибирь
+  country: RU
+- name: Липецк
+  region: Центр
+  country: RU
+- name: Луганск
+  region: Юг европейской части
+  country: RU
+- name: Люберцы
+  region: Центр
+  country: RU
+- name: Магадан
+  region: Дальний Восток
+  country: RU
+- name: Магас
+  region: Юг европейской части
+  country: RU
+- name: Магнитогорск
+  region: Урал
+  country: RU
+- name: Майкоп
+  region: Юг европейской части
+  country: RU
+- name: Макеевка
+  region: Юг европейской части
+  country: RU
+- name: Мариуполь
+  region: Юг европейской части
+  country: RU
+- name: Махачкала
+  region: Юг европейской части
+  country: RU
+- name: Мелитополь
+  region: Юг европейской части
+  country: RU
+- name: Миасс
+  region: Урал
+  country: RU
+- name: Москва
+  region: Центр
+  country: RU
+- name: Мурманск
+  region: Север европейской части
+  country: RU
+- name: Муром
+  region: Центр
+  country: RU
+- name: Мытищи
+  region: Центр
+  country: RU
+- name: Набережные Челны
+  region: Поволжье
+  country: RU
+- name: Назрань
+  region: Юг европейской части
+  country: RU
+- name: Нальчик
+  region: Юг европейской части
+  country: RU
+- name: Нарьян-Мар
+  region: Север европейской части
+  country: RU
+- name: Находка
+  region: Дальний Восток
+  country: RU
+- name: Невинномысск
+  region: Юг европейской части
+  country: RU
+- name: Нефтекамск
+  region: Центр
+  country: RU
+- name: Нефтеюганск
+  region: Урал
+  country: RU
+- name: Нижневартовск
+  region: Урал
+  country: RU
+- name: Нижнекамск
+  region: Поволжье
+  country: RU
+- name: Нижний Новгород
+  region: Поволжье
+  country: RU
+- name: Нижний Тагил
+  region: Урал
+  country: RU
+- name: Новокузнецк
+  region: Сибирь
+  country: RU
+- name: Новокуйбышевск
+  region: Поволжье
+  country: RU
+- name: Новомосковск
+  region: Центр
+  country: RU
+- name: Новороссийск
+  region: Юг европейской части
+  country: RU
+- name: Новосибирск
+  region: Сибирь
+  country: RU
+- name: Новочебоксарск
+  region: Поволжье
+  country: RU
+- name: Новочеркасск
+  region: Юг европейской части
+  country: RU
+- name: Новый Уренгой
+  region: Урал
+  country: RU
+- name: Ногинск
+  region: Центр
+  country: RU
+- name: Норильск
+  region: Сибирь
+  country: RU
+- name: Ноябрьск
+  region: Урал
+  country: RU
+- name: Обнинск
+  region: Центр
+  country: RU
+- name: Одинцово
+  region: Центр
+  country: RU
+- name: Октябрьский
+  region: Центр
+  country: RU
+- name: Омск
+  region: Сибирь
+  country: RU
+- name: Оренбург
+  region: Урал
+  country: RU
+- name: Орехово-Зуево
+  region: Центр
+  country: RU
+- name: Орск
+  region: Урал
+  country: RU
+- name: Орёл
+  region: Центр
+  country: RU
+- name: Пенза
+  region: Поволжье
+  country: RU
+- name: Первоуральск
+  region: Урал
+  country: RU
+- name: Пермь
+  region: Урал
+  country: RU
+- name: Петрозаводск
+  region: Север европейской части
+  country: RU
+- name: Петропавловск-Камчатский
+  region: Дальний Восток
+  country: RU
+- name: Подольск
+  region: Центр
+  country: RU
+- name: Прокопьевск
+  region: Сибирь
+  country: RU
+- name: Псков
+  region: Север европейской части
+  country: RU
+- name: Пушкино
+  region: Центр
+  country: RU
+- name: Пятигорск
+  region: Юг европейской части
+  country: RU
+- name: Раменское
+  region: Центр
+  country: RU
+- name: Реутов
+  region: Центр
+  country: RU
+- name: Ростов-на-Дону
+  region: Юг европейской части
+  country: RU
+- name: Рубцовск
+  region: Сибирь
+  country: RU
+- name: Рыбинск
+  region: Центр
+  country: RU
+- name: Рязань
+  region: Центр
+  country: RU
+- name: Салават
+  region: Центр
+  country: RU
+- name: Салехард
+  region: Урал
+  country: RU
+- name: Самара
+  region: Поволжье
+  country: RU
+- name: Санкт-Петербург
+  region: Север европейской части
+  country: RU
+- name: Саранск
+  region: Поволжье
+  country: RU
+- name: Саратов
+  region: Поволжье
+  country: RU
+- name: Севастополь
+  region: Юг европейской части
+  country: RU
+- name: Северодвинск
+  region: Север европейской части
+  country: RU
+- name: Северск
+  region: Сибирь
+  country: RU
+- name: Сергиев Посад
+  region: Центр
+  country: RU
+- name: Серпухов
+  region: Центр
+  country: RU
+- name: Симферополь
+  region: Юг европейской части
+  country: RU
+- name: Смоленск
+  region: Центр
+  country: RU
+- name: Сосновоборск
+  region: Сибирь
+  country: RU
+- name: Сочи
+  region: Юг европейской части
+  country: RU
+- name: Ставрополь
+  region: Юг европейской части
+  country: RU
+- name: Старый Оскол
+  region: Центр
+  country: RU
+- name: Стерлитамак
+  region: Центр
+  country: RU
+- name: Сургут
+  region: Урал
+  country: RU
+- name: Сызрань
+  region: Поволжье
+  country: RU
+- name: Сыктывкар
+  region: Север европейской части
+  country: RU
+- name: Таганрог
+  region: Юг европейской части
+  country: RU
+- name: Тамбов
+  region: Центр
+  country: RU
+- name: Тбилиси
+  region: Зарубежье
+  country: GE
+- name: Тверь
+  region: Центр
+  country: RU
+- name: Тобольск
+  region: Урал
+  country: RU
+- name: Тольятти
+  region: Поволжье
+  country: RU
+- name: Томск
+  region: Сибирь
+  country: RU
+- name: Тула
+  region: Центр
+  country: RU
+- name: Тюмень
+  region: Урал
+  country: RU
+- name: Улан-Удэ
+  region: Дальний Восток
+  country: RU
+- name: Ульяновск
+  region: Поволжье
+  country: RU
+- name: Урус-Мартан
+  region: Юг европейской части
+  country: RU
+- name: Уссурийск
+  region: Дальний Восток
+  country: RU
+- name: Уфа
+  region: Центр
+  country: RU
+- name: Хабаровск
+  region: Дальний Восток
+  country: RU
+- name: Ханты-Мансийск
+  region: Урал
+  country: RU
+- name: Хасавюрт
+  region: Юг европейской части
+  country: RU
+- name: Химки
+  region: Центр
+  country: RU
+- name: Чебаркуль
+  region: Урал
+  country: RU
+- name: Чебоксары
+  region: Поволжье
+  country: RU
+- name: Челябинск
+  region: Урал
+  country: RU
+- name: Череповец
+  region: Север европейской части
+  country: RU
+- name: Черкесск
+  region: Юг европейской части
+  country: RU
+- name: Чита
+  region: Дальний Восток
+  country: RU
+- name: Шали
+  region: Юг европейской части
+  country: RU
+- name: Шахты
+  region: Юг европейской части
+  country: RU
+- name: Щёлково
+  region: Центр
+  country: RU
+- name: Электросталь
+  region: Центр
+  country: RU
+- name: Элиста
+  region: Юг европейской части
+  country: RU
+- name: Энгельс
+  region: Поволжье
+  country: RU
+- name: Южно-Сахалинск
+  region: Дальний Восток
+  country: RU
+- name: Якутск
+  region: Дальний Восток
+  country: RU
+- name: Ярославль
+  region: Центр
+  country: RU

@@ -1,0 +1,23 @@
+title: Jung Ritter 2024
+starts: 2024-04-28
+ends: 2024-04-29
+city: Краснодар
+organizer: Тарас Верпеко
+url: https://vk.com/jungritter
+description: Турнир для начинающий фехтовальщиков Jung Ritter 2024
+source: hemagon
+source_key: jungritter24
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Мужская)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женская)
+- weapon: saber
+  gender: male
+  notes: Военная сабля (Мужская)
+- weapon: rapier
+  notes: Рапира Ренессанса. Соло
+- weapon: dussack
+  notes: Дюссак

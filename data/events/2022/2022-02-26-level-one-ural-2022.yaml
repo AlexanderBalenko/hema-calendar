@@ -1,0 +1,46 @@
+title: 'Level One: Ural 2022'
+starts: 2022-02-26
+ends: 2022-02-27
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/level-one-ural-2022
+description: Приглашаем к участию фехтовальщиков, чей стаж выступлений на соревнованиях по НЕМА и дуэльному
+  фехтованию не превышает 2х лет.
+source: hemagon
+source_key: level-one-ural-2022
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Longsword: Men'
+- weapon: longsword
+  gender: female
+  notes: 'Longsword: Women'
+- weapon: rapier
+  gender: male
+  notes: 'Rapier: Men'
+- weapon: rapier
+  gender: female
+  notes: 'Rapier: Women'
+- weapon: saber
+  gender: male
+  notes: 'Saber: Men'
+- weapon: saber
+  gender: female
+  notes: 'Saber: Women'
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: 'Saber: HEMAkids (12-14)'
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: 'Saber: HEMAkids (15-17 Men)'
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: 'Saber: HEMAkids (15-17 Women)'

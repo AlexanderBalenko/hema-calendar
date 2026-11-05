@@ -1,0 +1,59 @@
+title: Кубок Ярославля по HEMA 2022
+starts: 2022-10-29
+ends: 2022-10-30
+city: Ярославль
+organizer: Иван Кашицын
+url: https://hemagon.com/tournament/yaroslavl-hema-cup-2022
+description: Юбилейный десятый Кубок Ярославля по HEMA
+source: hemagon
+source_key: yaroslavl-hema-cup-2022
+nominations:
+- weapon: saber
+  gender: male
+  notes: 'День 1. Военная сабля Basic мужчины: личное первенство'
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: 'День 1. Военная сабля Women начинающие: личное первенство'
+- weapon: saber
+  gender: male
+  team: true
+  notes: 'День 1. Военная сабля Basic мужчины: командное первенство'
+- weapon: saber
+  gender: female
+  team: true
+  beginners: true
+  notes: 'День 1. Военная сабля Women начинающие: командное первенство'
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: 'День 2. HEMA Kids. 12-14. Сабля: личное первенство'
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  team: true
+  beginners: true
+  notes: 'День 2. HEMA Kids. 12-14. Сабля: командное первенство'
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: 'День 2. HEMA Kids. 15-17. Сабля. Юноши: личное первенство'
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: 'День 2. HEMA Kids. 15-17. Сабля. Девушки: личное первенство'
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  team: true
+  beginners: true
+  notes: 'День 2. HEMA Kids. 15-17. Сабля. Общая: командное первенство'
+- weapon: rapier
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: 'День 2. HEMA Kids. 9-11. Шпага: личное первенство'

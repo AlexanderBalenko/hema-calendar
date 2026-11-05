@@ -1,0 +1,32 @@
+title: 'Level One: Nordwest 2026'
+starts: 2026-05-09
+ends: 2026-05-10
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://vk.com/level_one_nordwest
+description: |-
+  Гранд-финал межрегиональной серии Level One
+
+  Добро пожаловать на финальный турнир сезона для самых настойчивых. Nordwest — это место встречи начинающих фехтовальщиков, которые не боятся вызовов; выпускной экзамен, за которым только хардкор.
+  Приезжай проверить себя, подвести итоги сезона и завоевать медаль, которая будет напоминать о твоём спортивном становлении в НЕМА.
+source: hemagon
+source_key: level-one-nordwest-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Федершверт, мужчины (с 18 лет)
+- weapon: longsword
+  gender: female
+  notes: Федершверт, женщины (с 14 лет)
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса, мужчины (с 15 лет)
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса, женщины (с 14 лет)
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля, мужчины (с 15 лет)
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, женщины (c 14 лет)

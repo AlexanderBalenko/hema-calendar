@@ -1,0 +1,24 @@
+title: 'ISO 2025: Company Challenge'
+starts: 2025-05-10
+city: Иваново
+organizer: Иван Кашицын
+url: https://vk.com/ivanovo_saber_open
+description: |-
+  Ivanovo – Alma mater клуба "Белый Отряд" и место, где вас всегда ждут гостеприимство, фехтование и улыбка товарища! 🤝
+
+  - 10 мая 2025.
+  - командная номинация
+  - адаптированные правила фехтования саблей по А. Хаттону
+
+  Все подробности турнира можно узнать в группе в контакте
+
+  До скорой встречи на турнире!
+source: hemagon
+source_key: iso-25
+nominations:
+- weapon: saber
+  team: true
+  notes: Saber Teams (M)
+- weapon: saber
+  team: true
+  notes: Saber Teams (W)

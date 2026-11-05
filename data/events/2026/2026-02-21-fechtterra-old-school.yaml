@@ -1,0 +1,41 @@
+title: FechtTerra Old School
+starts: 2026-02-21
+ends: 2026-02-22
+city: Санкт-Петербург
+organizer: Организатор Фехтерры
+url: https://vk.com/fechtterra_oldschool
+description: |-
+  Дата: 21-22 февраля 2026г.
+  Место: зал Гильдии по адресу: СПб, наб. Обводного канала 136 к.1Б
+
+  Вас ожидают:
+
+  - два дня турнира!
+  - номинации «длинный меч & рондель» и «меч & баклер».
+  - две новые номинации «мессер» и «рубка длинным мечом»!
+  - олдскульный скандинавский рулсет 2015-20гг с приоритетом старшей зоны(когда попадания считаются сообразно зоне вне зависимости от темпа). Классическая система с остановкой бойцов после попадания и афтерблоу.
+
+  Вся информация в группе ВК: https://vk.com/fechtterra_oldschool
+source: hemagon
+source_key: fechtterra-old-school2026
+nominations:
+- weapon: longsword
+  notes: Cutting
+- weapon: longsword
+  gender: male
+  notes: Longsword & Rondel (Men)
+- weapon: longsword
+  gender: female
+  notes: Longsword & Rondel (Women)
+- weapon: messer
+  gender: male
+  notes: Messer (Men)
+- weapon: messer
+  gender: female
+  notes: Messer (Women)
+- weapon: buckler
+  gender: male
+  notes: Sword & Buckler (Men)
+- weapon: buckler
+  gender: female
+  notes: Sword & Buckler (Women)

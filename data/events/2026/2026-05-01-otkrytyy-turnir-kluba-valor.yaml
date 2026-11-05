@@ -1,0 +1,24 @@
+title: Открытый турнир клуба "Valor"
+starts: 2026-05-01
+city: Тюмень
+organizer: UHFC - Ural
+url: https://docs.google.com/forms/d/e/1FAIpQLSchWHORtNkZHipGZ9qFvtT8etZ1t29n8bEW83g6i6K4TbujsA/viewform
+description: |-
+  Ждем вас в стенах школы фехтования VALOR!
+
+  Турнир планируется в следующих номинациях:
+  - Длинный меч;
+  - Дуэльная сабля;
+  - Рапира ренессанса;
+
+  Турнир состоится 1 мая в г. Тюмени по адресу ул. Земляной вал, 10 (2 этаж, вход с внутреннего двора здания).
+source: hemagon
+source_key: otkrytiyturnirklubavalor
+nominations:
+- weapon: longsword
+  beginners: true
+  notes: Длинный меч
+- weapon: rapier
+  notes: Рапира ренессанса
+- weapon: saber
+  notes: Дуэльная сабля

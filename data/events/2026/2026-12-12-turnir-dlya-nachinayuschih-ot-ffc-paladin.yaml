@@ -1,0 +1,17 @@
+title: Турнир для начинающих от ФФЦ "Паладин"
+starts: 2026-12-12
+city: Москва
+place: Paladin, Международная улица,15. М. "Римская/Площадь Ильича"
+organizer: FFC Paladin
+url: https://vk.com/fencing_tournament
+source: spreadsheet
+source_key: 2026-12-12:турнир-для-начинающих-от-ффц-паладин
+nominations:
+- weapon: saber
+  gender: female
+  notes: '- военная сабля М, Ж'
+- weapon: longsword
+  gender: female
+  notes: '- длинный меч М, Ж'
+- weapon: rapier
+  notes: '- рапира с выбором (дага, соло) общая'

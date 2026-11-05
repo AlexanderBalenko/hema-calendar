@@ -1,0 +1,41 @@
+title: Ivanovo Saber Open
+starts: 2023-05-13
+ends: 2023-05-14
+city: Иваново
+organizer: Иван Кашицын
+url: https://hemagon.com/tournament/ISO2023
+description: |-
+  Ivanovo – Alma mater клуба "Белый Отряд" и место, где вас всегда ждут гостеприимство, фехтование и улыбка товарища! 🤝
+  ISO – турнир, который мы с удовольствием анонсируем для вас в третий раз, а также знак качества, которое мы стараемся сохранять и преумножать ежегодно! 💪
+
+  - 13-14 мая 2023 года
+  - лиги Basic, Advanced, Women, HEMAKids Cadet
+  - адаптированные правила фехтования саблей по А. Хаттону
+
+  Hittind at your adversary when he is attacking you is almost as bad as cutting your own throat.
+  Дж. М. Уэйт.
+
+  Все подробности турнира можно узнать в группе в контакте: https://vk.com/ivanovo_saber_open
+
+  До скорой встречи на турнире!
+source: hemagon
+source_key: ISO2023
+nominations:
+- weapon: saber
+  notes: Сабля Advanced
+- weapon: saber
+  notes: Сабля Basic
+- weapon: saber
+  gender: female
+  notes: Сабля Women
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля Юноши 15-17 лет
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля Девушки 15-17 лет

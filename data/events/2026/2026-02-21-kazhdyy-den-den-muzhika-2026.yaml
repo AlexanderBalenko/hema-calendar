@@ -1,0 +1,39 @@
+title: 'Каждый день: День мужика 2026'
+starts: 2026-02-21
+ends: 2026-02-22
+city: Краснодар
+organizer: Тарас Верпеко
+url: https://vk.com/everydaykrd2
+source: hemagon
+source_key: kazhdiy-den-den-muzhika-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Мужчины)
+- weapon: saber
+  beginners: true
+  notes: 'HEMAkids: Сабля (до 12 лет)'
+- weapon: longsword
+  team: true
+  notes: Длинный меч (Командные двойки)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женщины)
+- weapon: rapier
+  notes: Рапира и дага (Общая)
+- weapon: saber
+  notes: Сабля по Хаттону (Общая)
+- weapon: saber
+  min_age: 12
+  beginners: true
+  notes: 'HEMAkids: Сабля (12+ лет)'
+- weapon: spear
+  notes: Штыковой бой
+- weapon: buckler
+  notes: Меч и баклер (Общая)
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага (Женская)
+- weapon: saber
+  gender: female
+  notes: Сабля по Хаттону (Женская)

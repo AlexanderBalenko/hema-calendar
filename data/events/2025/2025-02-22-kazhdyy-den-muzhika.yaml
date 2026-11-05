@@ -1,0 +1,36 @@
+title: Каждый день Мужика
+starts: 2025-02-22
+ends: 2025-02-23
+city: Краснодар
+organizer: Тарас Верпеко
+url: https://vk.com/everydaykrd2
+description: |-
+  Суббота - 22 февраля. Начало 10:00
+  - Длинный меч: Общий - по правилам "Fechtterra: Longsword 2024"
+  - Длинный меч: Женский - по правилам "Fechtterra: Longsword 2024"
+  - Рапира и дага
+  - Копьё - по правилам "стандарт 2-1"
+
+  Воскресенье - 23 февраля. Начало 10:00
+  - Длинный меч: команды 2х2 (или 3х3)
+  - Военная сабля
+  - Меч и баклер
+source: hemagon
+source_key: kazhdiy-den-muzhika
+nominations:
+- weapon: longsword
+  notes: 'Длинный меч: Общая'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: Женщины'
+- weapon: longsword
+  team: true
+  notes: 'Длинный меч: Команды'
+- weapon: rapier
+  notes: Рапира и дага
+- weapon: buckler
+  notes: Меч и баклер
+- weapon: saber
+  notes: Военная сабля
+- weapon: spear
+  notes: Копьё

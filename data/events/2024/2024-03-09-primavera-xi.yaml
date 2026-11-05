@@ -1,0 +1,40 @@
+title: Primavera XI
+starts: 2024-03-09
+ends: 2024-03-10
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://hemagon.com/tournament/primaveraXI
+description: |-
+  Воительницы, приглашаем вас принять участие в крупнейшем в России женском турнире Primavera.
+
+  ⚔🌹9 и 10 марта 2024 в Санкт-Петербурге состоится Primavera XI.
+
+  Сражения предстоят в пяти состязаниях:
+
+  🗡 Дуэльная сабля
+  🗡 Дуэльная сабля, команды
+  🗡 Длинный меч
+  🗡 Рапира Ренессанса
+  🗡 Меч и баклер
+
+  🌙 пишите свои отчёты с тэгом #primavera_tournament⚡
+
+  🌹Fight like a girl ⚔
+source: hemagon
+source_key: primaveraXI
+nominations:
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля
+- weapon: longsword
+  gender: female
+  notes: Длинный меч
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса
+- weapon: saber
+  team: true
+  notes: Дуэльная сабля, команды
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер

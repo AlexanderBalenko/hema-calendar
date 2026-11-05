@@ -1,0 +1,13 @@
+title: Блинный меч
+starts: 2027-03-13
+ends: 2027-03-14
+city: Вологда
+organizer: ГФ Ravenblade + ОМ Аскалон
+source: spreadsheet
+source_key: 2027-03-13:блинный-меч
+nominations:
+- weapon: longsword
+  beginners: true
+  notes: турнир л+нов
+- weapon: buckler
+  notes: турнир л

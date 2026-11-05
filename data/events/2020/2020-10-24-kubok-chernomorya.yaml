@@ -1,0 +1,39 @@
+title: Кубок Черноморья
+starts: 2020-10-24
+ends: 2020-10-25
+city: Сочи
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/cupofblacksea
+description: |-
+  Море, волны и звон мечей.
+  Мы приглашаем вас на турнир по историческому европейскому фехтованию в Сочи.
+  Вас ждёт по-настоящему много поединков: три вида оружия, бои в группах с каждым противником.
+
+  Организаторы турнира – спортивный клуб «Золотой Сокол».
+  У нас огромный опыт за плечами: ежегодные региональные и окружные турниры, три успешно проведённых Чемпионата России по историческому фехтованию «Мастер Клинка», сильные судейские бригады.
+
+  Регистрируйтесь по ссылке: https://vk.cc/ayUWJ2
+source: hemagon
+source_key: cupofblacksea
+nominations:
+- weapon: longsword
+  notes: Длинный меч. Advanced
+- weapon: longsword
+  notes: Длинный меч. Basic
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Woman
+- weapon: rapier
+  notes: Рапира и дага. Advanced
+- weapon: rapier
+  notes: Рапира и дага. Basic
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага. Woman
+- weapon: saber
+  notes: Военная сабля. Advanced
+- weapon: saber
+  notes: Военная сабля. Basic
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Woman

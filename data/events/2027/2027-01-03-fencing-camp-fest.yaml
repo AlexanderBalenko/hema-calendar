@@ -1,0 +1,16 @@
+title: Fencing Camp & Fest
+starts: 2027-01-03
+ends: 2027-01-07
+city: Новосибирск
+organizer: Фехт. Новосибирск HEMA | Золотой Сокол
+source: spreadsheet
+source_key: 2027-01-03:fencing-camp-fest
+nominations:
+- weapon: longsword
+  notes: фест +
+- weapon: saber
+  notes: фест +
+- weapon: rapier
+  notes: фест ренессанса
+- weapon: buckler
+  notes: фест +

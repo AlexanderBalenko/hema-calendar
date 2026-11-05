@@ -1,0 +1,77 @@
+title: Сила Зверя
+starts: 2023-05-27
+ends: 2023-05-28
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/powerofbeats
+description: |-
+  Что произойдет, если выпустить на волю своего внутреннего Зверя?
+
+  Почувствуйте в себе скорость королевского гепарда, мощь капского льва и изворотливость королевской гадюки. Присоединяйтесь к турниру для начинающих "Сила Зверя"!
+
+  Мы предлагаем вам направить всю свою энергию в сражение, использовать хищные инстинкты и биться до последнего.
+  Но помните, победителем выйдет тот, кто научится управлять своими порывами и взрастит самого опасного хищника - человека.
+source: hemagon
+source_key: powerofbeats
+nominations:
+- weapon: rapier
+  min_age: 6
+  max_age: 8
+  beginners: true
+  notes: Шпага 6-8 лет
+- weapon: rapier
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Шпага 9-11 лет
+- weapon: saber
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Сабля 9-11 лет
+- weapon: rapier
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Рапира 12-14 лет
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Сабля 12-14
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Военная сабля. Юноши 15-17 лет
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Военная сабля. Девушки 15-17 лет
+- weapon: rapier
+  gender: female
+  min_age: 15
+  notes: Рапира Ренессанса. Женщины 15+
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса. Мужчины
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Мужчины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины

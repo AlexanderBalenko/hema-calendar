@@ -1,0 +1,18 @@
+title: 'Каждый день: Новый год'
+starts: 2027-01-04
+ends: 2027-01-07
+city: Краснодар
+organizer: ЦИФ Гладиатория
+source: spreadsheet
+source_key: 2027-01-04:каждый-день-новый-год
+nominations:
+- weapon: longsword
+  team: true
+  notes: турнир л + ком
+- weapon: saber
+  team: true
+  notes: турнир л + ком
+- weapon: rapier
+  notes: турнир и дага (л)
+- weapon: rapier
+  notes: турнир соло (л)

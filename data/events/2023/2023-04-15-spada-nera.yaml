@@ -1,0 +1,32 @@
+title: Spada Nera
+starts: 2023-04-15
+city: Москва
+organizer: Татьяна Петрина
+url: https://hemagon.com/tournament/spadanera
+description: |-
+  "На узких улочках и просторных площадях, в тавернах и кабаках, длинными дорогами и именитыми домами спутниками моими были только честь да клинок".
+
+
+  Дуэли? Много ли мы знаем о них? Защита чести, мнения, прав, жизни?
+  Турнирный поединок тоже своего рода дуэль. Не столько с противником, сколько со своими мыслями и дерзновениями.
+
+
+  Готовы ли Вы бросить вызов?
+
+  Клуб "Black Lion" приглашает всех желающих принять участие в турнире "Spada Nera", который состоится 15 апреля 2023 года в городе Москва.
+  Номинации турнира : «Рапира и дага». https://vk.com/rapier_tournament
+source: hemagon
+source_key: spadanera
+nominations:
+- weapon: rapier
+  gender: male
+  notes: Men Basic
+- weapon: rapier
+  gender: male
+  notes: Men Advance
+- weapon: rapier
+  gender: female
+  notes: Women Basic
+- weapon: rapier
+  gender: female
+  notes: Women Advance

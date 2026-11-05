@@ -1,0 +1,46 @@
+title: Кубок "Золотого Сокола" 2024
+starts: 2024-03-30
+ends: 2024-03-31
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://vk.com/goldenfalconcup
+description: |-
+  Турнир для мечников всех категорий и направлений. Попробуйте себя в борьбе за Кубок "Золотого Сокола"!
+
+  Номинации:
+  - Федершверт: фехтшуле. Мужчины
+  - Федершверт: фехтшуле. Женщины
+  - Длинный меч: кодекс Валлерштайна. Мужчины.
+  - Длинный меч: кодекс Валлерштайна. Женщины
+  - Длинный меч: итальянский дуэльный кодекс. Мужчины
+  - Длинный меч: итальянский дуэльный кодекс. Женщины
+source: hemagon
+source_key: kzs2024
+nominations:
+- weapon: longsword
+  notes: 'Федершверт: фехтшуле. Отборочный'
+- weapon: longsword
+  notes: 'Федершверт: фехтшуле. Basic'
+- weapon: longsword
+  notes: 'Федершверт: фехтшуле. Advanced'
+- weapon: longsword
+  gender: female
+  notes: 'Федершверт: фехтшуле. Женщины'
+- weapon: longsword
+  notes: 'Длинный меч: кодекс Валлерштайна. Отборочный'
+- weapon: longsword
+  notes: 'Длинный меч: кодекс Валлерштайна. Basic'
+- weapon: longsword
+  notes: 'Длинный меч: кодекс Валлерштайна. Advanced'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: кодекс Валлерштайна. Женщины'
+- weapon: longsword
+  notes: 'Длинный меч: итальянский дуэльный кодекс. Отборочный'
+- weapon: longsword
+  notes: 'Длинный меч: итальянский дуэльный кодекс. Basic'
+- weapon: longsword
+  notes: 'Длинный меч: итальянский дуэльный кодекс. Advanced'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: итальянский дуэльный кодекс. Женщины'

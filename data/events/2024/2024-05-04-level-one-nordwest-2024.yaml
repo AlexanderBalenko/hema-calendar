@@ -1,0 +1,54 @@
+title: 'Level One: Nordwest 2024'
+starts: 2024-05-04
+ends: 2024-05-05
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://vk.com/level_one_nordwest
+description: |-
+  Турнир, который помог многим бойцам сделать первые шаги на пути к мечте. Турнир, накал страстей на котором давал фору многим "взрослым" мероприятиям. Турнир, который может изменить твою жизнь...
+
+  📅Ждём тебя 04 и 05 мая 2024 г в Петербурге на турнире Level One: Nordwest 2024.
+
+  Номинации:
+  ▪Длинный меч (команды)
+  ▪Длинный меч
+  ▪Дуэльная сабля
+  ▪Дуэльная сабля (кадеты 14-17 лет)
+  ▪Рапира Ренессанса
+
+  Место проведения:
+  📍СПб, Большая Пушкарская, д.10Е, зал CounterTime
+source: hemagon
+source_key: LevelOneNordwest2024
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, женщины
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч (команды), мужчины
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч (команды), женщины
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля, мужчины
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, женщины
+- weapon: saber
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Дуэльная сабля, кадеты 14-17
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса, мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса, женщины

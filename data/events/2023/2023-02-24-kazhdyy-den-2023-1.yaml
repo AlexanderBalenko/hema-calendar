@@ -1,0 +1,36 @@
+title: 'Каждый день 2023 #1'
+starts: 2023-02-24
+ends: 2023-02-25
+city: Краснодар
+organizer: Тарас Верпеко
+url: https://hemagon.com/tournament/everyday23-1
+description: |-
+  Это турнир для желающих набить как можно больше фрагов, чтобы зарядить себя перед турниром-флагманом.
+
+  Испытай себя и одержи победу, если сил хватит.
+source: hemagon
+source_key: everyday23-1
+nominations:
+- weapon: longsword
+  notes: Длинный меч (Общий)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женский)
+- weapon: longsword
+  team: true
+  notes: Длинный меч (Командный)
+- weapon: saber
+  notes: Военная сабля (Общая)
+- weapon: rapier
+  notes: Рапира (Соло; Общая)
+- weapon: buckler
+  notes: Меч и баклер (Общий)
+- weapon: spear
+  notes: Копьё (Общее)
+- text: Katana
+  min_age: 16
+  notes: Спортивная шпага 16+ (Регистрация)
+- text: Katana
+  min_age: 10
+  max_age: 15
+  notes: Спортивная шпага 10-15 лет (Регистрация)

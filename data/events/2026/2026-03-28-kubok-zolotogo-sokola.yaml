@@ -1,0 +1,48 @@
+title: Кубок Золотого сокола
+starts: 2026-03-28
+ends: 2026-03-29
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/kubok-zolotogo-sokola
+description: |-
+  Турнир по историческому фехтованию (HEMA) «Кубок Золотого Сокола»
+  проводится с целью популяризации и развития движения HEMA в России.
+  Основными задачами проведения турнира являются:
+  - популяризация и развитие HEMA-движения в России;
+  - эксперимент с новыми видами номинаций в НЕМА;
+  - выявление сильнейших HEMA-фехтовальщиков из числа участников;
+  - развитие судейской системы и получение опыта новыми судьями;
+  - пропаганда здорового образа жизни и спорта.
+source: hemagon
+source_key: kubok-zolotogo-sokola
+nominations:
+- weapon: longsword
+  gender: female
+  notes: 'Федершверт: фехтшуле (женщины)'
+- weapon: longsword
+  gender: male
+  notes: 'Федершверт: фехтшуле (мужчины)'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: кодекс Валлерштайна (мужчины)'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: кодекс Валлерштайна (женщины)'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: итальянский дуэльный кодекс (женщины)'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: итальянский дуэльный кодекс (мужчины)'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: кодекс Валлерштайна A (мужчины)'
+- weapon: longsword
+  gender: male
+  notes: 'Федершверт: фехтшуле A (мужчины)'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: кодекс Валлерштайна B (мужчины)'
+- weapon: longsword
+  gender: male
+  notes: 'Федершверт: фехтшуле B (мужчины)'

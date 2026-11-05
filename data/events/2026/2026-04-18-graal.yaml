@@ -1,0 +1,51 @@
+title: Грааль
+starts: 2026-04-18
+ends: 2026-04-19
+city: Нижний Новгород
+organizer: Андрей Люлин
+url: https://hemagon.com/tournament/greal
+description: |-
+  В сердце земли Нижегородской пробуждается дух древних ристалищ. Созываем мы великих воинов не для усобицы, но для высшей проверки духа и клинка.
+
+  Отозовитесь, ищущие не просто победы, но бессмертной славы в саге о поединке!
+
+  Вас ждут:
+  -Меч, Сабля, Рапира
+  -Семинары за день до события
+  -Два дня турнира
+  -Суровый и справедливый рулсет
+  -Все прелести открытого турнира
+
+  Вся информация в группе:
+  https://vk.ru/grailhema
+
+  Наша встреча еще состоится, воин.
+source: hemagon
+source_key: greal
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Доблестные Мужи)
+- weapon: longsword
+  notes: Кодекс "Валлерштайн"
+- weapon: longsword
+  notes: Семинар Андрея Люлина
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Прекрасные Дамы)
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (Доблестные Мужи)
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса (Прекрасные Дамы)
+- weapon: saber
+  gender: male
+  notes: Военная Сабля (Доблестные Мужи)
+- weapon: saber
+  gender: female
+  notes: Военная Сабля (Прекрасные Дамы)
+- weapon: saber
+  notes: Семинар Андрея Музурина (Сабля)
+- weapon: rapier
+  notes: Семинар Андрея Музурина (Рапира)

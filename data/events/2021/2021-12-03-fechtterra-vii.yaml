@@ -1,0 +1,34 @@
+title: Fechtterra VII
+starts: 2021-12-03
+ends: 2021-12-04
+city: Санкт-Петербург
+organizer: Организатор Фехтерры
+url: https://hemagon.com/tournament/fechtterra2021
+description: |-
+  Гильдия Вольных Фехтовальщиков FreiFechterGilde (FFG) и NF HEMA представляют седьмой ежегодный турнир FechtTerra Санкт-Петербург - самый престижный турнир по длинному мечу в России.
+
+  Место проведения:
+  наб. Обводного канала 136, БЦ "Красный Треугольник", проходная №4, 4й этаж, КТ АРЕНА, пешком 12 мин от м. Балтийская.
+
+  Спонсоры:
+  SPES
+  Kvetun Armory
+  Longsword Club
+
+  Номинации:
+  - продвинутый длинный меч (категория "А")
+  - базовый длинный меч (категория "В")
+  - женский длинный меч (категория "W")
+
+
+  http://fechtterra.ru/
+source: hemagon
+source_key: fechtterra2021
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (W)
+- weapon: longsword
+  notes: Длинный меч (A)
+- weapon: longsword
+  notes: Длинный меч (B)

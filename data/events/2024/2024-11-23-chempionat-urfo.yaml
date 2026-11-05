@@ -1,0 +1,68 @@
+title: Чемпионат УрФО
+starts: 2024-11-23
+ends: 2024-11-24
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://vk.com/goldenfalconopenchamp
+description: |-
+  Осенний. Яркий. Страстный.
+  Чемпионат УрФО - здесь встречаются те, чьи сердца горят фехтованием.
+
+  - Два оружия: сабля и рапира
+  - Гибкая система отбора в Basic и Advanced
+  - Нет лимита участников - мы проводим турнир на 4 площадках, чтобы смогли поучаствовать все желающие
+  - Место встречи - Челябинск, между Центральной Россией и Сибирью
+source: hemagon
+source_key: UrFO
+nominations:
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля. Мужчины.Квалификация.
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля. Женщины. Квалификация.
+- weapon: saber
+  gender: female
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Итальянская дуэльная сабля. Девушки 14-17 лет.
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (тяжелая). Мужчины. Квалификация.
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса (тяжелая). Женщины.
+- weapon: rapier
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Рапира Ренессанса (легкая). Юноши 14-17 лет.
+- weapon: rapier
+  gender: female
+  min_age: 14
+  max_age: 17
+  notes: Рапира Ренессанса (легкая). Девушки 14-17 лет.
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля. Женщины. Advanced.
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля. Женщины. Basic.
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля. Мужчины. Advanced.
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля. Мужчины. Basic.
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (тяжелая). Мужчины. Advanced.
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (тяжелая). Мужчины. Basic.
+- weapon: saber
+  min_age: 14
+  max_age: 17
+  beginners: true
+  notes: Итальянская дуэльная сабля. Юноши 14-17 лет

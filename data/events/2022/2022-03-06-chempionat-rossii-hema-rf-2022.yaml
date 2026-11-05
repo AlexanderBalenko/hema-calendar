@@ -1,0 +1,29 @@
+title: Чемпионат России HEMA RF 2022
+starts: 2022-03-06
+ends: 2022-03-07
+city: Москва
+organizer: HEMA RF
+url: https://hemagon.com/tournament/hemarf2022
+description: Первый в истории российского HEMA-сообщества Чемпионат России. Это спорт, через который вы
+  прикасаетесь к истории. Это достижения, к которым вы идете, становясь лучше с каждым шагом.
+source: hemagon
+source_key: hemarf2022
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины

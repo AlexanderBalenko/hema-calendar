@@ -1,0 +1,24 @@
+title: Открытый турнир клуба "Valor"
+starts: 2025-12-13
+city: Тюмень
+organizer: UHFC - Ural
+url: https://docs.google.com/forms/d/e/1FAIpQLSc17UZq_QpYQqUQhI__qW5OA94hqBZRVVlSmCSQTMxW7xBrsg/viewform
+description: |-
+  Ждем вас в стенах школы фехтования VALOR!
+
+  Турнир планируется в следующих номинациях:
+  - Длинный меч Мужчины*;
+  - Длинный меч Женщины;
+
+  *Мужские бои пройдут по системе Valor Double Elimination, где 4-ка финалистов верхней сетки признается победителями Advance, 4-ка финалистов нижней сетки победителями Basic.
+
+  Турнир состоится 13 декабря в г. Тюмени по адресу ул. Николая Чаплина 21 (2 этаж).
+
+  Техническая комиссия снаряжения: 9:00-10:00
+  Построение участников и начало турнира: 10:00
+source: hemagon
+source_key: otkrytiy-turnir-kluba-valor
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч Мужчины

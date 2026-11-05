@@ -1,0 +1,25 @@
+title: 'Level One: Volga 2022'
+starts: 2022-05-28
+ends: 2022-05-29
+city: Самара
+organizer: Desperados
+url: https://hemagon.com/tournament/LevelOneVolga2022
+description: https://vk.com/level_one_volga
+source: hemagon
+source_key: LevelOneVolga2022
+nominations:
+- weapon: saber
+  notes: Военная Сабля М
+- weapon: saber
+  gender: female
+  notes: Военная Сабля Ж
+- weapon: rapier
+  notes: Рапира М
+- weapon: rapier
+  gender: female
+  notes: Рапира Ж
+- weapon: longsword
+  notes: Длинный Меч М
+- weapon: longsword
+  gender: female
+  notes: Длинный Меч Ж

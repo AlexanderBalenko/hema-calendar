@@ -1,0 +1,45 @@
+title: Кубок Доблести 2026
+starts: 2026-02-28
+ends: 2026-03-01
+city: Тюмень
+organizer: UHFC - Ural
+url: https://vk.com/cupofvalor
+description: |-
+  Мы рады анонсировать Кубок доблести 2026!
+
+  Турнир состоится 28 февраля и 1 марта в г. Тюмени по адресу
+  ул. Валерии Гнаровской, 3а (МАОУ СОШ № 70, зал №1 - Светлый).
+
+  28 февраля:
+  • Длинный меч
+  • Меч и баклер
+
+  1 марта:
+  • Длинный меч, команды
+
+  Форма регистрации находится в группе ВК.
+
+  Ждем вас в гости!
+source: hemagon
+source_key: valorcup2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч Мужчины
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Меч Командный Мужчины
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Меч Командный Женщины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер Мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер Женщины

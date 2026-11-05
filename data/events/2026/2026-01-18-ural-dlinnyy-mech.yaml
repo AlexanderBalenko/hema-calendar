@@ -1,0 +1,15 @@
+title: Урал | Длинный меч
+starts: 2026-01-18
+city: Челябинск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/ural-dlinniy-mech-2026
+description: Турнир по длинному мечу
+source: hemagon
+source_key: ural-dlinniy-mech-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: классика (мужчины)'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: классика (женщины)'

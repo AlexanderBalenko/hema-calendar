@@ -1,0 +1,23 @@
+title: '"Элеонора"'
+starts: 2027-07-03
+ends: 2027-07-04
+city: Краснодар
+place: г. Краснодар ул. Красная 43/1
+organizer: КИФ "Эфес"
+url: https://vk.com/turnireleonora
+source: spreadsheet
+source_key: 2027-07-03:элеонора
+nominations:
+- weapon: longsword
+  gender: female
+  notes: |-
+    Спортивная шпага мужчины ЛЗ.
+    Спортивная шпага женщины ЛЗ.
+    Длинный меч общий
+    Длинный меч женщины
+    Военная сабля мужчины
+    военная сабля женщины
+    Рапира соло общая
+    Рапира
+- weapon: dagger
+  notes: дага общая

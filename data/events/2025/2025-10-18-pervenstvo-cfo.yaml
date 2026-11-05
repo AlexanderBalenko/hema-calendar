@@ -1,0 +1,27 @@
+title: Первенство ЦФО
+starts: 2025-10-18
+ends: 2025-10-19
+city: Москва
+organizer: Олег Колганов
+url: https://vk.com/club231314041
+source: hemagon
+source_key: pervenstvo-tsfo
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Кодекс Валлерштайна, мужчины
+- weapon: longsword
+  gender: female
+  notes: Кодекс Валлерштайна, женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира, мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира, женщины
+- weapon: saber
+  gender: male
+  notes: Сабля, мужчины
+- weapon: saber
+  gender: female
+  notes: Сабля, женщины

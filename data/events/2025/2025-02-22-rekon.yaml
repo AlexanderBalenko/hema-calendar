@@ -1,0 +1,29 @@
+title: Рекон
+starts: 2025-02-22
+ends: 2025-02-23
+city: Санкт-Петербург
+organizer: UHFC - Euro
+url: https://vk.com/rekon_fest
+description: ⚔ РЕКОН ⚔  – седьмой фестиваль военно-исторического движения пройдёт в Санкт-Петербурге 22
+  и 23 февраля 2025 года.
+source: hemagon
+source_key: tournament-imported-ppq8
+nominations:
+- weapon: rapier
+  gender: male
+  notes: Рапира соло Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира соло Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага Женщины
+- weapon: saber
+  gender: male
+  notes: Сабля Мужчины
+- weapon: saber
+  gender: female
+  notes: Сабля Женщины

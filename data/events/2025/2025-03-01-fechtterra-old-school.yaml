@@ -1,0 +1,34 @@
+title: FechtTerra Old School
+starts: 2025-03-01
+city: Санкт-Петербург
+organizer: Организатор Фехтерры
+url: https://vk.com/fechtterra_oldschool
+description: |-
+  Дата:
+  • 1 марта 2025 года
+
+  Вас ожидают:
+  • длинный меч & кинжал-рондель (М и Ж)
+  • меч & баклер (М и Ж)
+
+  Длинный меч по экспериментальным правилам с возможностью использовать кинжал-рондель, закреплённый на поясе.
+  Длинные мечи, кинжалы и пояса будут предоставлены организаторами. Также возможно использование собственных, если они будут соответствовать заявленным ТТХ(Лонгсворд до 120см).
+
+  Меч & баклер, который редко встречается на турнирах в РФ, внесём свой вклад в развитие этой номинации и порадуем вас.
+
+  Вся информация в группе ВК: https://vk.com/fechtterra_oldschool
+source: hemagon
+source_key: ft-oldschool2025
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Longsword & Rondel (Men)
+- weapon: buckler
+  gender: male
+  notes: Sword & Buckler (Men)
+- weapon: longsword
+  gender: female
+  notes: Longsword & Rondel (Women)
+- weapon: buckler
+  gender: female
+  notes: Sword & Buckler (Women)

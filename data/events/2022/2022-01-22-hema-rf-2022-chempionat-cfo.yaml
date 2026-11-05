@@ -1,0 +1,38 @@
+title: 'HEMA RF 2022: Чемпионат ЦФО'
+starts: 2022-01-22
+ends: 2022-01-23
+city: Москва
+organizer: HEMA RF
+url: https://hemagon.com/tournament/cfo2021
+description: |-
+  Чемпионат ЦФО по фехтованию состоится 22-23 января 2022 года в Москве.
+
+  Вас ждет 3 номинации с делением на эшелоны Men и Women:
+
+  - Рапира и дага
+  - Военная сабля
+  - Длинный меч
+
+  В соревнованиях могут участвовать бойцы Центрального региона, чтобы отобраться на главный Чемпионат России - HEMA RF. До участия допускаются только совершеннолетние спортсмены.
+  Обратите внимание, что вы можете выбрать для участия только 2 номинации.
+source: hemagon
+source_key: cfo2021
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага. Женщины

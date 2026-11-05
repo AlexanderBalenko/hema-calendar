@@ -1,0 +1,19 @@
+title: Серия турниров 1703. Сабля Хаттона
+starts: 2025-10-25
+city: Барнаул
+organizer: Стальной Опоссум
+url: https://hemagon.com/tournament/seriya-turnirov-1703-sablya-khattona
+description: |-
+  Серия турниров 1703. 25 октября пройдет номинация Сабля Хаттона.
+  Открытие зала 13.00
+  Начало 14.00
+  Регистрация только через hemagon. Подтвержденной считается оплаченная заявка. Стоимость участия 500 руб. Количество слотов 16 мужчины, 8 девушки. Бои ведутся 2 минуты чистого времени или
+  до набора 10 баллов.
+source: hemagon
+source_key: seriya-turnirov-1703-sablya-khattona
+nominations:
+- weapon: saber
+  notes: Сабля Хаттона М
+- weapon: saber
+  gender: female
+  notes: Сабля Хаттона Ж

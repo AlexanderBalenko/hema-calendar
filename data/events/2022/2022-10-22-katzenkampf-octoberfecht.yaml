@@ -1,0 +1,29 @@
+title: KatzenKampf Octoberfecht
+starts: 2022-10-22
+city: Санкт-Петербург
+organizer: Анастасия Смирнова
+url: https://hemagon.com/tournament/KatzenKampf-Octoberfecht
+description: |-
+  Команда НЕМА TEAM вновь готовится к проведению открытого турнира по длинному мечу, копью и дюссаку - Katzenkampf Octoberfecht 2022.
+  В этот раз двери будут открыты для всех желающих в независимости от уровня подготовки- главное наличие необходимой экипировки!
+source: hemagon
+source_key: KatzenKampf-Octoberfecht
+nominations:
+- weapon: longsword
+  gender: male
+  notes: KatzenKampf Longsword Men
+- weapon: longsword
+  gender: female
+  notes: KatzenKampf Longsword Women
+- weapon: dussack
+  gender: male
+  notes: KatzenKampf Dussack Men
+- weapon: dussack
+  gender: female
+  notes: KatzenKampf Dussack Women
+- weapon: spear
+  gender: male
+  notes: KatzenKampf Spear Men
+- weapon: spear
+  gender: female
+  notes: KatzenKampf Spear Women

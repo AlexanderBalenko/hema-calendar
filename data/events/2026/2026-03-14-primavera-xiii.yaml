@@ -1,0 +1,45 @@
+title: Primavera XIII
+starts: 2026-03-14
+ends: 2026-03-15
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://t.me/tournament_core
+description: |-
+  ⚔︎ 💙 Дорогие воительницы, приглашаем вас принять участие в ежегодном женском турнире Primavera!
+
+  ⚔︎ Мы приходим в НЕМА, потому что чувствуем, что нам важно проявить самость – сочетать эффективность и женственность, красоту и силу, точность и напор. И остаемся, когда находим сестер по оружию, для которых это тоже является ценностью.
+
+  Вместе мы проживаем высокую любовь к фехтованию и беззаботное веселье с клинками в руках. Только в боях друг с другом мы развиваем в себе гибкость, уверенность и смелость.
+
+  Регистрация открыта!
+
+  Подробности в группе турнира вконтакте, а также в телеграм-канале TournamentCore.
+
+  До встречи в северной столице!
+source: hemagon
+source_key: primavera-13
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, отборочные
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, отборочные
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, лига Advanced
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля, лига Basic
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, лига Advanced
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, лига Basic

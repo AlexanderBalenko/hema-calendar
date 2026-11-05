@@ -1,0 +1,42 @@
+title: 'Level One: Chernozem'
+starts: 2025-02-15
+ends: 2025-02-16
+city: Воронеж
+organizer: Клуб CounterTime
+url: https://vk.com/level_one_chernozem
+description: |-
+  Турнир для начинающих фехтовальщиков Level One: Chernozem!
+
+  Даты проведения: 15-16 февраля 2025
+
+  Номинации:
+  Федершверт, М и Ж
+  Меч и баклер, М и Ж
+  Дуэльная сабля, М и Ж
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет проверить свои силы и сразиться за победу
+
+  До встречи в Воронеже!
+
+  О всех новостях следите по хештегу #level_one_chernozem
+source: hemagon
+source_key: level-one-chernozem
+nominations:
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля - мужчины
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля - женщины
+- weapon: longsword
+  gender: male
+  notes: Федершверт - мужчины
+- weapon: longsword
+  gender: female
+  notes: Федершверт - женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер - мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер - женщины

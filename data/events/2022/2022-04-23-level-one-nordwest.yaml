@@ -1,0 +1,31 @@
+title: 'Level One: Nordwest'
+starts: 2022-04-23
+ends: 2022-04-24
+city: Санкт-Петербург
+organizer: Клуб CounterTime
+url: https://hemagon.com/tournament/tournament-feeao
+description: |-
+  Для подготовки хорошего фехтовальщика, который хочет быть первым и лучшим, нужно не только много и усердно тренироваться, но и иметь большой соревновательный опыт.
+
+  Турниры Level One — прекрасная возможность получить опыт состязаний, подвести итог соревновательного сезона, получить свою первую медаль.
+source: hemagon
+source_key: tournament-feeao
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч женщины
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля мужчины
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса женщины

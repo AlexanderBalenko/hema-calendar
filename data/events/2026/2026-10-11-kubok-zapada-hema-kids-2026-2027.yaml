@@ -1,0 +1,68 @@
+title: Кубок Запада HEMA kids 2026-2027
+starts: 2026-10-11
+city: Иваново
+organizer: Иван Кашицын
+url: https://vk.ru/club210219369
+description: |-
+  Юные шпажисты и саблисты со всех регионов!
+  Приглашаем вас на ежегодный открытый турнир по историческому фехтованию для детей и подростков Кубок Запада HEMA kids сезона 2026-2027 в Иваново 🔥
+
+  Номинации:
+  ▫️Шпага 9-11 лет (общая)
+  ▫️Шпага 12-14 лет (общая)
+  ▫️Шпага 15-17 лет (женская и мужская)
+
+  ▫️Сабля 9-11 лет (общая)
+  ▫️Сабля 12-14 лет (общая)
+  ▫️Сабля 15-17 лет (женская и мужская)
+
+  Место проведения: Шереметевский проспект, 10. Ивановский государственный химико–технологический университет
+
+  Дата проведения: 11 октября 2026
+
+  Скорее подавайте заявки и приезжайте на турнир, где маленькие и уже почти взрослые фехтовальщики попробуют свои силы в бою и встретятся с достойными соперниками! ⚔️
+source: hemagon
+source_key: kubok-zapada-hema-kids-2026-2027
+nominations:
+- weapon: rapier
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Шпага 9-11 лет
+- weapon: rapier
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Шпага 12-14 лет
+- weapon: rapier
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Шпага 15-17. Юноши
+- weapon: rapier
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Шпага 15-17. Девушки
+- weapon: saber
+  min_age: 9
+  max_age: 11
+  beginners: true
+  notes: Сабля 9-11 лет
+- weapon: saber
+  min_age: 12
+  max_age: 14
+  beginners: true
+  notes: Сабля 12-14 лет
+- weapon: saber
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля 15-17. Юноши
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  beginners: true
+  notes: Сабля 15-17. Девушки

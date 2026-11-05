@@ -1,0 +1,22 @@
+title: Блиц - Длинный Меч
+starts: 2025-03-15
+ends: 2025-03-16
+city: Новосибирск
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/blitz-longsword
+source: hemagon
+source_key: blitz-longsword
+nominations:
+- weapon: longsword
+  notes: Фехтшуле - Продвинутый
+- weapon: longsword
+  gender: female
+  notes: Фехтшуле - Женский
+- weapon: longsword
+  notes: Фехтшуле - Базовый
+- weapon: longsword
+  gender: female
+  notes: Итальянский Длинный Меч - Женская
+- weapon: longsword
+  team: true
+  notes: Итальянский Длинный Меч - Команды

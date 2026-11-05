@@ -1,0 +1,33 @@
+title: Das schwarze Schwert
+starts: 2026-10-17
+city: Москва
+organizer: Олег Колганов
+url: https://vk.com/dasschwarzeschwert
+description: |-
+  Открытый турнир по длинному мечу в Москве с разделением участников на эшелоны: адванс и база в мужской и женской номинациях.
+
+  Пройдёт 17 октября в Москве.
+
+
+  Адрес: Ташкентская 15к2.
+source: hemagon
+source_key: das-schwarze-schwert-test
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, женщины
+- weapon: longsword
+  gender: male
+  notes: Мужчины. Base
+- weapon: longsword
+  gender: female
+  notes: Женщины. Base
+- weapon: longsword
+  gender: male
+  notes: Мужчины. Advance
+- weapon: longsword
+  gender: female
+  notes: Женщины. Advance

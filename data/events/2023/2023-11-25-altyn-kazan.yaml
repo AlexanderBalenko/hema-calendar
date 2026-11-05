@@ -1,0 +1,42 @@
+title: Алтын Казан
+starts: 2023-11-25
+ends: 2023-11-26
+city: Казань
+organizer: Raubritter Kazan
+url: https://hemagon.com/tournament/altyn_kzn
+description: |-
+  Открытый кубок Татарстана "Алтын Казан"
+  Турнир по Историческим Европейским Боевым Искусствам (HEMA)
+
+  В последние выходные осени мы собрали для вас все ее золото и спрятали в Казани!
+  Турнир “Алтын Казан” приглашает фехтовальщиков всей страны полюбоваться его красотой, а самых отчаянных - попытаться увезти домой.
+
+  Дата проведения: 25 -26 ноября
+
+  Номинации:
+  Длинный меч, М и Ж
+  Дуэльная сабля, М и Ж
+  Рапира и дага, М и Ж
+
+  Место проведения: улица Короленко, 26А, Казань
+source: hemagon
+source_key: altyn_kzn
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (женщины)
+- weapon: rapier
+  gender: female
+  notes: Рапира с дагой (женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира с дагой (мужчины)
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля (женщины)
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля (мужчины)

@@ -1,0 +1,26 @@
+title: ЯWoman
+starts: 2024-03-09
+city: Асбест
+organizer: Денис Матяж
+url: https://hemagon.com/tournament/IWoman-2024
+source: hemagon
+source_key: IWoman-2024
+nominations:
+- weapon: rapier
+  min_age: 14
+  beginners: true
+  notes: Рапира 14+
+- weapon: rapier
+  gender: female
+  min_age: 18
+  notes: Рапира 18+
+- weapon: saber
+  min_age: 14
+  beginners: true
+  notes: Сабля 14+
+- weapon: saber
+  gender: female
+  min_age: 18
+  notes: Сабля 18+
+- weapon: longsword
+  notes: Длинный меч

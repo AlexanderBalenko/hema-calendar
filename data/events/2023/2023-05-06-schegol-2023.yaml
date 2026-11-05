@@ -1,0 +1,21 @@
+title: Щегол 2023
+starts: 2023-05-06
+ends: 2023-05-07
+city: Краснодар
+organizer: Тарас Верпеко
+url: https://hemagon.com/tournament/Shegol23
+description: Кто кого перещеголяет? Турнир для начинающих фехтовальщиков.
+source: hemagon
+source_key: Shegol23
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женская)
+- weapon: longsword
+  notes: Длинный меч (Общая)
+- weapon: rapier
+  notes: Рапира и дага
+- weapon: saber
+  notes: Военная сабля
+- weapon: buckler
+  notes: Меч и баклер
