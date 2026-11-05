@@ -26,7 +26,9 @@ export default defineConfig({
     timeout: 30_000,
   },
   use: {
-    baseURL: `http://127.0.0.1:${PORT}${BASE_PATH}`,
+    // Со слешем на конце и относительными путями в тестах: абсолютный путь ('/...') затирает
+    // подкаталог целиком, и прогон с подкаталогом проверял бы корень сайта.
+    baseURL: `http://127.0.0.1:${PORT}${BASE_PATH}/`,
     launchOptions: {
       executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/chromium-browser',
       args: ['--no-sandbox', '--disable-dev-shm-usage'],

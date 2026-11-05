@@ -21,8 +21,19 @@ const TYPES = {
 
 createServer((request, response) => {
   const url = new URL(request.url ?? '/', 'http://localhost');
+  let pathname = decodeURIComponent(url.pathname);
+  if (prefix) {
+    // Всё, что мимо подкаталога, — честный 404: ровно так ведёт себя Pages, и ровно на этом
+    // ловится адрес, собранный без подкаталога.
+    if (pathname !== prefix && !pathname.startsWith(`${prefix}/`)) {
+      response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
+      return response.end('вне подкаталога сайта');
+    }
+    pathname = pathname.slice(prefix.length) || '/';
+  }
+
   // normalize + отсечение «..»: сервер смоука не должен уметь отдавать файлы мимо каталога.
-  const relative = normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, '');
+  const relative = normalize(pathname).replace(/^(\.\.[/\\])+/, '');
   let file = join(root, relative);
 
   if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');

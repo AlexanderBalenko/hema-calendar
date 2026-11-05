@@ -64,6 +64,9 @@ jobs:
           # Подкаталог и адрес — из настроек Pages: на github.io сайт лежит в /hema-calendar,
           # на своём домене в корне, и ссылки в разметке пишутся на сборке.
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          # То же значение для клиентского кода: маска пиктограммы оружия — это CSS-url, его
+          # Next сам не префиксует, а переменные без NEXT_PUBLIC_ в браузер не попадают.
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.origin }}${{ steps.pages.outputs.base_path }}
           NEXT_PUBLIC_SUBMIT_FORM_URL: ${{ vars.SUBMIT_FORM_URL }}
         run: |

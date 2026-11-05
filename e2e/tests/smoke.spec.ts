@@ -13,7 +13,7 @@ const MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', '�
 
 test.describe('Календарь', () => {
   test('лента недель открывается главным видом', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('');
     await page.waitForLoadState('load');
 
     // Лента — вид по умолчанию, как в портале: недели строками, дни колонками.
@@ -23,7 +23,7 @@ test.describe('Календарь', () => {
   });
 
   test('сетка месяца открывается и показывает текущий месяц', async ({ page }) => {
-    await page.goto('/?view=month');
+    await page.goto('?view=month');
     await page.waitForLoadState('load');
 
     // «Сегодня» календарь считает по Москве, а прогон может идти в UTC: в ночь на первое
@@ -39,7 +39,7 @@ test.describe('Календарь', () => {
   });
 
   test('полоска месяцев листает календарь', async ({ page }) => {
-    await page.goto('/?view=month');
+    await page.goto('?view=month');
 
     // Полоска — главная навигация календаря портала: месяц выбирается ссылкой с числом турниров.
     const march = page.getByRole('link', { name: /^Март/ });
@@ -50,7 +50,7 @@ test.describe('Календарь', () => {
   });
 
   test('турнир открывается своей страницей, и она собрана заранее', async ({ page }) => {
-    await page.goto('/?view=list&period=past');
+    await page.goto('?view=list&period=past');
     const first = page.locator('a[href*="/events/"]').first();
     // В строке списка несколько колонок; название — вторая, после даты.
     const title = (await first.locator('span').nth(1).innerText()).trim();
@@ -66,7 +66,7 @@ test.describe('Календарь', () => {
   });
 
   test('фильтр по оружию сужает список и снимается «Сбросить»', async ({ page }) => {
-    await page.goto('/?view=list&period=all');
+    await page.goto('?view=list&period=all');
     const rows = page.locator('a[href*="/events/"]');
     const before = await rows.count();
     expect(before).toBeGreaterThan(0);
@@ -88,7 +88,7 @@ test.describe('Календарь', () => {
   });
 
   test('фильтры переживают перезагрузку: ссылкой можно поделиться', async ({ page }) => {
-    await page.goto('/?view=list&period=all&weapons=saber');
+    await page.goto('?view=list&period=all&weapons=saber');
     const count = await page.locator('a[href*="/events/"]').count();
     expect(count).toBeGreaterThan(0);
 
@@ -99,7 +99,7 @@ test.describe('Календарь', () => {
   });
 
   test('прошедшие показываются от свежих к старым', async ({ page }) => {
-    await page.goto('/?view=list&period=past');
+    await page.goto('?view=list&period=past');
     const dividers = await page.locator('h2').allInnerTexts();
     expect(dividers.length).toBeGreaterThan(1);
 
@@ -110,7 +110,7 @@ test.describe('Календарь', () => {
   });
 
   test('адрес с мусором в параметрах не роняет страницу', async ({ page }) => {
-    const response = await page.goto('/?month=2026-13&view=галерея&city=&weapons=,,');
+    const response = await page.goto('?month=2026-13&view=галерея&city=&weapons=,,');
     expect(response?.status()).toBe(200);
     await expect(page.locator('h1').first()).toBeVisible();
   });
@@ -118,7 +118,7 @@ test.describe('Календарь', () => {
 
 test.describe('Подача турнира', () => {
   test('страница объясняет оба пути: форму и правку данных', async ({ page }) => {
-    await page.goto('/submit/');
+    await page.goto('submit/');
     await expect(page.getByRole('heading', { name: 'Подать турнир' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'data/events' })).toBeVisible();
     // Регистрация не нужна — это обещание страницы, и оно должно на ней быть.
@@ -128,7 +128,7 @@ test.describe('Подача турнира', () => {
 
 test.describe('Для поисковика', () => {
   test('карта сайта перечисляет страницы турниров', async ({ page }) => {
-    const response = await page.request.get('/sitemap.xml');
+    const response = await page.request.get('sitemap.xml');
     expect(response.status()).toBe(200);
     const xml = await response.text();
     expect(xml).toContain('/events/');
@@ -146,12 +146,27 @@ test.describe('Собранные файлы', () => {
       if (response.status() >= 400) broken.push(`${response.status()} ${response.url()}`);
     });
 
-    await page.goto('/');
+    await page.goto('');
     await page.waitForLoadState('load');
 
     const logo = page.locator('header img');
     await expect(logo).toBeVisible();
     expect(await logo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+
+    // Пиктограммы оружия рисуются CSS-маской, а не картинкой: битый адрес не даёт ни ошибки в
+    // консоли, ни пустого <img> — иконка просто исчезает. Поэтому спрашиваем у страницы, какой
+    // адрес она просит, и проверяем именно его: на Pages он уезжал в корень сайта мимо
+    // подкаталога, и длинный меч пропадал.
+    await page.getByTitle(/^Оружие/).click();
+    const mask = await page
+      .locator('span[style*="mask-image"]')
+      .first()
+      .evaluate((el) => getComputedStyle(el).maskImage || getComputedStyle(el).webkitMaskImage);
+    const maskUrl = /url\("?([^")]+)"?\)/.exec(mask ?? '')?.[1];
+    expect(maskUrl, 'пиктограмма должна рисоваться маской').toBeTruthy();
+    const icon = await page.request.get(maskUrl as string);
+    expect(icon.status(), `пиктограмма должна отдаваться по ${maskUrl}`).toBe(200);
+
     expect(broken).toEqual([]);
   });
 });

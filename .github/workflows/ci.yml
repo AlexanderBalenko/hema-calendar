@@ -63,9 +63,17 @@ jobs:
 
       - name: Собрать сайт
         working-directory: frontend
+        # Сборка с подкаталогом — ровно такая, какая уезжает на Pages: без него ломается
+        # только опубликованная версия (так пропали пиктограммы оружия, адрес маски шёл в
+        # корень сайта).
+        env:
+          PAGES_BASE_PATH: /hema-calendar
+          NEXT_PUBLIC_BASE_PATH: /hema-calendar
         run: |
           npm ci --no-audit --no-fund
           npm run build
 
       - name: Смоук
+        env:
+          E2E_BASE_PATH: /hema-calendar
         run: sh scripts/e2e-smoke.sh
