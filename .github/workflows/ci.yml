@@ -74,6 +74,9 @@ jobs:
           dotnet tool install --global dotnet-ef
           export PATH="$PATH:$HOME/.dotnet/tools"
           cd backend
+          # restore обязателен: dotnet ef читает метаданные проекта сборкой без восстановления
+          # пакетов и падает на отсутствующем project.assets.json.
+          dotnet restore src/HemaCalendar.Api/HemaCalendar.Api.csproj
           dotnet ef database update \
             --project src/HemaCalendar.Api \
             --connection "Host=localhost;Port=5433;Database=hema_calendar;Username=calendar;Password=calendar"
@@ -84,11 +87,9 @@ jobs:
           python3 scripts/seed_demo_events.py --api http://localhost:8085 --key dev-admin-key
 
       - name: Смоук
+        # Адрес стенда одинаков на всех машинах: контейнеру смоука заводится
+        # host.docker.internal (см. scripts/e2e-smoke.sh), подсеть моста угадывать не нужно.
         run: sh scripts/e2e-smoke.sh
-        env:
-          # В CI контейнер смоука ходит на опубликованный порт раннера.
-          E2E_BASE_URL: http://172.17.0.1:3001
-          E2E_WARMUP_URL: http://localhost:3001/
 
       - name: Логи стенда при падении
         if: failure()

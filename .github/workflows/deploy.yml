@@ -27,6 +27,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Сервера под календарь на 05.11.2026 нет, и секреты не заведены. Без этой проверки
+      # выкладка падала бы на «docker login» с невнятной ошибкой про пустой адрес реестра.
+      - name: Секреты на месте?
+        env:
+          REGISTRY: ${{ secrets.REGISTRY }}
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          missing=""
+          for name in REGISTRY REGISTRY_USER REGISTRY_PASSWORD DEPLOY_SSH_HOST DEPLOY_SSH_USER DEPLOY_SSH_KEY; do
+            eval "value=\$$name"
+            [ -n "$value" ] || missing="$missing $name"
+          done
+          if [ -n "$missing" ]; then
+            echo "Выкладывать некуда: не заведены секреты —$missing"
+            echo "Что нужно сделать, описано в docs/Deploy.md §1–2."
+            exit 1
+          fi
+
       - name: Тег образа — дата и номер прогона
         id: tag
         run: echo "value=$(date +%Y-%m-%d)-${{ github.run_number }}" >> "$GITHUB_OUTPUT"

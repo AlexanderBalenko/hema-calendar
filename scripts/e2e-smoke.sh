@@ -28,7 +28,11 @@ HOST_E2E="$(pwd -W 2>/dev/null || pwd)/e2e"
 
 # MSYS_NO_PATHCONV=1 — Git Bash иначе переписывает /e2e в C:/Program Files/Git/e2e.
 # --entrypoint sh — у образа точка входа сам chromium, а нужен shell.
+# --add-host: на Linux (в том числе на раннере GitHub) host.docker.internal сам по себе не
+# разрешается — его надо завести явно. На Windows имя уже есть, и повтор ничего не ломает,
+# поэтому адрес стенда одинаков везде и не приходится угадывать подсеть docker-моста.
 MSYS_NO_PATHCONV=1 docker run --rm --entrypoint sh \
+  --add-host=host.docker.internal:host-gateway \
   -v "$HOST_E2E:/e2e" -w /e2e \
   -e E2E_BASE_URL="${E2E_BASE_URL:-http://host.docker.internal:3001}" \
   -e E2E_ADMIN_KEY="${CALENDAR_ADMIN_KEY:-dev-admin-key}" \

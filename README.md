@@ -1,5 +1,7 @@
 # Календарь турниров HEMA
 
+[![CI](https://github.com/AlexanderBalenko/hema-calendar/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexanderBalenko/hema-calendar/actions/workflows/ci.yml)
+
 Отдельный сервис календаря турниров по историческому фехтованию для `calendar.hema.ru`:
 просмотр и фильтрация прошедших и будущих турниров, приём заявок от кого угодно с модерацией.
 
