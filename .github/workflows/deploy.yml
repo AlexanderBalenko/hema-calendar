@@ -1,0 +1,85 @@
+# Выкладка календаря на calendar.hema.ru — вручную, кнопкой во вкладке Actions.
+#
+# НЕ по пушу в main: проект пушит прямо в main, и автодеплой означал бы, что любая промежуточная
+# правка немедленно оказывается на живом сайте.
+#
+# ДЕПЛОЙ НЕВОЗМОЖЕН БЕЗ ПОЛНОГО ПРОГОНА ТЕСТОВ (правило заказчика): job `deploy` объявлен
+# `needs: tests`, а `tests` — это весь CI целиком. Пока он не позеленел, выкладка не стартует,
+# и обойти это кнопкой в интерфейсе нельзя.
+#
+# Секреты репозитория (Settings → Secrets and variables → Actions):
+#   REGISTRY, REGISTRY_USER, REGISTRY_PASSWORD — реестр образов
+#   DEPLOY_SSH_HOST, DEPLOY_SSH_USER, DEPLOY_SSH_KEY — доступ на сервер
+# На сервере в /opt/hema-calendar/ должны лежать docker-compose.yml (из deploy/prod/) и .env.
+
+name: Deploy calendar.hema.ru
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  tests:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Тег образа — дата и номер прогона
+        id: tag
+        run: echo "value=$(date +%Y-%m-%d)-${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+      - name: Войти в реестр
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login "${{ secrets.REGISTRY }}" -u "${{ secrets.REGISTRY_USER }}" --password-stdin
+
+      - name: Собрать и отправить образы
+        env:
+          TAG: ${{ steps.tag.outputs.value }}
+          REGISTRY: ${{ secrets.REGISTRY }}
+        run: |
+          docker build -t "$REGISTRY/hema-calendar-backend:$TAG" backend
+          docker build -t "$REGISTRY/hema-calendar-frontend:$TAG" frontend
+          docker push "$REGISTRY/hema-calendar-backend:$TAG"
+          docker push "$REGISTRY/hema-calendar-frontend:$TAG"
+
+      - name: Ключ доступа на сервер
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.DEPLOY_SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Обновить compose на сервере
+        run: |
+          scp deploy/prod/docker-compose.yml \
+            "${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}:/opt/hema-calendar/docker-compose.yml"
+
+      # Миграция — ОТДЕЛЬНЫМ шагом до подъёма новых контейнеров: приложение схему само не
+      # накатывает. Пакет миграций собирается здесь (на сервере нет ни репозитория, ни SDK) и
+      # едет файлом — тот же приём, что у портала.
+      - name: Собрать и накатить миграции
+        env:
+          TAG: ${{ steps.tag.outputs.value }}
+        run: |
+          dotnet tool install --global dotnet-ef
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          cd backend
+          dotnet ef migrations bundle --project src/HemaCalendar.Api --self-contained -r linux-x64 -o ../efbundle
+          cd ..
+          scp efbundle "${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}:/opt/hema-calendar/efbundle"
+          ssh "${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}" \
+            'cd /opt/hema-calendar && set -a && . ./.env && set +a && chmod +x efbundle && ./efbundle --connection "Host=localhost;Port=${CALENDAR_PG_PORT:-5433};Database=$POSTGRES_DB;Username=$POSTGRES_USER;Password=$POSTGRES_PASSWORD"'
+
+      - name: Поднять новую версию
+        env:
+          TAG: ${{ steps.tag.outputs.value }}
+        run: |
+          ssh "${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}" \
+            "cd /opt/hema-calendar && sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=$TAG/' .env && docker compose pull && docker compose up -d"
+
+      - name: Проверить, что сайт отвечает
+        run: |
+          ssh "${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}" \
+            'curl -fsS -o /dev/null -w "%{http_code}\n" https://calendar.hema.ru/api/health'

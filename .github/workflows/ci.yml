@@ -1,0 +1,95 @@
+# Полный прогон пирамиды на каждый push и pull request.
+#
+# Гейт деплоя (правило заказчика): выкладка возможна только после ЗЕЛЁНОГО полного прогона —
+# workflow деплоя ждёт этот.
+#
+# Слои:
+#   * http-тесты бэкенда — с живым Postgres, своя база на каждый тест;
+#   * юнит-тесты фронта — чистая логика (раскладка месяца, разбор адреса, текст) на node:test;
+#   * браузерный смоук — против поднятого здесь же стенда: страницы, ссылки, форма, модерация.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call: {}
+
+jobs:
+  backend:
+    name: Тесты бэкенда
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: calendar
+          POSTGRES_PASSWORD: calendar
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U calendar"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: dotnet test
+        working-directory: backend
+        # Тесты сами заводят по базе на тест на этом сервере.
+        env:
+          CALENDAR_TEST_DB: Host=localhost;Port=5433;Database=postgres;Username=calendar;Password=calendar;Timeout=30
+        run: dotnet test HemaCalendar.slnx --logger "console;verbosity=normal"
+
+  frontend:
+    name: Юнит-тесты фронта
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: node --test
+        working-directory: frontend
+        # Зависимости не нужны: проверяемые модули чистые, без импортов из node_modules.
+        run: node --experimental-strip-types --test "src/**/*.test.ts"
+
+  smoke:
+    name: Браузерный смоук
+    runs-on: ubuntu-latest
+    needs: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Поднять стенд
+        run: docker compose up -d --build
+
+      - name: Накатить схему
+        run: |
+          dotnet tool install --global dotnet-ef
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          cd backend
+          dotnet ef database update \
+            --project src/HemaCalendar.Api \
+            --connection "Host=localhost;Port=5433;Database=hema_calendar;Username=calendar;Password=calendar"
+
+      - name: Наполнить справочниками и демо-турнирами
+        run: |
+          python3 scripts/seed_directories.py --api http://localhost:8085 --key dev-admin-key
+          python3 scripts/seed_demo_events.py --api http://localhost:8085 --key dev-admin-key
+
+      - name: Смоук
+        run: sh scripts/e2e-smoke.sh
+        env:
+          # В CI контейнер смоука ходит на опубликованный порт раннера.
+          E2E_BASE_URL: http://172.17.0.1:3001
+          E2E_WARMUP_URL: http://localhost:3001/
+
+      - name: Логи стенда при падении
+        if: failure()
+        run: docker compose logs --tail=200
