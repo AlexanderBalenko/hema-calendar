@@ -1,0 +1,95 @@
+# Публикация календаря на GitHub Pages.
+#
+# Сервера у календаря нет: сайт статический, данные — YAML-файлы репозитория. Поэтому
+# «выкладка» здесь это сборка и загрузка файлов, а не доставка на машину.
+#
+# ВЫКЛАДКА НЕВОЗМОЖНА БЕЗ ЗЕЛЁНОГО ПОЛНОГО ПРОГОНА: job `build` объявлен `needs: tests`, а
+# `tests` — это весь CI целиком (данные, юнит-тесты, браузерный смоук). Обойти это кнопкой
+# в интерфейсе нельзя.
+#
+# Адрес сайта не зашит: configure-pages отдаёт и origin, и подкаталог, поэтому один и тот же
+# workflow годится и для alexanderbalenko.github.io/hema-calendar, и для своего домена
+# (calendar.hema.ru), когда на него направят CNAME.
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Одна выкладка за раз, и начатую не обрываем: оборванная оставила бы сайт наполовину
+# обновлённым.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Включить Pages и узнать адрес
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          # Первый прогон включает Pages сам: иначе выкладку пришлось бы начинать с ручного
+          # щелчка в настройках репозитория.
+          enablement: true
+
+      - run: pip install pyyaml
+      - name: Собрать данные сайта
+        run: python scripts/build_json.py
+
+      - name: Собрать сайт
+        working-directory: frontend
+        env:
+          # Подкаталог и адрес — из настроек Pages: на github.io сайт лежит в /hema-calendar,
+          # на своём домене в корне, и ссылки в разметке пишутся на сборке.
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.origin }}${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_SUBMIT_FORM_URL: ${{ vars.SUBMIT_FORM_URL }}
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+          # .nojekyll — иначе Pages прячет каталоги, начинающиеся с подчёркивания (_next).
+          touch out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Проверить, что сайт отвечает
+        run: |
+          url="${{ steps.deployment.outputs.page_url }}"
+          echo "Опубликовано: $url"
+          curl -fsS -o /dev/null -w "главная: %{http_code}\n" "$url"
+          curl -fsS -o /dev/null -w "карта сайта: %{http_code}\n" "${url}sitemap.xml"
