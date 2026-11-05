@@ -31,11 +31,17 @@ HOST_E2E="$(pwd -W 2>/dev/null || pwd)/e2e"
 # --add-host: на Linux (в том числе на раннере GitHub) host.docker.internal сам по себе не
 # разрешается — его надо завести явно. На Windows имя уже есть, и повтор ничего не ломает,
 # поэтому адрес стенда одинаков везде и не приходится угадывать подсеть docker-моста.
+# --user root: образ работает под пользователем chrome (uid 1000), а примонтированный каталог
+# на Linux принадлежит хозяину сборки — npm не может создать в нём node_modules и выходит
+# молча (на раннере GitHub это был выход с кодом 243 ещё до запуска тестов). На Windows права
+# тома не проверяются, так что строка одна на обе машины.
+# Вывод npm больше не глушится: именно он объясняет такие падения.
 MSYS_NO_PATHCONV=1 docker run --rm --entrypoint sh \
+  --user root \
   --add-host=host.docker.internal:host-gateway \
   -v "$HOST_E2E:/e2e" -w /e2e \
   -e E2E_BASE_URL="${E2E_BASE_URL:-http://host.docker.internal:3001}" \
   -e E2E_ADMIN_KEY="${CALENDAR_ADMIN_KEY:-dev-admin-key}" \
   -e CHROMIUM_PATH=/usr/bin/chromium-browser \
   zenika/alpine-chrome:with-node \
-  -c "npm install --no-audit --no-fund >/dev/null 2>&1 && npx playwright test"
+  -c "npm install --no-audit --no-fund --loglevel=error && npx playwright test"

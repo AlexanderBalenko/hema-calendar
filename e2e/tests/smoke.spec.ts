@@ -22,9 +22,11 @@ test.describe('Публичный календарь', () => {
     await page.goto('/');
     await page.waitForLoadState('load');
 
-    const now = new Date();
-    await expect(page.locator('h1').first()).toContainText(MONTHS[now.getMonth()]);
-    await expect(page.locator('h1').first()).toContainText(String(now.getFullYear()));
+    // «Сегодня» календарь считает по Москве (TZ контейнера фронта), а прогон может идти в UTC:
+    // в ночь на первое число ожидания разъехались бы на месяц.
+    const moscow = new Date(Date.now() + 3 * 60 * 60 * 1000);
+    await expect(page.locator('h1').first()).toContainText(MONTHS[moscow.getUTCMonth()]);
+    await expect(page.locator('h1').first()).toContainText(String(moscow.getUTCFullYear()));
 
     // Шапка дней недели — семь колонок, первая «Пн»: без неё это не календарь.
     await expect(page.getByText('Пн', { exact: true })).toBeVisible();
