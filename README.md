@@ -13,10 +13,12 @@
 
 | Каталог | Что это |
 |---|---|
-| `backend/` | .NET 10, minimal API, EF Core + PostgreSQL. Один проект `HemaCalendar.Api`. |
-| `frontend/` | Next.js 14 (App Router), Tailwind. Ходит в API, своего состояния не держит. |
-| `scripts/` | Импорт турниров из внешних источников (хемагон, таблицы организаторов). |
-| `docs/` | Решения и правила сервиса — `docs/Calendar.md`. |
+| `backend/` | .NET 10, minimal API, EF Core + PostgreSQL. Проект `HemaCalendar.Api` и http-тесты. |
+| `frontend/` | Next.js 14 (App Router), Tailwind. Сетка месяца, список, фильтры в адресе. |
+| `e2e/` | Браузерный смоук (Playwright) против поднятого стенда. |
+| `scripts/` | Импорт турниров (хемагон, таблицы организаторов), справочники, демо-данные. |
+| `deploy/` | Боевой compose, образец переменных окружения, Caddyfile. |
+| `docs/` | Решения и правила — `docs/Calendar.md`, выкладка — `docs/Deploy.md`. |
 
 ## Запуск стенда
 
@@ -24,6 +26,8 @@
 docker compose up -d postgres
 dotnet ef database update --project backend/src/HemaCalendar.Api/HemaCalendar.Api.csproj
 docker compose up -d --build backend frontend
+python scripts/seed_directories.py    # справочники: города и оружие
+python scripts/seed_demo_events.py    # десяток демо-турниров, чтобы стенд не был пустым
 ```
 
 - фронт — http://localhost:3001
@@ -35,6 +39,33 @@ docker compose up -d --build backend frontend
 
 Схему накатывает человек командой `dotnet ef database update` — приложение миграции само не
 применяет: автоприменение означает, что любой перезапуск контейнера меняет схему прода.
+
+Настоящие данные вместо демо-набора:
+
+```bash
+python scripts/import_hemagon.py                                 # прошедшие турниры
+python scripts/import_spreadsheet.py --google <id> --gid <gid>   # анонсы организаторов
+python scripts/import_spreadsheet.py --xlsx <график.xlsx>        # присланный график
+```
+
+Повторный прогон любого импорта обновляет записи и не создаёт новых.
+
+## Тесты
+
+```bash
+# http-слой бэкенда: своя база на каждый тест, нужен поднятый postgres стенда
+cd backend && dotnet test -m:4 -nodeReuse:false HemaCalendar.slnx
+
+# юнит-тесты фронта (раскладка месяца, разбор адреса, текст) — в контейнере с node 22
+docker run --rm -v "$(pwd)/frontend:/app" -w /app node:22-alpine \
+  node --experimental-strip-types --test "src/**/*.test.ts"
+
+# браузерный смоук против поднятого стенда
+sh scripts/e2e-smoke.sh
+```
+
+Полный прогон на каждый push делает `.github/workflows/ci.yml`; выкладка (`deploy.yml`)
+запускается кнопкой и не стартует без зелёного CI.
 
 ## API
 
@@ -48,21 +79,29 @@ docker compose up -d --build backend frontend
 | `GET /api/admin/submissions` | ключ | очередь на модерацию (видны контакты заявителя) |
 | `POST /api/admin/submissions/{id}/approve` | ключ | одобрить |
 | `POST /api/admin/submissions/{id}/reject` | ключ | отклонить, причина в теле |
+| `PUT /api/admin/directories` | ключ | долить справочники (ничего не удаляет) |
+| `POST /api/admin/events/import` | ключ | импорт турниров пачкой, идемпотентный |
 
 Ключ модератора — заголовок `X-Calendar-Admin-Key`, значение из `Admin__Key`. **Пустой ключ
 закрывает очередь полностью** (404), а не открывает её всем: забытая переменная окружения не
-должна публиковать контакты заявителей.
+должна публиковать контакты заявителей. Ключ задавать только латиницей: значение заголовка HTTP
+не принимает кириллицу.
+
+Браузер ходит в API через свой origin (`/api/…`) — запрос проводит фронт
+(`frontend/app/api/[...path]/route.ts`), читая адрес бэкенда в момент запроса. Поэтому нет ни
+CORS, ни зашитого в бандл адреса, ни открытого наружу порта бэкенда.
 
 ## Страницы
 
 | Адрес | Что |
 |---|---|
-| `/` | список ближайших турниров |
+| `/` | календарь: сетка месяца или список, фильтры в адресе страницы |
 | `/events/{slug}` | карточка турнира: даты, место, организатор, номинации |
-| `/submit` | заявка на турнир без регистрации |
+| `/submit` | заявка на турнир без регистрации, с номинациями |
+| `/moderation` | очередь модерации по ключу; ссылок с сайта нет намеренно |
 
 ## Чего ещё нет
 
-Сетка месяца и лента недель, фильтры на странице, номинации в форме заявки, импорт из внешних
-источников, автотесты, разворачивание на сервере. Каркас сделан так, чтобы это добавлялось по
-частям.
+- сервера: VPS, реестр образов и домен не заведены (`docs/Deploy.md` §6);
+- писем заявителю — контакт нужен, чтобы модератор написал сам;
+- карты и подписки на фильтр — обсуждаемое, не решённое.
