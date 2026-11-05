@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 /**
  * Смоук статического календаря: страницы открываются, ссылки ведут куда надо, фильтры
@@ -11,37 +11,42 @@ import { expect, test, type Page } from '@playwright/test';
 const MONTHS = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
   'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
-async function monthTitle(page: Page): Promise<string> {
-  return (await page.locator('h1').first().innerText()).trim();
-}
-
 test.describe('Календарь', () => {
-  test('сетка месяца открывается и показывает текущий месяц', async ({ page }) => {
+  test('лента недель открывается главным видом', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('load');
+
+    // Лента — вид по умолчанию, как в портале: недели строками, дни колонками.
+    await expect(page.getByText('пн', { exact: true })).toBeVisible();
+    await expect(page.getByText('воскресенье', { exact: true })).toBeVisible();
+    await expect(page.locator('a[href*="/events/"]').first()).toBeVisible();
+  });
+
+  test('сетка месяца открывается и показывает текущий месяц', async ({ page }) => {
+    await page.goto('/?view=month');
     await page.waitForLoadState('load');
 
     // «Сегодня» календарь считает по Москве, а прогон может идти в UTC: в ночь на первое
     // число ожидания разъехались бы на месяц.
     const moscow = new Date(Date.now() + 3 * 60 * 60 * 1000);
-    await expect(page.locator('h1').first()).toContainText(MONTHS[moscow.getUTCMonth()]);
-    await expect(page.locator('h1').first()).toContainText(String(moscow.getUTCFullYear()));
+    // Заголовка у сетки нет (как в портале — месяц показывает полоска), поэтому сверяем
+    // выбранный месяц по ней.
+    await expect(page.getByRole('link', { name: new RegExp(`^${MONTHS[moscow.getUTCMonth()]}`) }))
+      .toHaveAttribute('aria-current', 'date');
 
-    await expect(page.getByText('пн', { exact: true })).toBeVisible();
-    await expect(page.getByText('вс', { exact: true })).toBeVisible();
     // Сегодняшнее число подсвечено ровно одно.
     await expect(page.locator('.bg-primary.rounded-full')).toHaveCount(1);
   });
 
-  test('месяц листается ссылками и возвращается кнопкой «Сегодня»', async ({ page }) => {
-    await page.goto('/');
-    const start = await monthTitle(page);
+  test('полоска месяцев листает календарь', async ({ page }) => {
+    await page.goto('/?view=month');
 
-    await page.getByLabel('Следующий месяц').click();
-    await expect(page.locator('h1').first()).not.toHaveText(start);
-    expect(page.url()).toContain('month=');
-
-    await page.getByRole('link', { name: 'Сегодня' }).click();
-    await expect(page.locator('h1').first()).toHaveText(start);
+    // Полоска — главная навигация календаря портала: месяц выбирается ссылкой с числом турниров.
+    const march = page.getByRole('link', { name: /^Март/ });
+    await expect(march).toBeVisible();
+    await march.click();
+    await page.waitForURL(/month=/);
+    await expect(page.getByRole('link', { name: /^Март/ })).toHaveAttribute('aria-current', 'date');
   });
 
   test('турнир открывается своей страницей, и она собрана заранее', async ({ page }) => {
@@ -60,17 +65,20 @@ test.describe('Календарь', () => {
     expect(await response.text()).toContain(title);
   });
 
-  test('фильтр по оружию сужает список, «Сбросить» возвращает', async ({ page }) => {
+  test('фильтр по оружию сужает список и снимается «Сбросить»', async ({ page }) => {
     await page.goto('/?view=list&period=all');
-    await page.getByRole('button', { name: /Фильтры/ }).click();
-
     const rows = page.locator('a[href*="/events/"]');
     const before = await rows.count();
     expect(before).toBeGreaterThan(0);
 
-    await page.getByRole('button', { name: 'Сабля', exact: true }).click();
-    await expect(rows).not.toHaveCount(before);
-    expect(page.url()).toContain('weapons=saber');
+    // Оружие — мультиселект, как в портале: снимаем «Все» и отмечаем одну саблю.
+    await page.getByTitle(/^Оружие/).click();
+    // «Все» есть и в списке периода — берём то, что внутри раскрытого списка оружия.
+    const weaponPanel = page.locator('div.absolute').filter({ hasText: 'Сабля' }).first();
+    await weaponPanel.getByText('Все', { exact: true }).click();
+    await weaponPanel.getByText('Сабля', { exact: true }).click();
+
+    await expect(page).toHaveURL(/weapons=saber/);
     const filtered = await rows.count();
     expect(filtered).toBeGreaterThan(0);
     expect(filtered).toBeLessThan(before);
@@ -86,7 +94,8 @@ test.describe('Календарь', () => {
 
     await page.reload();
     await expect(page.locator('a[href*="/events/"]')).toHaveCount(count);
-    await expect(page.getByRole('button', { name: 'Сабля', exact: true })).toHaveAttribute('aria-pressed', 'true');
+    // Активный фильтр виден в самой строке: триггер оружия перекрашивается акцентом.
+    await expect(page.getByTitle(/^Оружие/)).toHaveClass(/text-primary/);
   });
 
   test('прошедшие показываются от свежих к старым', async ({ page }) => {
@@ -124,5 +133,25 @@ test.describe('Для поисковика', () => {
     const xml = await response.text();
     expect(xml).toContain('/events/');
     expect((xml.match(/<url>/g) ?? []).length).toBeGreaterThan(100);
+  });
+});
+
+test.describe('Собранные файлы', () => {
+  test('картинки и стили страницы не битые', async ({ page }) => {
+    // Прямая память о живом дефекте: логотип уехал на Pages с адресом без подкаталога и там
+    // давал 404, а локальный смоук этого не видел — подкаталога у него не было. Теперь в CI
+    // сайт собирается с подкаталогом, и эта проверка ловит любой адрес, промахнувшийся мимо.
+    const broken: string[] = [];
+    page.on('response', (response) => {
+      if (response.status() >= 400) broken.push(`${response.status()} ${response.url()}`);
+    });
+
+    await page.goto('/');
+    await page.waitForLoadState('load');
+
+    const logo = page.locator('header img');
+    await expect(logo).toBeVisible();
+    expect(await logo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
+    expect(broken).toEqual([]);
   });
 });

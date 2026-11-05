@@ -10,6 +10,8 @@ import { defineConfig } from '@playwright/test';
  * zenika/alpine-chrome:with-node (свой Playwright не качает, в alpine он и не поставится).
  */
 const PORT = Number(process.env.E2E_PORT ?? 3002);
+// Подкаталог публикации: в CI сайт собирается ровно так, как уезжает на Pages.
+const BASE_PATH = (process.env.E2E_BASE_PATH ?? '').replace(/\/$/, '');
 
 export default defineConfig({
   testDir: './tests',
@@ -18,13 +20,13 @@ export default defineConfig({
   workers: 1,
   reporter: [['list']],
   webServer: {
-    command: `node static-server.mjs ${process.env.E2E_SITE ?? '../frontend/out'} ${PORT}`,
-    url: `http://127.0.0.1:${PORT}/`,
+    command: `node static-server.mjs ${process.env.E2E_SITE ?? '../frontend/out'} ${PORT} ${BASE_PATH}`,
+    url: `http://127.0.0.1:${PORT}${BASE_PATH}/`,
     reuseExistingServer: true,
     timeout: 30_000,
   },
   use: {
-    baseURL: `http://127.0.0.1:${PORT}`,
+    baseURL: `http://127.0.0.1:${PORT}${BASE_PATH}`,
     launchOptions: {
       executablePath: process.env.CHROMIUM_PATH ?? '/usr/bin/chromium-browser',
       args: ['--no-sandbox', '--disable-dev-shm-usage'],

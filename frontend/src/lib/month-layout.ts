@@ -129,7 +129,7 @@ type Classified<T extends LayoutEvent> = {
 };
 
 /** Стабильный тай-брейк: при полностью совпадающих датах порядок не должен зависеть от входа. */
-function bySlug<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
+function byId<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
   return a.event.slug < b.event.slug ? -1 : a.event.slug > b.event.slug ? 1 : 0;
 }
 
@@ -137,8 +137,8 @@ function bySlug<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): numb
  * Раньше начинается — выше; при равном начале КОРОЧЕ — выше, чтобы под коротким сегментом
  * осталось окошко с датой дня.
  */
-function compareSegments<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
-  return a.start - b.start || a.end - b.end || bySlug(a, b);
+function compareBars<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
+  return a.start - b.start || a.end - b.end || byId(a, b);
 }
 
 export type MonthDayCell = {
@@ -241,7 +241,7 @@ export function layoutMonth<T extends LayoutEvent>(
         lastColumn: Math.min(6, end - monday),
       });
     }
-    touching.sort(compareSegments);
+    touching.sort(compareBars);
 
     const segments: MonthSegment<T>[] = [];
     const laneEnds: number[] = [];
@@ -280,4 +280,311 @@ export function todayLocal(): string {
 export function shiftMonth(year: number, month: number, delta: number): { year: number; month: number } {
   const total = year * 12 + month + delta;
   return { year: Math.floor(total / 12), month: ((total % 12) + 12) % 12 };
+}
+
+
+// ---------------------------------------------------------------------------
+// Лента недель — перенос из портала (slices/events/lib/calendar-layout.ts).
+// Бары над уикендом, нити будничных событий, аннексированный понедельник: главный вид
+// календаря портала, и выглядеть он должен так же. Праздников здесь нет (их список живёт
+// в портальном API), признака «подходит мне» тоже — календарь не знает, кто его читает.
+// ---------------------------------------------------------------------------
+
+/** Колонка недели: 0..4 — пн..пт (узкие), 5 — сб, 6 — вс (широкие), 7 — хвостовая (пн-хвост). */
+export const TAIL_COLUMN = 7;
+
+export type BarPlacement<T extends LayoutEvent = LayoutEvent> = {
+  event: T;
+  /** Ярус (0 — верхний). */
+  lane: number;
+  /** Включительные границы колонок 0..7. */
+  startColumn: number;
+  endColumn: number;
+  /** Событие началось раньше этой недели / кончается позже — рисуем «обрезанный» край. */
+  continuesLeft: boolean;
+  continuesRight: boolean;
+};
+
+/**
+ * Нить-продолжение: событие нарисовано баром в ЭТОЙ строке, а в следующей продолжается нитью.
+ * Рисуется тонкой линией по нижней кромке своих дней — тем же цветом, что нить следующей строки,
+ * чтобы два сегмента читались как одно событие (решение заказчика 27.10.2026).
+ */
+export type BarContinuation<T extends LayoutEvent = LayoutEvent> = {
+  event: T;
+  startColumn: number;
+  endColumn: number;
+  color: ThreadColor;
+};
+
+export type StripePlacement<T extends LayoutEvent = LayoutEvent> = {
+  event: T;
+  lane: number;
+  continuesLeft: boolean;
+  continuesRight: boolean;
+};
+
+export type ThreadPlacement<T extends LayoutEvent = LayoutEvent> = {
+  event: T;
+  /** Ярус сносок вниз (0 — ближайший к строке недели). */
+  lane: number;
+  /** Колонка первого дня события в этой неделе (0..4). */
+  startColumn: number;
+  /** Последний день события в этой неделе — нужен для градиента плашек. */
+  endColumn: number;
+  /** Цвет из палитры металлов по порядку; null — нить ушла в деградацию (см. overflowThreads). */
+  color: ThreadColor | null;
+};
+
+/** Палитра нитей — металлы (спека §7). Больше четырёх будничных событий в неделе не бывает. */
+export type ThreadColor = 'gold' | 'bronze' | 'silver' | 'steel';
+export const THREAD_COLORS: ThreadColor[] = ['gold', 'bronze', 'silver', 'steel'];
+export const MAX_THREAD_LANES = THREAD_COLORS.length;
+
+export type DayCell = {
+  /** 'YYYY-MM-DD'. */
+  date: string;
+  day: number;
+  month: number;
+  year: number;
+  /** 0..6 — пн..вс. */
+  column: number;
+  isWeekend: boolean;
+};
+
+export type WeekLayout<T extends LayoutEvent = LayoutEvent> = {
+  /** Понедельник недели, 'YYYY-MM-DD'. */
+  weekStart: string;
+  days: DayCell[];
+  stripes: StripePlacement<T>[];
+  bars: BarPlacement<T>[];
+  threads: ThreadPlacement<T>[];
+  /** Нити-продолжения баров этой строки (цвет берётся у нити следующей, см. layoutRange). */
+  continuations: BarContinuation<T>[];
+  /** Нити сверх четырёх — не падаем, показываем простым списком под неделей. */
+  overflowThreads: T[];
+  /** Сколько ярусов занято барами (для высоты строки). */
+  laneCount: number;
+  /** Сколько ярусов сносок. */
+  threadLaneCount: number;
+  /** Подпись разделителя месяца ПЕРЕД этой неделей: [year, monthIndex] или null. */
+  monthDivider: { year: number; month: number } | null;
+};
+
+/**
+ * Нити (чисто будничные события): раньше начинается — выше; при равном начале ПОЗЖЕ
+ * ЗАКАНЧИВАЕТСЯ — выше. Правило заказчика прямо противоположно барному, поэтому компараторы
+ * разведены явно.
+ */
+function compareThreads<T extends LayoutEvent>(a: Classified<T>, b: Classified<T>): number {
+  return a.start - b.start || b.end - a.end || byId(a, b);
+}
+
+function buildDays(weekStart: string): DayCell[] {
+  const base = dayNumber(weekStart);
+  const days: DayCell[] = [];
+  for (let i = 0; i < 7; i++) {
+    const date = fromDayNumber(base + i);
+    const { year, month, day } = parseDate(date);
+    days.push({ date, day, month, year, column: i, isWeekend: i >= 5 });
+  }
+  return days;
+}
+
+/**
+ * Раскладка одной недели. `events` — все события, чей интервал пересекается с этой неделей
+ * (лишние молча отфильтровываются, так что можно передавать и весь список окна).
+ */
+export function layoutWeek<T extends LayoutEvent>(
+  weekStart: string,
+  events: readonly T[],
+): WeekLayout<T> {
+  const monday = dayNumber(weekStart);
+  const sunday = monday + 6;
+  const nextMonday = monday + 7;
+
+  const touching: Classified<T>[] = [];
+  for (const event of events) {
+    const start = dayNumber(event.startsAt);
+    const end = Math.max(start, dayNumber(event.endsAt));
+    if (end < monday || start > sunday) continue;
+    touching.push({
+      event,
+      start,
+      end,
+      firstColumn: Math.max(0, start - monday),
+      lastColumn: Math.min(6, end - monday),
+    });
+  }
+
+  // Порядок баров и полос (уикенд-события). Раньше начинается — выше; при РАВНОМ начале КОРОЧЕ —
+  // выше (пересмотр 2026-08-05: короткое событие сверху освобождает окошко под собой, и в нём видна
+  // дата дня; раньше наверх шло длинное и дата пряталась). Жадная упаковка ниже не меняется —
+  // экономия строк остаётся приоритетом. Стабильный тай-брейк по id — для детерминированности.
+  // ВНИМАНИЕ: у НИТЕЙ правило другое, см. compareThreads ниже — комбинировать их нельзя.
+  touching.sort(compareBars);
+
+  const stripes: StripePlacement<T>[] = [];
+  const bars: BarPlacement<T>[] = [];
+  const threadCandidates: Classified<T>[] = [];
+
+  for (const item of touching) {
+    const coversWholeWeek = item.start <= monday && item.end >= sunday;
+    const isLongerThanWeek = item.end - item.start + 1 >= 7;
+    const touchesWeekend = item.lastColumn >= 5;
+
+    if (coversWholeWeek && isLongerThanWeek) {
+      stripes.push({
+        event: item.event,
+        lane: stripes.length,
+        continuesLeft: item.start < monday,
+        continuesRight: item.end > sunday,
+      });
+      continue;
+    }
+
+    if (touchesWeekend) {
+      // Аннексия понедельника-хвоста: он живёт в 8-й колонке ЭТОЙ строки, а не в следующей неделе —
+      // но ТОЛЬКО когда остаток ровно один день. Решение заказчика 27.10.2026: при остатке в два дня
+      // и больше бар вылезал за правый край строки, а следующая неделя дорисовывала его со вторника,
+      // и событие читалось как два разных. Длинный остаток честнее показать с понедельника.
+      const annexesTail = item.end === nextMonday;
+      bars.push({
+        event: item.event,
+        lane: 0, // проставится упаковкой ниже
+        startColumn: item.firstColumn,
+        endColumn: annexesTail ? TAIL_COLUMN : item.lastColumn,
+        continuesLeft: item.start < monday,
+        continuesRight: !annexesTail && item.end > sunday,
+      });
+      continue;
+    }
+
+    // Чисто будничное событие. Отдельный случай — событие, которое закончилось ровно в этот
+    // понедельник, а началось в прошлой неделе на её уикенде: прошлая строка показала этот
+    // понедельник аннексированным хвостом в 8-й колонке, и второй раз рисовать его нельзя.
+    // Остаток длиннее одного дня прошлая строка больше не аннексирует (см. ветку баров выше),
+    // поэтому он рисуется обычной нитью С ПОНЕДЕЛЬНИКА.
+    const startedInPreviousWeek = item.start < monday && item.start > monday - 7;
+    if (startedInPreviousWeek && item.end === monday) continue;
+    threadCandidates.push(item);
+  }
+
+  packLanes(bars);
+
+  // Порядок НИТЕЙ — свои правила (фидбек заказчика 2026-08-05), не те же, что у баров:
+  //   • начинаются в один день → выше та, что ЗАКАНЧИВАЕТСЯ ПОЗЖЕ (длиннее сверху);
+  //   • заканчиваются в один день → выше та, что начинается раньше;
+  //   • просто накладываются → выше та, что начинается раньше.
+  // Все три сводятся к «start по возрастанию, при равном start — end по УБЫВАНИЮ».
+  threadCandidates.sort(compareThreads);
+
+  const threads: ThreadPlacement<T>[] = [];
+  const overflowThreads: T[] = [];
+  for (const item of threadCandidates) {
+    const lane = threads.length;
+    if (lane >= MAX_THREAD_LANES) {
+      overflowThreads.push(item.event);
+      continue;
+    }
+    threads.push({
+      event: item.event,
+      lane,
+      startColumn: item.firstColumn,
+      endColumn: item.lastColumn,
+      color: THREAD_COLORS[lane],
+    });
+  }
+
+  return {
+    weekStart,
+    days: buildDays(weekStart),
+    stripes,
+    bars,
+    threads,
+    // Заполняется в layoutRange: цвет нити назначает СЛЕДУЮЩАЯ неделя, одной строки для этого мало.
+    continuations: [],
+    overflowThreads,
+    laneCount: bars.reduce((max, bar) => Math.max(max, bar.lane + 1), 0),
+    threadLaneCount: threads.length,
+    monthDivider: null,
+  };
+}
+
+/** Жадная упаковка ярусов как в Ганте: каждый бар — в самый верхний ярус без пересечения по дням. */
+function packLanes<T extends LayoutEvent>(bars: BarPlacement<T>[]): void {
+  const laneEnds: number[] = []; // последняя занятая колонка каждого яруса
+  for (const bar of bars) {
+    let lane = laneEnds.findIndex((end) => end < bar.startColumn);
+    if (lane === -1) {
+      lane = laneEnds.length;
+      laneEnds.push(bar.endColumn);
+    } else {
+      laneEnds[lane] = bar.endColumn;
+    }
+    bar.lane = lane;
+  }
+}
+
+/**
+ * Лента недель от `from` до `to` (границы нормализуются к целым неделям).
+ *
+ * Границы месяцев НЕ режут недели: неделя остаётся целой, разделитель ставится МЕЖДУ строками.
+ * Правило выбора строки (пересмотр 2026-08-05, решение заказчика «мне больше нравится, когда
+ * 1 число месяца приходится на свой месяц»): разделитель — перед неделей, СОДЕРЖАЩЕЙ 1-е число
+ * месяца, то есть переходная неделя уходит в новый месяц. Раньше это была первая целиком новая
+ * неделя, и 1-е число оказывалось под заголовком предыдущего месяца.
+ *
+ * Исключение — самая первая строка окна: если 1-го числа в ней нет, она всё равно подписывается
+ * (месяцем своего понедельника), иначе лента начиналась бы без заголовка вовсе.
+ */
+export function layoutRange<T extends LayoutEvent>(
+  from: string,
+  to: string,
+  events: readonly T[],
+  options: { firstDividerMonth?: { year: number; month: number } | null } = {},
+): WeekLayout<T>[] {
+  const first = dayNumber(startOfWeek(from));
+  const last = dayNumber(startOfWeek(to));
+
+  const weeks: WeekLayout<T>[] = [];
+  let shown = options.firstDividerMonth ?? null;
+
+  for (let n = first; n <= last; n += 7) {
+    const weekStart = fromDayNumber(n);
+    const week = layoutWeek(weekStart, events);
+    const firstOfMonth = week.days.find((d) => d.day === 1);
+    const candidate = firstOfMonth
+      ? { year: firstOfMonth.year, month: firstOfMonth.month }
+      : shown === null
+        ? { year: week.days[0].year, month: week.days[0].month }
+        : null;
+
+    if (candidate && (shown === null || shown.year !== candidate.year || shown.month !== candidate.month)) {
+      week.monthDivider = candidate;
+      shown = candidate;
+    }
+
+    weeks.push(week);
+  }
+
+  // Нити-продолжения: проставляются после того, как все недели разложены, — цвет берётся у нити
+  // следующей строки, иначе под баром и под его продолжением оказались бы разные металлы.
+  for (let i = 0; i < weeks.length - 1; i++) {
+    const nextThreads = weeks[i + 1].threads;
+    for (const bar of weeks[i].bars) {
+      if (!bar.continuesRight) continue;
+      const thread = nextThreads.find((t) => t.event.slug === bar.event.slug);
+      // Нить без цвета — та, что ушла в деградацию списком (overflowThreads): связывать не с чем.
+      if (!thread || thread.color === null) continue;
+      weeks[i].continuations.push({
+        event: bar.event,
+        startColumn: bar.startColumn,
+        endColumn: Math.min(bar.endColumn, 6),
+        color: thread.color,
+      });
+    }
+  }
+
+  return weeks;
 }

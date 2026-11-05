@@ -7,6 +7,10 @@ import { extname, join, normalize } from 'node:path';
 
 const root = process.argv[2] ?? '../frontend/out';
 const port = Number(process.argv[3] ?? 3002);
+// Подкаталог, как на Pages: сайт, собранный с basePath, лежит не в корне, и смоук должен
+// ходить ровно так же — иначе ломается только опубликованная версия (так и случилось с
+// логотипом: адрес без подкаталога, 404 на живом сайте и зелёный смоук локально).
+const prefix = (process.argv[4] ?? '').replace(/\/$/, '');
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',

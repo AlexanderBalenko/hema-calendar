@@ -18,14 +18,14 @@ const TODAY = '2026-11-05';
 describe('разбор адреса', () => {
   it('пустой адрес — месяц «сегодня», будущие, без фильтров', () => {
     assert.deepEqual(parseFilters({}, TODAY), {
-      view: 'month',
+      view: 'ribbon',
       month: '2026-11',
       period: 'future',
-      weapons: [],
-      regions: [],
+      weapons: null,
+      regions: null,
       city: null,
       team: false,
-      beginner: false,
+      beginner: 'all',
       q: '',
     });
   });
@@ -39,7 +39,7 @@ describe('разбор адреса', () => {
       regions: 'ЦФО,ЮФО',
       city: 'Казань',
       team: '1',
-      beginner: '1',
+      beginner: 'only',
       q: '  Алга!  ',
     }, TODAY);
     assert.equal(filters.view, 'list');
@@ -49,6 +49,7 @@ describe('разбор адреса', () => {
     assert.deepEqual(filters.regions, ['ЦФО', 'ЮФО']);
     assert.equal(filters.city, 'Казань');
     assert.equal(filters.team, true);
+    assert.equal(filters.beginner, 'only');
     assert.equal(filters.q, 'Алга!');
   });
 
@@ -62,10 +63,12 @@ describe('разбор адреса', () => {
       team: 'yes',
       q: 'x'.repeat(500),
     }, TODAY);
-    assert.equal(filters.view, 'month', 'неизвестный вид — не повод падать');
+    assert.equal(filters.view, 'ribbon', 'неизвестный вид — не повод падать, показываем ленту');
     assert.equal(filters.period, 'future');
     assert.equal(filters.month, '2026-11', 'тринадцатого месяца не бывает');
     assert.deepEqual(filters.weapons, ['longsword', 'saber'], 'пустые куски и дубли выброшены');
+    assert.equal(parseFilters({ weapons: '' }, TODAY).weapons, null, 'пустой параметр — «все»');
+    assert.deepEqual(parseFilters({ weapons: '-' }, TODAY).weapons, [], 'дефис — «ничего не выбрано»');
     assert.equal(filters.city, null);
     assert.equal(filters.team, false, 'булев фильтр включается только значением «1»');
     assert.equal(filters.q.length, 100, 'длинный поиск обрезан');
@@ -96,6 +99,12 @@ describe('сборка адреса', () => {
     assert.equal(filtersToSearch({ ...base, month: '2027-03' }, TODAY), '?month=2027-03');
   });
 
+  it('вид по умолчанию — лента, и в адрес он не пишется', () => {
+    assert.equal(base.view, 'ribbon');
+    assert.equal(filtersToSearch(base, TODAY), '');
+    assert.equal(filtersToSearch({ ...base, view: 'month' }, TODAY), '?view=month');
+  });
+
   it('период пишется только для списка: в сетке месяца он ничего не значит', () => {
     assert.equal(filtersToSearch({ ...base, period: 'past' }, TODAY), '');
     assert.equal(filtersToSearch({ ...base, view: 'list', period: 'past' }, TODAY), '?view=list&period=past');
@@ -110,7 +119,7 @@ describe('сборка адреса', () => {
       regions: ['ЦФО'],
       city: 'Казань',
       team: true,
-      beginner: true,
+      beginner: 'only',
       q: 'алга',
     };
     const search = filtersToSearch(filters, TODAY);
@@ -123,6 +132,8 @@ describe('сборка адреса', () => {
   it('активные фильтры считаются без вида, месяца и периода', () => {
     assert.equal(hasActiveFilters(base), false);
     assert.equal(hasActiveFilters({ ...base, view: 'list', period: 'all', month: '2020-01' }), false);
+    assert.equal(hasActiveFilters({ ...base, beginner: 'hide' }), true);
+    assert.equal(hasActiveFilters({ ...base, weapons: [] }), true, 'пустой выбор — тоже фильтр');
     assert.equal(hasActiveFilters({ ...base, city: 'Казань' }), true);
     assert.equal(hasActiveFilters({ ...base, q: 'а' }), true);
   });
@@ -133,7 +144,8 @@ describe('видимый отрезок', () => {
 
   it('сетка месяца захватывает хвосты соседних месяцев', () => {
     // Ноябрь 2026 начинается в воскресенье: сетка идёт с 26 октября по 6 декабря.
-    assert.deepEqual(visibleRange({ ...base, month: '2026-11' }, TODAY), { from: '2026-10-26', to: '2026-12-06' });
+    assert.deepEqual(visibleRange({ ...base, view: 'month', month: '2026-11' }, TODAY),
+      { from: '2026-10-26', to: '2026-12-06' });
   });
 
   it('список: будущие — от сегодня, прошедшие — до сегодня, все — без границ', () => {
@@ -176,7 +188,7 @@ describe('отбор турниров', () => {
       event({ slug: 'раньше', startsAt: '2026-10-01', endsAt: '2026-10-02' }),
       event({ slug: 'позже', startsAt: '2027-01-10' }),
     ];
-    const selected = selectEvents(events, { ...base, month: '2026-11' }, TODAY);
+    const selected = selectEvents(events, { ...base, view: 'month', month: '2026-11' }, TODAY);
     assert.deepEqual(selected.map((e) => e.slug), ['через-границу']);
   });
 
@@ -223,9 +235,11 @@ describe('отбор турниров', () => {
     assert.deepEqual(slugs({ city: 'Казань' }), ['сабля-казань']);
     assert.deepEqual(slugs({ city: 'казань' }), ['сабля-казань'], 'город без учёта регистра');
     assert.deepEqual(slugs({ team: true }), ['меч-москва']);
-    assert.deepEqual(slugs({ beginner: true }), ['сабля-казань']);
+    assert.deepEqual(slugs({ beginner: 'only' }), ['сабля-казань']);
+    assert.deepEqual(slugs({ beginner: 'hide' }), ['меч-москва'], 'скрыть новичковые — убрать турниры с ними');
     assert.deepEqual(slugs({ weapons: ['saber', 'longsword'] }), ['сабля-казань', 'меч-москва'],
       'несколько видов оружия — это ИЛИ, а не И');
+    assert.deepEqual(slugs({ weapons: [] }), [], 'снятый выбор показывает пустой календарь, а не всё');
   });
 
   it('поиск идёт по названию и организатору, без учёта регистра и ё', () => {

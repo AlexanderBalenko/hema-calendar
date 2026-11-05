@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Inter, Playfair_Display } from 'next/font/google';
 
@@ -18,6 +17,14 @@ const playfair = Playfair_Display({
   display: 'swap',
 });
 
+/**
+ * Подкаталог сайта. На Pages календарь лежит в /hema-calendar, на своём домене — в корне.
+ * Ссылки Next подставляет сам, а вот адрес картинки — нет: next/image с unoptimized отдаёт src
+ * как есть, и логотип ломался на опубликованном сайте. Поэтому обычный <img> и явный префикс —
+ * переменная подставляется на сборке, в разметку уезжает готовый адрес.
+ */
+const BASE_PATH = process.env.PAGES_BASE_PATH ?? '';
+
 export const metadata: Metadata = {
   title: 'Календарь турниров HEMA',
   description: 'Турниры по историческому фехтованию: прошедшие и будущие, с фильтрами по оружию, региону и датам.',
@@ -32,12 +39,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
             <Link href="/" aria-label="Календарь HEMA — на главную" className="shrink-0">
-              <Image
-                src="/logo-horizontal.png"
+              {/* eslint-disable-next-line @next/next/no-img-element -- см. BASE_PATH выше */}
+              <img
+                src={`${BASE_PATH}/logo-horizontal.png`}
                 alt="HEMA.RU"
                 width={160}
                 height={32}
-                priority
                 className="h-8 w-auto object-contain"
               />
             </Link>

@@ -24,5 +24,6 @@ MSYS_NO_PATHCONV=1 docker run --rm --entrypoint sh \
   --user root \
   -v "$ROOT:/work" -w /work/e2e \
   -e CHROMIUM_PATH=/usr/bin/chromium-browser \
+  -e E2E_BASE_PATH="${E2E_BASE_PATH:-}" \
   zenika/alpine-chrome:with-node \
   -c "npm install --no-audit --no-fund --loglevel=error && npx playwright test"
