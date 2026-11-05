@@ -59,6 +59,21 @@ def source_key(title: str, start: str) -> str:
     return f"{start}:{normalized[:80]}"
 
 
+# Куски, которые сами по себе номинацией не являются: это уточнение к предыдущей («сабля, Ж»,
+# «длинный меч (соло) общая»). Они приклеиваются к предыдущей номинации, а не заводят свою —
+# иначе в календаре появляется «оружие» под названием «Ж».
+QUALIFIER_WORDS = {
+    "ж", "м", "жен", "муж", "женская", "мужская", "женский", "мужской",
+    "общая", "общий", "общее", "соло", "пара", "парная", "ком", "команда", "командная",
+    "новички", "дети", "детская", "юноши",
+}
+
+
+def is_qualifier(fragment: str) -> bool:
+    words = [w for w in re.split(r"[^а-яёa-z0-9]+", fragment.lower()) if w]
+    return bool(words) and all(w in QUALIFIER_WORDS for w in words)
+
+
 def nominations_from_text(text: str) -> list[dict]:
     """Номинации из свободного текста Google-таблицы: «л, сабля, ком» и подобное."""
     if not text or text.strip() in ("", "(номинации не указаны)"):
@@ -66,22 +81,47 @@ def nominations_from_text(text: str) -> list[dict]:
     synonyms = [
         ("длинн", "longsword"), ("меч и баклер", "buckler"), ("баклер", "buckler"),
         ("рапир", "rapier"), ("сабл", "saber"), ("мессер", "messer"), ("дюссак", "dussack"),
-        ("копь", "spear"), ("кинжал", "dagger"), ("монтанте", "montante"), ("сайдсворд", "sidesword"),
+        ("копь", "spear"), ("кинжал", "dagger"), ("дага", "dagger"), ("монтанте", "montante"),
+        ("сайдсворд", "sidesword"),
     ]
-    result = []
-    for part in re.split(r"[;,/]| и ", text):
-        low = part.strip().lower()
+    # «Меч и баклер» — одно оружие, но разделитель « и » рвал его пополам и заводил номинацию
+    # «меч». Склеиваем до разбора.
+    guarded = re.sub(r"меч\s+и\s+баклер", "меч-и-баклер", text, flags=re.IGNORECASE)
+
+    result: list[dict] = []
+    for part in re.split(r"[;,/]| и ", guarded):
+        fragment = part.strip().replace("меч-и-баклер", "меч и баклер")
+        low = fragment.lower()
         if not low:
             continue
+
         code = next((c for marker, c in synonyms if marker in low), None)
+        # Сокращения таблицы: «л» — длинный меч (в шапке так и написано: «л, сабля, ком»).
+        if code is None and low in ("л", "дм"):
+            code = "longsword"
+        # Пол пишут отдельной буквой («сабля Ж», «дага М.»), поэтому сравниваем слова
+        # целиком: подстрока «м» нашлась бы в любом «мече», а «ж» — в «кинжале».
+        words = [w for w in re.split(r"[^а-яёa-z0-9]+", low) if w]
+        gender = ("Female" if any(w == "ж" or w.startswith(("жен", "девуш")) for w in words)
+                  else "Male" if any(w == "м" or w.startswith("муж") for w in words) else None)
+
+        if code is None and result and is_qualifier(fragment):
+            previous = result[-1]
+            if gender:
+                previous["gender"] = gender
+            previous["isTeam"] = previous["isTeam"] or any(m in low for m in TEAM_MARKERS)
+            previous["isBeginnerFriendly"] = previous["isBeginnerFriendly"] or any(m in low for m in BEGINNER_MARKERS)
+            previous["notes"] = f"{previous['notes']}, {fragment}"[:500] if previous["notes"] else fragment[:500]
+            continue
+
         result.append({
             "weaponCode": code,
-            "weaponText": None if code else part.strip()[:120],
-            "gender": "Female" if "жен" in low else "Male" if "муж" in low else "Any",
+            "weaponText": None if code else fragment[:120],
+            "gender": gender or "Any",
             "minAge": None, "maxAge": None,
             "isTeam": any(m in low for m in TEAM_MARKERS),
             "isBeginnerFriendly": any(m in low for m in BEGINNER_MARKERS),
-            "notes": part.strip()[:500] or None,
+            "notes": fragment[:500] or None,
         })
     return result
 

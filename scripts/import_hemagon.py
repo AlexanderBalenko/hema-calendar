@@ -48,6 +48,12 @@ CITY_EN_TO_RU = {
 
 # weapon.title хемагона (EN) -> код оружия календаря. Дюссак хемагон пишет двумя способами, и без
 # второго написания в портале терялись 13 номинаций.
+#
+# Внимание: название у хемагона СОСТАВНОЕ — «longsword - women», «sword & buckler - kids»,
+# «rapier & dagger - advanced». Прямым поиском по словарю распознавалась только половина: 1062
+# номинации из 2016 уехали в календарь строкой «longsword - women» и показывались в списке как
+# отдельное «оружие». Разбор — в weapon_of(): сначала целиком, потом голова до « - », потом голова
+# до «&» («longsword & rondel» — это длинный меч с рондельным кинжалом, а не отдельный вид).
 WEAPON_EN_TO_CODE = {
     "longsword": "longsword", "rapier": "rapier", "rapier & dagger": "rapier",
     "smallsword": "rapier", "saber": "saber", "sabre": "saber", "messer": "messer",
@@ -60,8 +66,10 @@ WEAPON_EN_TO_CODE = {
 
 TEAM_MARKERS = ("команд", "ком.", "team", "парн")
 BEGINNER_MARKERS = ("нович", "начина", "beginner", "kids", "дет", "юнош")
-FEMALE_MARKERS = ("жен", "women", "female", "девуш")
-MALE_MARKERS = ("муж", "men", "male")
+# «woman» и «girls» обязательны: у хемагона 192 номинации названы «saber - woman», и без этого
+# написания они уезжали мужскими. Женские маркеры проверяются ПЕРВЫМИ: в «women» сидит «men».
+FEMALE_MARKERS = ("жен", "women", "woman", "female", "девуш", "girls")
+MALE_MARKERS = ("муж", "men", "male", "boys")
 AGE_RANGE = re.compile(r"(\d{1,2})\s*[-–—]\s*(\d{1,2})\s*(?:лет|года|год)?")
 AGE_PLUS = re.compile(r"(\d{1,2})\s*\+")
 
@@ -79,13 +87,28 @@ def get_json(url: str, attempts: int = 3) -> dict:
     raise SystemExit(f"хемагон не ответил: {url} — {last}")
 
 
+def weapon_of(weapon_title: str) -> str | None:
+    """Код оружия из составного названия хемагона; None — если вида нет в справочнике."""
+    low = weapon_title.strip().lower()
+    if not low:
+        return None
+    head = low.partition(" - ")[0].strip()
+    for candidate in (low, head, head.split("&")[0].strip()):
+        code = WEAPON_EN_TO_CODE.get(candidate)
+        if code:
+            return code
+    return None
+
+
 def nominations_of(detail: dict) -> list[dict]:
     result = []
     for nom in detail.get("nominations") or []:
         title = (nom.get("title") or "").strip()
-        low = title.lower()
-        weapon_en = ((nom.get("weapon") or {}).get("title") or "").strip().lower()
-        code = WEAPON_EN_TO_CODE.get(weapon_en)
+        weapon_raw = ((nom.get("weapon") or {}).get("title") or "").strip()
+        code = weapon_of(weapon_raw)
+        # Категория (women / kids / team / advanced) живёт в том же названии оружия, поэтому
+        # маркеры ищем и в нём, а не только в названии номинации.
+        low = f"{title} {weapon_raw}".lower()
 
         min_age = max_age = None
         match = AGE_RANGE.search(low)
@@ -107,13 +130,15 @@ def nominations_of(detail: dict) -> list[dict]:
             "weaponCode": code,
             # Нераспознанное оружие не выбрасываем: пишем словами, как в источнике, — иначе
             # номинация исчезает молча и турнир выглядит пустым.
-            "weaponText": None if code else (weapon_en or title or None),
+            "weaponText": None if code else (weapon_raw or title or None),
             "gender": gender,
             "minAge": min_age,
             "maxAge": max_age,
             "isTeam": any(marker in low for marker in TEAM_MARKERS),
             "isBeginnerFriendly": any(marker in low for marker in BEGINNER_MARKERS),
-            "notes": title or None,
+            # Категория из названия оружия («longsword - advanced») остаётся в заметке: сам код
+            # оружия её не хранит, а для человека это половина смысла номинации.
+            "notes": title or (weapon_raw if " - " in weapon_raw else None),
         })
     return result
 
