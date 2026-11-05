@@ -47,13 +47,12 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      - name: Включить Pages и узнать адрес
+      # Pages включаются один раз и человеком: встроенному токену создавать сайт не
+      # разрешено («Resource not accessible by integration»), и enablement: true здесь только
+      # ронял выкладку. Если Pages выключены — Settings → Pages → Source: GitHub Actions.
+      - name: Узнать адрес сайта
         id: pages
         uses: actions/configure-pages@v5
-        with:
-          # Первый прогон включает Pages сам: иначе выкладку пришлось бы начинать с ручного
-          # щелчка в настройках репозитория.
-          enablement: true
 
       - run: pip install pyyaml
       - name: Собрать данные сайта
