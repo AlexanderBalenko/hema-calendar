@@ -2,16 +2,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { fetchEvent } from '@/src/lib/api';
+import { formatDateRange } from '@/src/lib/month-layout';
+import { formatPlace } from '@/src/lib/text';
 
 export const dynamic = 'force-dynamic';
 
 const GENDER_LABEL: Record<string, string> = { Any: 'общая', Male: 'мужская', Female: 'женская' };
-
-function formatRange(startsAt: string, endsAt: string): string {
-  const fmt = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-  const start = fmt.format(new Date(`${startsAt}T00:00:00Z`));
-  return startsAt === endsAt ? start : `${start} — ${fmt.format(new Date(`${endsAt}T00:00:00Z`))}`;
-}
 
 export default async function EventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -19,7 +15,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   if (!data) notFound();
 
   const { event, description } = data;
-  const place = [event.city, event.locationManual].filter(Boolean).join(', ');
+  const place = formatPlace(event.city, event.locationManual);
 
   return (
     <article className="flex flex-col gap-4">
@@ -28,8 +24,9 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-2xl text-foreground">{event.title}</h1>
         <p className="text-sm text-text-secondary">
-          {formatRange(event.startsAt, event.endsAt)}
+          {formatDateRange(event.startsAt, event.endsAt, true)}
           {place && ` · ${place}`}
+          {event.macroRegion && <span className="text-text-muted"> · {event.macroRegion}</span>}
         </p>
         {event.organizerName && <p className="text-sm text-text-muted">Организатор: {event.organizerName}</p>}
       </header>
@@ -50,7 +47,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                   {n.minAge != null && ` · от ${n.minAge}`}
                   {n.maxAge != null && ` до ${n.maxAge}`}
                 </span>
-                {n.notes && <span className="text-text-faint"> — {n.notes}</span>}
+                {n.notes && n.notes !== n.weapon && <span className="text-text-faint"> — {n.notes}</span>}
               </li>
             ))}
           </ul>

@@ -1,69 +1,79 @@
-import Link from 'next/link';
-
-import { fetchCalendar, type CalendarEvent } from '@/src/lib/api';
+import { EventList } from '@/src/components/event-list';
+import { FilterBar } from '@/src/components/filter-bar';
+import { MonthGrid } from '@/src/components/month-grid';
+import { MonthNav } from '@/src/components/month-nav';
+import { fetchCalendar, fetchDirectories, type CalendarEvent, type Directories } from '@/src/lib/api';
+import {
+  filtersToQuery,
+  isInPeriod,
+  parseFilters,
+  parseMonthKey,
+  type RawParams,
+} from '@/src/lib/filters';
+import { todayLocal } from '@/src/lib/month-layout';
 
 /**
- * Список турниров — первая, намеренно скучная страница каркаса: она доказывает, что цепочка
- * «база → API → страница» живая. Сетка месяца и лента недель переезжают из портала следующим
- * шагом, вместе с фильтрами.
+ * Календарь: сетка месяца или список, фильтры — в адресе страницы (учётных записей в сервисе нет,
+ * сохранять подборку некуда, зато ссылкой с фильтрами можно поделиться).
  */
 export const dynamic = 'force-dynamic';
 
-function formatRange(startsAt: string, endsAt: string): string {
-  const start = new Date(`${startsAt}T00:00:00Z`);
-  const end = new Date(`${endsAt}T00:00:00Z`);
-  const fmt = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', timeZone: 'UTC' });
-  return startsAt === endsAt ? fmt.format(start) : `${fmt.format(start)} — ${fmt.format(end)}`;
-}
+const EMPTY_DIRECTORIES: Directories = { weapons: [], cities: [], macroRegions: [] };
 
-function EventRow({ event }: { event: CalendarEvent }) {
-  const place = [event.city, event.locationManual].filter(Boolean).join(', ');
-  return (
-    <li className="rounded-xl bg-card p-4">
-      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <Link href={`/events/${event.slug}`} className="text-base text-foreground hover:text-primary-light">
-          {event.title}
-        </Link>
-        <span className="text-xs text-text-muted">{formatRange(event.startsAt, event.endsAt)}</span>
-        {place && <span className="text-xs text-text-secondary">{place}</span>}
-        {event.organizerName && <span className="ml-auto text-xs text-text-faint">{event.organizerName}</span>}
-      </div>
-      {event.nominations.length > 0 && (
-        <p className="mt-1 text-xs text-text-muted">
-          {event.nominations.map((n) => n.weapon).join(' · ')}
-        </p>
-      )}
-    </li>
-  );
-}
+export default async function HomePage({ searchParams }: { searchParams: Promise<RawParams> }) {
+  // «Сегодня» считается на сервере, поэтому у контейнера фронта задан TZ=Europe/Moscow: под UTC
+  // вечером по Москве сетка подсвечивала бы вчерашний день.
+  const today = todayLocal();
+  const filters = parseFilters(await searchParams, today);
+  const { year, month } = parseMonthKey(filters.month, today);
 
-export default async function HomePage() {
-  const today = new Date().toISOString().slice(0, 10);
-  let events: CalendarEvent[] = [];
-  let error: string | null = null;
+  const [calendar, directories] = await Promise.allSettled([
+    fetchCalendar(filtersToQuery(filters, today)),
+    fetchDirectories(),
+  ]);
 
-  try {
-    events = await fetchCalendar({ from: today });
-  } catch {
-    // Пустая база и лежащий API для каркаса — обычное состояние: страница обязана открыться и
-    // сказать об этом словами, а не пятисоткой.
-    error = 'Не удалось получить список турниров: проверьте, что API поднят.';
+  const error = calendar.status === 'rejected'
+    ? 'Не удалось получить турниры: API не ответил.'
+    : null;
+  let events: CalendarEvent[] = calendar.status === 'fulfilled' ? calendar.value : [];
+  if (filters.view === 'list') {
+    events = events.filter((event) => isInPeriod(event, filters.period, today));
+    // Прошедшее читают от свежего к старому: 2020 год в начале списка никому не нужен.
+    if (filters.period === 'past') events = [...events].reverse();
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-display text-xl text-foreground">Ближайшие турниры</h1>
+      {filters.view === 'month'
+        ? <MonthNav filters={filters} today={today} />
+        : <h1 className="font-display text-xl text-foreground">Турниры</h1>}
+
+      <FilterBar
+        filters={filters}
+        directories={directories.status === 'fulfilled' ? directories.value : EMPTY_DIRECTORIES}
+        today={today}
+      />
+
       {error && <p className="rounded-xl bg-card p-4 text-sm text-danger">{error}</p>}
-      {!error && events.length === 0 && (
-        <p className="rounded-xl bg-card p-4 text-sm text-text-secondary">
-          Пока ни одного турнира. Импорт с хемагона и из таблиц организаторов — следующий шаг.
-        </p>
+
+      {!error && filters.view === 'month' && (
+        <>
+          <MonthGrid year={year} month={month} events={events} today={today} />
+          {events.length === 0 && (
+            <p className="text-sm text-text-muted">
+              В этом месяце турниров нет{filters.weapons.length || filters.regions.length || filters.cityId || filters.q
+                ? ' — по выбранным фильтрам'
+                : ''}.
+            </p>
+          )}
+        </>
       )}
-      <ul className="flex flex-col gap-2">
-        {events.map((event) => (
-          <EventRow key={event.id} event={event} />
-        ))}
-      </ul>
+
+      {!error && filters.view === 'list' && (
+        events.length === 0
+          ? <p className="rounded-xl bg-card p-4 text-sm text-text-secondary">Ничего не нашлось. Попробуйте снять часть фильтров.</p>
+          : <EventList events={events} today={today} />
+      )}
     </div>
   );
 }

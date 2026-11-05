@@ -1,0 +1,43 @@
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+
+import { formatPlace, weaponSummary } from './text.ts';
+
+describe('formatPlace', () => {
+  it('не повторяет город, который уже есть в адресе', () => {
+    assert.equal(formatPlace('Калуга', 'Калуга'), 'Калуга');
+    assert.equal(formatPlace('Краснодар', 'г. Краснодар ул. Красная 43/1'), 'г. Краснодар ул. Красная 43/1');
+    assert.equal(formatPlace('Орёл', 'г. Орел, ул. Ленина 1'), 'г. Орел, ул. Ленина 1', 'ё и е — один город');
+  });
+
+  it('склеивает разное и переживает пустые', () => {
+    assert.equal(formatPlace('Москва', 'Лужники'), 'Москва, Лужники');
+    assert.equal(formatPlace('Москва', null), 'Москва');
+    assert.equal(formatPlace(null, 'Тбилиси'), 'Тбилиси');
+    assert.equal(formatPlace(null, null), '');
+    assert.equal(formatPlace('  ', ' Казань '), 'Казань');
+  });
+});
+
+describe('weaponSummary', () => {
+  const nom = (weapon: string, weaponCode: string | null = null) => ({ weapon, weaponCode });
+
+  it('показывает распознанное оружие без повторов', () => {
+    assert.deepEqual(
+      weaponSummary([nom('Сабля', 'saber'), nom('Сабля', 'saber'), nom('Рапира', 'rapier')]),
+      ['Сабля', 'Рапира'],
+    );
+  });
+
+  it('сырой текст вытесняется распознанным оружием', () => {
+    assert.deepEqual(
+      weaponSummary([nom('Длинный меч', 'longsword'), nom('longsword - women'), nom('advanced')]),
+      ['Длинный меч'],
+    );
+  });
+
+  it('если распознать нечего — показываем текст, а не пустоту', () => {
+    assert.deepEqual(weaponSummary([nom('katana'), nom('triathlon'), nom('katana')]), ['katana', 'triathlon']);
+    assert.deepEqual(weaponSummary([]), []);
+  });
+});
