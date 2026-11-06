@@ -25,6 +25,25 @@ const playfair = Playfair_Display({
  */
 const BASE_PATH = process.env.PAGES_BASE_PATH ?? '';
 
+/**
+ * Ширина рабочей области — одна константа на шапку, содержимое и подвал.
+ *
+ * Просьба заказчика 06.11.2026: «подсожмём немного календарь — уменьши на четверть ширину за
+ * счёт сб и вс». 61rem (976px) минус отступы по бокам (lg:px-8, 2×32px) = 912px содержимого
+ * вместо прежних 1216.
+ *
+ * Сжатие живёт ЗДЕСЬ, а не в GRID_TEMPLATE ленты, и это ровно то, о чём просили: будни в гриде
+ * фиксированные (5×32px), резиновые только суббота и воскресенье — поэтому все 304px разницы
+ * уходят из уикенда (колонка выходного с 528px до 376px), а будни не трогаются вовсе.
+ *
+ * Шапка и подвал держат ту же ширину тем же значением: ширина, разъехавшаяся с лентой, — уже
+ * знакомый дефект (из-за него в ленте убрали хвостовую колонку, см. calendar-ribbon.tsx).
+ *
+ * Прежний класс полным именем в комментариях не называем: Tailwind сканирует и их, и упомянутый
+ * класс уезжает в собранные стили мёртвым правилом.
+ */
+const CONTENT_WIDTH = 'max-w-[61rem]';
+
 export const metadata: Metadata = {
   title: 'Календарь турниров HEMA',
   description: 'Турниры по историческому фехтованию: прошедшие и будущие, с фильтрами по оружию, региону и датам.',
@@ -37,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Шапка повторяет портальную: липкая, высотой 64px, с размытием под полупрозрачным
             фоном и тем же логотипом. */}
         <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
-          <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
+          <div className={`mx-auto flex h-16 ${CONTENT_WIDTH} items-center gap-4 px-4 sm:px-6 lg:px-8`}>
             <Link href="/" aria-label="Календарь HEMA — на главную" className="shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element -- см. BASE_PATH выше */}
               <img
@@ -58,10 +77,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main className={`mx-auto w-full ${CONTENT_WIDTH} flex-1 px-4 py-6 sm:px-6 lg:px-8`}>{children}</main>
 
         <footer className="border-t border-border">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-baseline gap-x-4 gap-y-1 px-4 py-5 text-xs text-text-faint sm:px-6 lg:px-8">
+          <div className={`mx-auto flex ${CONTENT_WIDTH} flex-wrap items-baseline gap-x-4 gap-y-1 px-4 py-5 text-xs text-text-faint sm:px-6 lg:px-8`}>
             {/* Свежесть данных видно сразу: календарь собирается из файлов репозитория, и
                 «когда он последний раз обновлялся» — честный и важный для читателя факт. */}
             <span>{EVENTS.length} турниров, данные от {formatDateRange(BUILT_AT, BUILT_AT, true)}</span>
