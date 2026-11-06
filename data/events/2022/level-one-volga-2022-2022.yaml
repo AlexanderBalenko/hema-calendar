@@ -1,0 +1,34 @@
+title: 'Level One: Volga 2022'
+starts: 2022-05-28
+ends: 2022-05-29
+city: Самара
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/LevelOneVolga2022
+description: https://vk.com/level_one_volga
+source: portal
+source_key: level-one-volga-2022-2022
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Военная Сабля М
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Военная Сабля Ж
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира М
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: Рапира Ж
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный Меч М
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный Меч Ж

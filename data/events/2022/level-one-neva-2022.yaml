@@ -1,0 +1,41 @@
+title: Level One. Neva
+starts: 2022-09-24
+ends: 2022-09-25
+city: Санкт-Петербург
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/tournament-dg4wi
+description: Турниры Level One — прекрасная возможность получить опыт состязаний, подвести итог тренировочного
+  сезона, получить свою первую медаль.
+source: portal
+source_key: level-one-neva-2022
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля. Мужчины
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Дуэльная сабля. Женщины
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира Ренессанса
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч. Женщины
+- weapon: longsword
+  gender: male
+  team: true
+  beginners: true
+  notes: Длинный меч, команды. Мужчины
+- weapon: longsword
+  gender: female
+  team: true
+  beginners: true
+  notes: Длинный меч, команды. Женщины

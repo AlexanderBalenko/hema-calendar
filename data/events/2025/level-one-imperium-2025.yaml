@@ -1,0 +1,47 @@
+title: 'Level One: Imperium'
+starts: 2025-04-12
+ends: 2025-04-13
+city: Москва
+organizer: Tournament Core
+url: https://vk.com/level_one_imperium
+hemagon_url: https://hemagon.com/tournament/level-one-imperium
+description: |-
+  Турнир для начинающих фехтовальщиков Level One: Imperium!
+
+  Даты проведения: 12-13 апреля 2025
+
+  Номинации:
+  Дуэльная сабля, М и Ж
+  Рапира Ренессанса, М и Ж
+  Федершверт, М и Ж
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет, проверить свои силы и сразиться за победу!
+
+  Подробная информация доступна в сообществе мероприятия в ВК
+source: portal
+source_key: level-one-imperium-2025
+nominations:
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: 'Рапира Ренессанса: мужчины'
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: 'Рапира Ренессанса: женщины'
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: 'Дуэльная сабля: мужчины'
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: 'Дуэльная сабля: женщины'
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: 'Федершверт: мужчины'
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: 'Федершверт: женщины'

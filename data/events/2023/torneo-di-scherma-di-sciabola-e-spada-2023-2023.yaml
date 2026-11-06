@@ -1,0 +1,40 @@
+title: Torneo di scherma di sciabola e spada 2023
+starts: 2023-04-15
+ends: 2023-04-16
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/parise2023
+description: |-
+  Турнир по итальянской дуэльной сабле и рапире по правилам Мазаньелло Паризе (Италия, XIX в)
+
+  Приглашаем вас принять участие и почувствовать дух Италии XIX века.
+
+  Вас ждут правила, основанные на трактате маэстро М.Паризе "Trattato della Scherma di Spada e Sciabola", номинации по сабле и рапире и много хорошего фехтования!
+source: portal
+source_key: torneo-di-scherma-di-sciabola-e-spada-2023-2023
+nominations:
+- weapon: saber
+  gender: male
+  min_age: 14
+  max_age: 17
+  notes: Sciabola. Giovani (юноши, 14-17 лет)
+- weapon: saber
+  gender: female
+  min_age: 14
+  max_age: 17
+  notes: Sciabola. Signorine (девушки, 14-17 лет)
+- weapon: rapier
+  gender: female
+  notes: Spada. Signore (женщины)
+- weapon: rapier
+  gender: male
+  notes: Spada. Signori (мужчины)
+- weapon: saber
+  gender: female
+  notes: Sciabola. Signore (женщины)
+- weapon: saber
+  gender: male
+  notes: Sciabola. Maestri (мужчины, высший эшелон)
+- weapon: saber
+  gender: male
+  notes: Sciabola. Dilettanti (мужчины, базовый эшелон)

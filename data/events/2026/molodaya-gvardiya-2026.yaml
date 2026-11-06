@@ -1,0 +1,60 @@
+title: Молодая гвардия
+starts: 2026-05-01
+ends: 2026-05-03
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+hemagon_url: https://hemagon.com/tournament/molodaya-gvardiya-2026
+description: Турнир для начинающих фехтовальщиков.
+source: portal
+source_key: molodaya-gvardiya-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч, Классика - Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный Меч, Классика - Женщины
+- weapon: rapier
+  gender: male
+  min_age: 14
+  max_age: 17
+  notes: Дуэльная Рапира - Дети 14-17
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 13
+  notes: Рапира Ренессанса - Дети 9-13
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 13
+  notes: Итальянская Дуэльная Сабля - Дети 9-13
+- weapon: saber
+  gender: male
+  min_age: 14
+  max_age: 17
+  notes: Итальянская Дуэльная Сабля - Дети 14-17
+- weapon: longsword
+  gender: male
+  notes: 'Федершверт: Фехтшуле - Мужчины'
+- weapon: longsword
+  gender: female
+  notes: 'Федершверт: Фехтшуле - Женщины'
+- weapon: rapier
+  gender: male
+  notes: Дуэльная Рапира - Мужчины
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса - Мужчины
+- weapon: saber
+  gender: male
+  notes: Австрийская Военная Сабля - Мужчины
+- weapon: saber
+  gender: male
+  notes: Итальянская Дуэльная Сабля - Мужчины
+- weapon: saber
+  gender: female
+  notes: Австрийская Военная Сабля - Женщины
+- weapon: saber
+  gender: female
+  notes: Итальянская Дуэльная Сабля - Женщины

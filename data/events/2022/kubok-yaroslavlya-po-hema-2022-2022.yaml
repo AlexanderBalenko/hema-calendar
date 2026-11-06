@@ -1,0 +1,50 @@
+title: Кубок Ярославля по HEMA 2022
+starts: 2022-10-29
+ends: 2022-10-30
+city: Ярославль
+organizer: Белый Отряд (Яр)
+hemagon_url: https://hemagon.com/tournament/yaroslavl-hema-cup-2022
+description: Юбилейный десятый Кубок Ярославля по HEMA
+source: portal
+source_key: kubok-yaroslavlya-po-hema-2022-2022
+nominations:
+- weapon: saber
+  gender: male
+  notes: 'День 1. Военная сабля Basic мужчины: личное первенство'
+- weapon: saber
+  gender: female
+  notes: 'День 1. Военная сабля Women начинающие: личное первенство'
+- weapon: saber
+  gender: male
+  team: true
+  notes: 'День 1. Военная сабля Basic мужчины: командное первенство'
+- weapon: saber
+  gender: female
+  team: true
+  notes: 'День 1. Военная сабля Women начинающие: командное первенство'
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: 'День 2. HEMA Kids. 12-14. Сабля: личное первенство'
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  team: true
+  notes: 'День 2. HEMA Kids. 12-14. Сабля: командное первенство'
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: 'День 2. HEMA Kids. 15-17. Сабля. Юноши: личное первенство'
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: 'День 2. HEMA Kids. 15-17. Сабля. Девушки: личное первенство'
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: 'День 2. HEMA Kids. 9-11. Шпага: личное первенство'

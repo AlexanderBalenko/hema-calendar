@@ -1,0 +1,21 @@
+title: Зимний Кубок Ярославля по HEMA 2025
+starts: 2025-02-15
+city: Ярославль
+organizer: Белый Отряд (Яр)
+url: https://vk.com/winter_hemacup_yar
+hemagon_url: https://hemagon.com/tournament/winterhemacup-2025
+source: portal
+source_key: zimniy-kubok-yaroslavlya-po-hema-2025-2025
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Men
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Women
+- weapon: rapier
+  gender: male
+  notes: Рапира. Men
+- weapon: rapier
+  gender: female
+  notes: Рапира. Women

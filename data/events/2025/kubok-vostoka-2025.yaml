@@ -1,0 +1,48 @@
+title: Кубок Востока
+starts: 2025-11-29
+ends: 2025-11-30
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/kubok-vostoka-2025
+source: portal
+source_key: kubok-vostoka-2025
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Федершверт: фехтшуле (юноши 15‑17 лет)'
+- weapon: saber
+  gender: male
+  min_age: 6
+  max_age: 8
+  notes: Спортивная сабля (дети 6–8 лет)
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля (юноши 12‑14 лет)
+- weapon: saber
+  gender: female
+  min_age: 12
+  max_age: 14
+  notes: Итальянская дуэльная сабля (девушки 12–14 лет)
+- weapon: rapier
+  gender: female
+  min_age: 12
+  max_age: 17
+  notes: Дуэльная рапира (девушки 12-17 лет)
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Итальянская дуэльная сабля (девушки 15-17 лет)
+- weapon: rapier
+  gender: male
+  notes: Дуэльная рапира (юноши 12‑17 лет)
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Итальянская дуэльная сабля (юноши 15-17 лет)
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спортивная сабля (дети 9-11 лет)

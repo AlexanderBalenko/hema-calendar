@@ -1,0 +1,42 @@
+title: Кубок Доблести
+starts: 2026-02-28
+ends: 2026-03-01
+city: Тюмень
+organizer: VALOR
+url: https://vk.com/cupofvalor
+hemagon_url: https://hemagon.com/tournament/valorcup2026
+description: |-
+  Мы рады анонсировать Кубок доблести 2026!
+
+  Турнир состоится 28 февраля и 1 марта в г. Тюмени по адресу
+  ул. Валерии Гнаровской, 3а (МАОУ СОШ № 70, зал №1 - Светлый).
+
+  28 февраля:
+  • Длинный меч
+  • Меч и баклер
+
+  1 марта:
+  • Длинный меч, команды
+
+  Форма регистрации находится в группе ВК.
+
+  Ждем вас в гости!
+source: portal
+source_key: kubok-doblesti-2026
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female
+- weapon: buckler
+  gender: male
+- weapon: buckler
+  gender: female
+- weapon: longsword
+  gender: male
+  team: true
+  notes: команды
+- weapon: longsword
+  gender: female
+  team: true
+  notes: команды

@@ -1,0 +1,14 @@
+title: 'HEMA Maxima: longsword advanced'
+starts: 2026-12-19
+ends: 2026-12-20
+city: Вологда
+organizer: Ravenblade
+source: portal
+source_key: hema-maxima-longsword-advanced-2026
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+- weapon: longsword
+  gender: female
+  team: true

@@ -1,0 +1,48 @@
+title: Torneo di scherma di sciabola e spada
+starts: 2025-04-26
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+url: https://goldenfalcon.ru/torneo-di-scherma
+hemagon_url: https://hemagon.com/tournament/torneo-di-scherma-di-sciabola-e-spada
+description: |-
+  Cari signori e signorine!
+
+  Мы снова рады приветствовать Вас на, пожалуй, самом изящном, но оттого не менее горячем турнире серии Torneo di scherma.
+
+  🖋 Что ожидает кавалеров и дам меча?
+
+  - Разделение на эшелоны Maestri и Dilettanti. Проход в высшую лигу дают не победы, а уровень техники, тактического превосходства и этикета.
+  - Снаряды и правила эпохи М.Паризе. Здесь фехтуют не тяжелыми орудиями для боевых столкновений, а управляемыми легкими саблями.
+  - Роскошный зал с почти вековой историей. Дворец культуры - место, где с трепетом относятся к воссозданию обстановки конца XIX - начала XX века и создают особенную атмосферу.
+  - Этикет и куртуазность. Это идеальный турнир, чтобы окунуться в ощущение итальянской школы фехтования - изящные манеры, подкрученные усы и куртуазное фехтование с техническими излишествами. Здесь можно позволить себе больше, чем на обычных соревнованиях.
+
+  Регистрация по ссылке: https://goldenfalcon.ru/torneo-di-scherma
+
+  Saluti, amici!
+source: portal
+source_key: torneo-di-scherma-di-sciabola-e-spada-2025
+nominations:
+- weapon: rapier
+  gender: male
+  notes: Spada. Signori (мужчины)
+- weapon: rapier
+  gender: female
+  notes: Spada. Signore (женщины)
+- weapon: rapier
+  gender: male
+  notes: Spada. Giovani (юноши)
+- weapon: rapier
+  gender: female
+  notes: Spada. Signorine (девушки)
+- weapon: saber
+  gender: male
+  notes: Sciabola. Signori (мужчины)
+- weapon: saber
+  gender: female
+  notes: Sciabola. Signore (женщины)
+- weapon: saber
+  gender: male
+  notes: Sciabola. Giovani (юноши)
+- weapon: saber
+  gender: female
+  notes: Sciabola. Signorine (девушки)

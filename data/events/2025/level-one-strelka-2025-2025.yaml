@@ -1,0 +1,48 @@
+title: 'Level One: Strelka 2025'
+starts: 2025-09-20
+ends: 2025-09-21
+city: Нижний Новгород
+organizer: Tournament Core
+url: https://vk.com/level_one_strelka?from=groups
+hemagon_url: https://hemagon.com/tournament/level-one-strelka-2025
+description: |-
+  Турнир для начинающих фехтовальщиков в славном городе Нижнем Новгороде.
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет, проверить свои силы и сразиться за победу!
+
+
+  Дата проведения: 20-21 сентября 2025
+
+  Номинации:
+  Длинный меч, М и Ж
+  Дуэльная сабля, М и Ж
+  Рапира соло, М и Ж
+
+  До встречи!
+source: portal
+source_key: level-one-strelka-2025-2025
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч, Мужчины
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч, Женщины
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира Ренессанса, Мужчины
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: Рапира Ренессанса, Женщины
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля, Мужчины
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Дуэльная сабля, Женщины

@@ -1,0 +1,28 @@
+title: Кубок Золотого Сокола
+starts: 2022-04-30
+ends: 2022-05-01
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/goldenfalconcup2022
+description: Турнир для мечников всех категорий и направлений. Попробуйте себя в борьбе за Кубок "Золотого
+  Сокола"!
+source: portal
+source_key: kubok-zolotogo-sokola-2022
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Woman
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч. Командный
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч. Командный. Woman
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Advanced
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Basic

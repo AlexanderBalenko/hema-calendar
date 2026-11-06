@@ -1,0 +1,29 @@
+title: JTF "Командный зачёт"
+starts: 2026-11-07
+ends: 2026-11-08
+city: Воронеж
+organizer: АНТАРЕС
+url: https://vk.com/event210659795
+source: portal
+source_key: jtf-komandnyy-zachyot-2026
+nominations:
+- weapon: saber
+  gender: male
+  team: true
+- weapon: saber
+  gender: female
+  team: true
+- weapon: longsword
+  gender: male
+  team: true
+  notes: меч (команды)
+- weapon: longsword
+  gender: female
+  team: true
+  notes: меч (команды)
+- weapon: buckler
+  gender: male
+  team: true
+- weapon: buckler
+  gender: female
+  team: true

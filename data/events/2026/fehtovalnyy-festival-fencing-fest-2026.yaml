@@ -1,0 +1,12 @@
+title: Фехтовальный фестиваль Fencing Fest
+starts: 2026-01-05
+ends: 2026-01-07
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+source: portal
+source_key: fehtovalnyy-festival-fencing-fest-2026
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female

@@ -1,0 +1,39 @@
+title: 'Level One: Strelka'
+starts: 2026-09-19
+ends: 2026-09-20
+city: Нижний Новгород
+organizer: Tournament Core
+co_organizers:
+- Аскалон (НН)
+hemagon_url: https://hemagon.com/tournament/levelonestrelka2026
+description: |-
+  Орден меча «Аскалон» приглашает встретиться этой осенью в Столице Закатов на турнире для начинающих НЕМА-спортсменов!
+
+  К участию в турнире допускаются спортсмены с опытом выступлений не более 2 лет.
+
+  Если вы готовы продемонстрировать свои навыки исторического фехтования, то будем вас ждать в Нижнем Новгороде!
+source: portal
+source_key: level-one-strelka-2026
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: дуэльная сабля
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: дуэльная сабля
+- weapon: longsword
+  gender: male
+  beginners: true
+- weapon: longsword
+  gender: female
+  beginners: true
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: рапира Ренессанса
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: рапира Ренессанса

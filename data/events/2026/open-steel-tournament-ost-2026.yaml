@@ -1,0 +1,31 @@
+title: Open Steel Tournament (OST)
+starts: 2026-09-12
+ends: 2026-09-13
+city: Воронеж
+organizer: Сталь
+url: https://vk.com/steel_tournament
+hemagon_url: https://hemagon.com/tournament/open-steel-tournament
+description: |-
+  Open Steel Tournament - турнир по Историческим Европейским Боевым Искусствам (HEMA) от клуба "Сталь".
+
+  Номинации:
+  - военная сабля (м, ж)
+  - длинный меч (м,ж)
+
+  Вас ждут:
+  - Отдельные мужские и женские номинации
+  - Групповой этап + Double Elimination в каждой номинации
+
+  Дата проведения: 12-13 сентября 2026
+  Место проведения: г. Воронеж, ул. Дорожная 15А/3
+source: portal
+source_key: open-steel-tournament-ost-2026
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female

@@ -1,0 +1,17 @@
+title: Цветок Битвы
+starts: 2026-10-10
+city: Ростов-на-Дону
+organizer: РГФ
+source: portal
+source_key: tsvetok-bitvy-2026
+nominations:
+- weapon: spear
+  gender: male
+- weapon: spear
+  gender: female
+- weapon: spear
+  gender: male
+  team: true
+- weapon: spear
+  gender: female
+  team: true

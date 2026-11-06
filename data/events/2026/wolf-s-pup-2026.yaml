@@ -1,0 +1,27 @@
+title: Wolf's Pup
+starts: 2026-10-24
+ends: 2026-10-25
+city: Тбилиси
+organizer: HEMA Georgia
+hemagon_url: https://hemagon.com/tournament/wolfs-pup
+source: portal
+source_key: wolf-s-pup-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Longsword Beginner; hemagon: Longsword Ladies Beginner'
+- weapon: longsword
+  gender: female
+  notes: 'Longsword Beginner; hemagon: Longsword Ladies Beginner'
+- weapon: rapier
+  gender: male
+  notes: Rapier
+- weapon: rapier
+  gender: female
+  notes: Rapier
+- weapon: saber
+  gender: male
+  notes: Saber Beginner
+- weapon: saber
+  gender: female
+  notes: Saber Beginner

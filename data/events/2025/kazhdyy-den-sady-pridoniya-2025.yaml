@@ -1,0 +1,49 @@
+title: 'Каждый день: Сады Придония'
+starts: 2025-11-03
+ends: 2025-11-04
+city: Ростов-на-Дону
+organizer: Гладиатория
+co_organizers:
+- РГФ
+url: https://vk.com/everydaykrd2
+hemagon_url: https://hemagon.com/tournament/kazhdiy-den-sady-pridoniya
+description: |-
+  Cерия фановых турниров все ближе к вам!
+  "Каждый день: Сады ПридонИя" теперь в Ростове-на-Дону
+
+  Дата: 03-04 ноября 2025 года
+  Где: г. Ростов-на-Дону, ул. Таганрогская,73 (здание подготовки охранников "Элита").
+
+  Номинации:
+  ⚔Длинный меч: команды (в команде 3 человека)
+  ⚔Сайдсворд (общая)*
+  ⚔Рапира Ренессанса (общая)
+  ⚔Рапира Ренессанса (Ж)**
+  ⚔Сабля (общая)
+  ⚔Сабля (Ж)**
+  ⚔Копье (общая)
+
+  * Правила номинации "Сайдсворд" по версии Ростовской Гильдии Фехтовальщиков будут опубликованы позже.
+  ** Женская номинация состоится, если количество заявок превысит 6, в ином случае участие девушек возможно в смешанной номинации.
+source: portal
+source_key: kazhdyy-den-sady-pridoniya-2025
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+  notes: 'Длинный меч: Команды'
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (Общая)
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса (Женская)
+- weapon: saber
+  gender: male
+  notes: Сабля (Общая)
+- weapon: sidesword
+  gender: male
+  notes: Сайдсворд (Общий)
+- weapon: spear
+  gender: male
+  notes: Копье (Общая)

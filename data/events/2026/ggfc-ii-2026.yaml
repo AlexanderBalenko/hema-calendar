@@ -1,0 +1,29 @@
+title: GGFC II
+starts: 2026-08-15
+ends: 2026-08-16
+city: Астана
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/ggfc-ii
+source: portal
+source_key: ggfc-ii-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Катана. Отборки; hemagon: Катана. Advanced; hemagon: Катана. Basic'
+- weapon: longsword
+  gender: female
+  notes: 'Катана. Отборки; hemagon: Катана. Advanced; hemagon: Катана. Basic'
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч. Командный
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч. Командный
+- weapon: saber
+  gender: male
+  notes: 'Дуэльная Сабля. Отборки; hemagon: Дуэльная сабля Advanced; hemagon: Дуэльная сабля Basic'
+- weapon: saber
+  gender: female
+  notes: 'Дуэльная Сабля. Отборки; hemagon: Дуэльная сабля Advanced; hemagon: Дуэльная сабля Basic'

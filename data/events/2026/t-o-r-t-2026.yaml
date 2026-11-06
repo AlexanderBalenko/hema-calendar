@@ -1,0 +1,89 @@
+title: Т.О.Р.Т.
+starts: 2026-01-09
+ends: 2026-01-10
+city: Тюмень
+organizer: VALOR
+url: https://vk.com/tyumentournament
+hemagon_url: https://hemagon.com/tournament/tort
+description: |-
+  Возращение легендарного "лампового" Тюменского турнира!
+
+  Спустя 6 лет мы рады возродить и анонсировать седьмой Тюменский Открытый Рождественский Турнир!
+
+  Турнир состоится 9 и 10 января в г. Тюмени по адресу ул. Валерии Гнаровской 3а (МАОУ СОШ № 70, 2 зал).
+
+  9 января:
+  • Рапира Ренессанса
+  • Военная сабля
+
+  10 января:
+  • Хемакидс (сабля)
+  • Шпага, первенство кадеты
+  • Шпага, чемпионат
+source: portal
+source_key: t-o-r-t-2026
+nominations:
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса Женщины
+- weapon: longsword
+  gender: female
+  notes: Шпага Женщины
+- weapon: saber
+  gender: male
+  notes: Военная Сабля Мужчины, Basic
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля Юноши (12-14 лет)
+- weapon: saber
+  gender: female
+  min_age: 12
+  max_age: 14
+  notes: Сабля Юноши (12-14 лет)
+- weapon: saber
+  gender: female
+  notes: Военная Сабля Женщины
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Сабля Девушки (15-17 лет)
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Сабля Девушки (15-17 лет)
+- weapon: longsword
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Шпага Девушки (15-17 лет)
+- weapon: longsword
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Шпага Девушки (15-17 лет)
+- weapon: longsword
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага Юноши (12-14 лет)
+- weapon: longsword
+  gender: female
+  min_age: 12
+  max_age: 14
+  notes: Шпага Юноши (12-14 лет)
+- weapon: saber
+  gender: male
+  notes: Военная Сабля Мужчины, Advanced
+- weapon: rapier
+  gender: male
+  notes: Шпага Мужчины
+- weapon: rapier
+  gender: female
+  notes: Шпага Женщины

@@ -1,0 +1,15 @@
+title: Кружева
+starts: 2026-11-21
+ends: 2026-11-22
+city: Вологда
+organizer: Ravenblade
+hemagon_url: https://hemagon.com/tournament/kruzheva-2026
+source: portal
+source_key: kruzheva-2026
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+- weapon: longsword
+  gender: female
+  team: true

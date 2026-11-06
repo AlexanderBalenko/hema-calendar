@@ -1,0 +1,28 @@
+title: FechtTerra 2023
+starts: 2023-12-02
+ends: 2023-12-03
+city: Санкт-Петербург
+organizer: FFG (СПб)
+url: https://vk.com/fechtterra
+hemagon_url: https://hemagon.com/tournament/fechtterra2023
+description: 'Турнир по длинному мечу от Freifechter Gilde в Санкт-Петербурге. Подробности в группе: https://vk.com/fechtterra'
+source: portal
+source_key: fechtterra-2023-2023
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Longsword Women
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Longsword Team (W)
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Longsword Team (M)
+- weapon: longsword
+  gender: male
+  notes: Longsword Advanced
+- weapon: longsword
+  gender: male
+  notes: Longsword Basic

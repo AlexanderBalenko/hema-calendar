@@ -1,0 +1,32 @@
+title: Next Level, masters (СЗФО), командный зачёт
+starts: 2027-06-12
+ends: 2027-06-13
+city: Санкт-Петербург
+organizer: Tournament Core
+co_organizers:
+- CounterTime
+source: portal
+source_key: next-level-masters-szfo-komandnyy-zachyot-2027
+nominations:
+- weapon: saber
+  gender: male
+  team: true
+  notes: дуэльная сабля
+- weapon: saber
+  gender: female
+  team: true
+  notes: дуэльная сабля
+- weapon: longsword
+  gender: male
+  team: true
+- weapon: longsword
+  gender: female
+  team: true
+- weapon: rapier
+  gender: male
+  team: true
+  notes: рапира Ренессанса
+- weapon: rapier
+  gender: female
+  team: true
+  notes: рапира Ренессанса

@@ -1,0 +1,46 @@
+title: HEMA Panda 2026
+starts: 2026-01-24
+city: Ярославль
+organizer: Белый Отряд (Яр)
+url: https://vk.com/hema_panda
+hemagon_url: https://hemagon.com/tournament/hema-panda-2026
+description: |-
+  Приглашаем маленьких, фехтовальщиков побольше и почти совсем взрослых фехтовальщиков на главное событие Нового года - турнир HEMA PANDA!
+
+  Приготовьтесь к фехтовальным поединкам, где смелость, ловкость и немного удачи встречаются на одной дорожке!
+  Будущие чемпионы смогут продемонстрировать свои навыки, а мы обещаем море эмоций, общения и, конечно же, захватывающих моментов!
+
+  Номинации проводятся без электрофиксации
+source: portal
+source_key: hema-panda-2026-2026
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Шпага 9-11 лет
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага 12-14 лет
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Рапира Паризе 15-17 лет
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Сабля 9-11 лет
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля 12-14 лет
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Сабля 15-17 лет

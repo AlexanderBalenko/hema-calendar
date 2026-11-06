@@ -1,0 +1,18 @@
+title: KatzenKampf
+starts: 2022-03-26
+city: Санкт-Петербург
+organizer: HEMA TEAM
+hemagon_url: https://hemagon.com/tournament/tournament-f9c0w
+description: KatzenKampf
+source: portal
+source_key: katzenkampf-2022
+nominations:
+- weapon: longsword
+  gender: male
+  notes: KatzenKampf Longsword Man
+- weapon: longsword
+  gender: female
+  notes: KatzenKampf Longsword Women
+- weapon: dussack
+  gender: male
+  notes: KatzenKampf Dussak

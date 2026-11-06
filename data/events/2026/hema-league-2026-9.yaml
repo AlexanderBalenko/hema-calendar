@@ -1,0 +1,13 @@
+title: Hema League
+starts: 2026-03-14
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+hemagon_url: https://hemagon.com/tournament/hl-italian-longsword-siberia-2026
+description: Турнир в рамках https://hema-league.ru/
+source: portal
+source_key: hema-league-2026-9
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female

@@ -28,6 +28,7 @@ import urllib.request
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
+from calendar_data import place_for  # noqa: E402
 from import_common import Importer  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -140,6 +141,22 @@ def nominations_from_text(text: str) -> list[dict]:
     return result
 
 
+def split_organizers(raw: str | None) -> list[str]:
+    """Со-организаторы из одной ячейки формы. Разделители — запятая, точка с запятой, перенос
+    строки и плюс: заявитель пишет как привык, и спорить с ним через форму негде. Одинокий «и»
+    разделителем НЕ считается: «Щит и меч» — одно название, а не два клуба."""
+    if not raw:
+        return []
+    parts = re.split(r"[,;\n+]+", str(raw))
+    names, seen = [], set()
+    for part in parts:
+        name = part.strip(" \t.-—")
+        if name and name.lower() not in seen:
+            seen.add(name.lower())
+            names.append(name)
+    return names
+
+
 def read_google(sheet_id: str, gid: str) -> list[dict]:
     url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format=csv&gid={gid}"
     with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "hema-calendar-import"}), timeout=60) as response:
@@ -150,16 +167,25 @@ def read_google(sheet_id: str, gid: str) -> list[dict]:
         title = (row.get("Название") or "").strip()
         if not start or not title:
             continue
-        rows.append({
+        item = {
             "title": title,
             "starts": start,
             "ends": parse_date(row.get("Дата завершения")) or start,
             "city": (row.get("Город") or "").strip() or None,
             "organizer": (row.get("Организатор") or "").strip() or None,
             "url": (row.get("Ссылка") or "").strip() or None,
-            "place": (row.get("Адрес") or "").strip() or None,
+            # Адрес из формы в календарь не уезжает: публикуется только город
+            # (calendar_data.place_for). В листе заявок он остаётся — редактору он нужен,
+            # читателю списка нет.
+            "place": place_for(row.get("Адрес"), row.get("Город")),
             "nominations": nominations_from_text(row.get("Номинации") or ""),
-        })
+        }
+        # Пустое поле формы НЕ кладём ключом: повторный прогон затёр бы им список, дописанный
+        # руками в пул-реквесте, — и делал бы это молча, на каждом ночном импорте.
+        co_organizers = split_organizers(row.get("Со-организаторы"))
+        if co_organizers:
+            item["co_organizers"] = co_organizers
+        rows.append(item)
     return rows
 
 

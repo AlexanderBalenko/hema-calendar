@@ -22,10 +22,10 @@ DATA = ROOT / "data"
 EVENTS = DATA / "events"
 
 GENDERS = {"any", "male", "female"}
-SOURCES = {"hemagon", "spreadsheet", "submission", "manual"}
+SOURCES = {"portal", "hemagon", "spreadsheet", "submission", "manual"}
 
-EVENT_KEYS = {"title", "starts", "ends", "city", "place", "organizer", "url", "description",
-              "source", "source_key", "nominations"}
+EVENT_KEYS = {"title", "starts", "ends", "city", "place", "organizer", "co_organizers", "url",
+              "hemagon_url", "description", "source", "source_key", "nominations"}
 NOMINATION_KEYS = {"weapon", "text", "gender", "min_age", "max_age", "team", "beginners", "notes"}
 
 # Слова, которые в названии турнира ничего не различают: по ним два разных турнира выглядели бы
@@ -40,8 +40,8 @@ class DataError(Exception):
 
 # Порядок полей в файле: сначала то, что человек читает первым. Задаётся здесь, чтобы файлы
 # от импорта и от руки выглядели одинаково — иначе дифф пул-реквеста полон перестановок.
-FIELD_ORDER = ["title", "starts", "ends", "city", "place", "organizer", "url", "description",
-               "source", "source_key", "nominations"]
+FIELD_ORDER = ["title", "starts", "ends", "city", "place", "organizer", "co_organizers", "url",
+               "hemagon_url", "description", "source", "source_key", "nominations"]
 NOMINATION_ORDER = ["weapon", "text", "gender", "min_age", "max_age", "team", "beginners", "notes"]
 
 
@@ -84,9 +84,33 @@ def save_event(path: pathlib.Path, item: dict) -> None:
 
 
 def event_path(starts: str, slug_body: str) -> pathlib.Path:
-    """Путь файла турнира: год каталогом, дата началом имени — имя файла и есть адрес
-    страницы, поэтому собирается оно в одном месте."""
-    return EVENTS / starts[:4] / f"{starts}-{slug_body}.yaml"
+    """Путь файла турнира: год каталогом, слаг именем — имя файла и есть адрес страницы,
+    поэтому собирается оно в одном месте.
+
+    Даты в имени нет намеренно (решение 06.11.2026, вместе с переходом на базу портала как
+    источник правды): слаги берутся из портала (`eleonora-2027`), год в них уже есть, и адрес
+    страницы переживает исправление даты — иначе поправленный на день турнир менял бы ссылку,
+    по которой его уже разослали."""
+    return EVENTS / starts[:4] / f"{slug_body}.yaml"
+
+
+def place_for(place, city) -> str | None:
+    """Площадка в данных календаря — ЗАПАСНОЙ вариант города, а не адрес.
+
+    Решение заказчика 06.11.2026: «оставь только город, не бери улицу-дом». Улица и дом в
+    списке турниров ничего не решают — человек идёт за ними к организатору по ссылке, — зато
+    занимают ту самую строку плашки, где должно стоять название: «Краснодар · г. Краснодар
+    ул. Красная 43/1», «Воронеж · Дружинников 8». Поэтому правило простое: город известен —
+    площадку не берём вовсе; города нет — площадка остаётся единственной подсказкой о месте
+    («Калужская область» у выездных лагерей MWS) и сохраняется как есть.
+
+    Адрес при этом не теряется: он остаётся в базе портала (источник правды) и в листе заявок
+    формы — просто не уезжает в публичные данные календаря.
+    """
+    text = str(place or "").strip()
+    if not text:
+        return None
+    return None if str(city or "").strip() else text
 
 
 def _read(path: pathlib.Path):
@@ -201,8 +225,8 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
             ends = _as_date(event.get("ends", event.get("starts")), where, "ends")
             if ends < starts:
                 error(f"{where}: ends раньше starts")
-            if not event["slug"].startswith(starts.isoformat()):
-                error(f"{where}: имя файла должно начинаться с даты начала ({starts})")
+            if not where.startswith(f"data/events/{starts.year}/"):
+                error(f"{where}: файл должен лежать в data/events/{starts.year}/ — по году начала")
             by_day.setdefault(starts.isoformat(), []).append(event)
         except DataError as parse_error:
             error(str(parse_error))
@@ -212,10 +236,38 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
         if city and str(city).lower() not in city_names:
             error(f"{where}: города «{city}» нет в data/cities.yaml — добавьте его туда или "
                   f"перенесите в поле place")
+        if city and event.get("place"):
+            # Правило place_for выше: при известном городе адреса в данных нет вовсе.
+            error(f"{where}: при заполненном city поле place не нужно — календарь показывает "
+                  f"только город (сейчас place: «{event['place']}»)")
         if not city and not event.get("place"):
             # Предупреждение, а не ошибка: так приезжают старые турниры, у которых источник не
             # дал города. Выдумывать место нельзя, прятать турнир — тоже.
             warn(f"{where}: нет ни city, ни place — источник не дал места")
+
+        # Со-организаторы: турнир часто делают два клуба вместе, и второй обязан быть назван —
+        # иначе его работу припишут первому. Главный остаётся в organizer: он отвечает за турнир
+        # и по нему же идёт поиск в списке.
+        co = event.get("co_organizers")
+        if co is not None:
+            if not isinstance(co, list) or not all(isinstance(name, str) for name in co):
+                error(f"{where}: co_organizers — список названий")
+            else:
+                names = [name.strip() for name in co]
+                if not all(names):
+                    error(f"{where}: в co_organizers пустое название")
+                main = str(event.get("organizer") or "").strip().lower()
+                lowered = [name.lower() for name in names]
+                if main and main in lowered:
+                    error(f"{where}: организатор «{event['organizer']}» повторён в co_organizers")
+                if len(set(lowered)) != len(lowered):
+                    error(f"{where}: в co_organizers повторяется одно и то же название")
+                if not main and names:
+                    error(f"{where}: есть co_organizers, но не указан главный organizer")
+
+        hemagon = event.get("hemagon_url")
+        if hemagon is not None and "hemagon." not in str(hemagon):
+            error(f"{where}: hemagon_url = «{hemagon}» — это не ссылка на хемагон")
 
         source = event.get("source", "manual")
         if source not in SOURCES:
@@ -248,6 +300,15 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
                 age = nomination.get(field)
                 if age is not None and not (isinstance(age, int) and 0 < age < 120):
                     error(f"{at}: {field} = «{age}» — ожидается возраст числом")
+            low, high = nomination.get("min_age"), nomination.get("max_age")
+            # Номинация без min_age считается взрослой, 18+ (так в портале: поле обязательное,
+            # значение по умолчанию 18). Поэтому один только max_age задаёт пустой диапазон
+            # 18…max и прячет номинацию от всех: детскому зачёту нижнюю границу надо назвать.
+            if low is None and high is not None:
+                error(f"{at}: max_age без min_age. Номинация без min_age — взрослая (18+), "
+                      f"и с max_age = {high} в неё не попадает никто; укажите нижнюю границу")
+            if isinstance(low, int) and isinstance(high, int) and high < low:
+                error(f"{at}: max_age {high} меньше min_age {low}")
 
     # Дубли между источниками: тот же день, то же место, похожее название. Два разных турнира
     # в один день в одном городе бывают (личный и командный зачёты), поэтому одной даты мало —

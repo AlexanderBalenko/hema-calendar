@@ -1,0 +1,95 @@
+title: Сила Зверя 2026
+starts: 2026-05-30
+ends: 2026-05-31
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/sila-zverya-2026
+description: Турнир для начинающих
+source: portal
+source_key: sila-zverya-2026-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Кензюцу (Мужчины)
+- weapon: longsword
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: 'Федершверт: Фехтшуле (Юноши 15-17)'
+- weapon: longsword
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: 'Федершверт: Фехтшуле (Юноши 15-17)'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: Классика (Женщины)'
+- weapon: rapier
+  gender: male
+  notes: Рапира Паризе (Мужчины)
+- weapon: rapier
+  gender: female
+  notes: Рапира Паризе (Женщины)
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля (Мужчины)
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спортивная сабля (дети 9-11 лет)
+- weapon: saber
+  gender: female
+  min_age: 9
+  max_age: 11
+  notes: Спортивная сабля (дети 9-11 лет)
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Итальянская дуэльная сабля (дети 12–14 лет)
+- weapon: saber
+  gender: female
+  min_age: 12
+  max_age: 14
+  notes: Итальянская дуэльная сабля (дети 12–14 лет)
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Итальянская дуэльная сабля (юноши 15-17 лет)
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Итальянская дуэльная сабля (девушки 15-17 лет)
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля (Женщины)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (Мужчины)
+- weapon: saber
+  gender: male
+  notes: Австрийская военная сабля (Мужчины)
+- weapon: saber
+  gender: male
+  notes: Английская гимнастическая сабля (Мужчины)
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: классика (Мужчины)'
+- weapon: longsword
+  gender: male
+  notes: 'Федершверт: фехтшуле (Мужчины)'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: итальянский дуэльный кодекс (Мужчины)'
+- weapon: longsword
+  gender: female
+  notes: Кензюцу (Женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса с дагой (Мужчины)
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса с дагой (Женщины)

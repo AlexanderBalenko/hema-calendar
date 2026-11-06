@@ -1,0 +1,13 @@
+title: Parise Challenge
+starts: 2026-12-05
+ends: 2026-12-06
+city: Москва
+organizer: Duel club
+hemagon_url: https://hemagon.com/tournament/parise-challenge-rapier2
+source: portal
+source_key: parise-challenge-2026-2
+nominations:
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female

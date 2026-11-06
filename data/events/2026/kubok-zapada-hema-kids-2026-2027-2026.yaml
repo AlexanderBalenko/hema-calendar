@@ -1,0 +1,60 @@
+title: Кубок Запада HEMA kids 2026-2027
+starts: 2026-10-11
+city: Иваново
+organizer: Белый отряд (Ивн)
+hemagon_url: https://hemagon.com/tournament/kubok-zapada-hema-kids-2026-2027
+source: portal
+source_key: kubok-zapada-hema-kids-2026-2027-2026
+nominations:
+- weapon: longsword
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Шпага 9-11 лет
+- weapon: longsword
+  gender: female
+  min_age: 9
+  max_age: 11
+  notes: Шпага 9-11 лет
+- weapon: longsword
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага 12-14 лет
+- weapon: longsword
+  gender: female
+  min_age: 12
+  max_age: 14
+  notes: Шпага 12-14 лет
+- weapon: longsword
+  gender: male
+  notes: 'Шпага 15-17. Юноши; hemagon: Шпага 15-17. Девушки'
+- weapon: longsword
+  gender: female
+  notes: 'Шпага 15-17. Юноши; hemagon: Шпага 15-17. Девушки'
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Сабля 9-11 лет
+- weapon: saber
+  gender: female
+  min_age: 9
+  max_age: 11
+  notes: Сабля 9-11 лет
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля 12-14 лет
+- weapon: saber
+  gender: female
+  min_age: 12
+  max_age: 14
+  notes: Сабля 12-14 лет
+- weapon: saber
+  gender: male
+  notes: 'Сабля 15-17. Юноши; hemagon: Сабля 15-17. Девушки'
+- weapon: saber
+  gender: female
+  notes: 'Сабля 15-17. Юноши; hemagon: Сабля 15-17. Девушки'

@@ -1,0 +1,20 @@
+title: 'FechtTerra: Rapier'
+starts: 2026-05-23
+ends: 2026-05-24
+city: Санкт-Петербург
+organizer: FFG (СПб)
+url: https://vk.com/ft_rapier
+description: Флагманский турнир по Рапире Ренессанса от Гильдии Вольных Фехтовальщиков!
+source: portal
+source_key: fechtterra-rapier-2026
+nominations:
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female
+- weapon: rapier
+  gender: male
+  team: true
+- weapon: rapier
+  gender: female
+  team: true

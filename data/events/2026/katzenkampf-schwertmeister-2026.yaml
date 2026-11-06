@@ -1,0 +1,27 @@
+title: Katzenkampf Schwertmeister
+starts: 2026-05-16
+city: Санкт-Петербург
+organizer: HEMA TEAM
+url: https://vk.com/schwertmeister
+hemagon_url: https://hemagon.com/tournament/katzenkampfschwertmeister
+description: |-
+  Нашему сообществу нужны разные турниры - нужны крупные, с мечами в призах, где фехтуют на корову. Нужны маленькие, неформальные турниры, где важнее опыт и удовольствие от фехтования и общения.
+  Вот и мы решили разбавить наш яростный Katzenkampf небольшим экспериментальным турниром.
+
+  🔸Анонсируем Katzenkampf Schwertmeister!
+
+  Турнир пройдет 16 мая в зале HEMA TEAM по адресу 13 линия Васильевского острова 78.
+
+  Длинный меч, только мужская номинация - лимит - 36 участников.
+  В случае, если будет зарегистрировано более 32 участников, будет проведено разделение на Advanced и Basic по итогам отборочных этапов.
+
+  Турнир пройдет по правилам прошедшего в марте Katzenkampf с небольшим дополнениями.
+source: portal
+source_key: katzenkampf-schwertmeister-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Basic)
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Advanced )

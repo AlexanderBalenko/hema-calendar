@@ -1,0 +1,31 @@
+title: 'FechtTerra: Rapier 2025'
+starts: 2025-05-31
+ends: 2025-06-01
+city: Санкт-Петербург
+organizer: FFG (СПб)
+url: https://vk.com/ft_rapier
+hemagon_url: https://hemagon.com/tournament/fechtterra-rapier-2025
+description: 'Турнир по рапире от Freifechter Gilde в Санкт-Петербурге. Подробности в группе: https://vk.com/ft_rapier'
+source: portal
+source_key: fechtterra-rapier-2025-2025
+nominations:
+- weapon: rapier
+  gender: male
+  team: true
+  notes: Rapier  Teams (M)
+- weapon: rapier
+  gender: female
+  team: true
+  notes: Rapier Teams (W)
+- weapon: rapier
+  gender: male
+  notes: Rapier (M) Advanced
+- weapon: rapier
+  gender: male
+  notes: Rapier (M) Basic
+- weapon: rapier
+  gender: female
+  notes: Rapier (W) Advanced
+- weapon: rapier
+  gender: female
+  notes: Rapier (W) Basic

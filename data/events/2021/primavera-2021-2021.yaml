@@ -1,0 +1,37 @@
+title: Primavera 2021
+starts: 2021-05-22
+ends: 2021-05-23
+city: Санкт-Петербург
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/primavera2021
+description: |-
+  Воительницы, приглашаем вас принять участие в крупнейшем в России женском турнире Primavera.
+  История события становится всё длиннее и насыщеннее: этой весной состоятся восьмые по счёту соревнования.
+  Боёв будет много и каждый "с огоньком".
+
+  Мы всегда:
+  ⚔ собираем лучших из лучших
+  ⚔ не ограничиваем количество номинаций, в которых можно принять участие
+  ⚔ приглашаем в чистый светлый зал
+  ⚔ готовим судей
+  ⚔ вручаем достойные призы
+
+  Список номинаций: дуэльная сабля, длинный меч, рапира и дага (личная и командная номинации)
+
+  🌹 Fight like a girl🔪
+source: portal
+source_key: primavera-2021-2021
+nominations:
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля
+- weapon: longsword
+  gender: female
+  notes: Длинный меч
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага, личный зачет
+- weapon: rapier
+  gender: female
+  team: true
+  notes: Рапира и дага, командный зачет

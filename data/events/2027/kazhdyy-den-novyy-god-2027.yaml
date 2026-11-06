@@ -1,0 +1,34 @@
+title: 'Каждый день: Новый год'
+starts: 2027-01-04
+ends: 2027-01-07
+city: Краснодар
+organizer: Гладиатория
+source: portal
+source_key: kazhdyy-den-novyy-god-2027
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+- weapon: longsword
+  gender: female
+  team: true
+- weapon: saber
+  gender: male
+  team: true
+- weapon: saber
+  gender: female
+  team: true
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female
+- weapon: dussack
+  gender: male
+- weapon: dussack
+  gender: female
+- weapon: longsword
+  gender: male
+  notes: лонг валлерштайн
+- weapon: longsword
+  gender: female
+  notes: лонг валлерштайн

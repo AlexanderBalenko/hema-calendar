@@ -1,0 +1,15 @@
+title: Valor Open League
+starts: 2022-04-17
+city: Тюмень
+organizer: VALOR
+hemagon_url: https://hemagon.com/tournament/ValorOpenLeague
+description: 'Регистрация: https://clck.ru/eoK9G'
+source: portal
+source_key: valor-open-league-2022
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Longsword, mixed
+- weapon: longsword
+  gender: female
+  notes: Longsword, women

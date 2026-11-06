@@ -1,0 +1,56 @@
+title: Чемпионат УрФО по историческому фехтованию
+starts: 2023-11-25
+ends: 2023-11-26
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+url: https://vk.com/goldenfalconopenchamp
+hemagon_url: https://hemagon.com/tournament/urfo2023
+description: |-
+  Осенний. Яркий. Страстный.
+  Чемпионат УрФО - здесь встречаются те, чьи сердца горят фехтованием.
+
+  - Два оружия: сабля и рапира
+  - Гибкая система отбора в Basic и Advanced
+  - Нет лимита участников - мы проводим турнир на 4 площадках, чтобы смогли поучаствовать все желающие
+  - Место встречи - Челябинск, между Центральной Россией и Сибирью
+source: portal
+source_key: chempionat-urfo-po-istoricheskomu-fehtovaniyu-2023
+nominations:
+- weapon: saber
+  gender: male
+  min_age: 14
+  max_age: 17
+  notes: Дуэльная сабля. 14-17 лет. Юноши
+- weapon: rapier
+  gender: female
+  min_age: 14
+  max_age: 17
+  notes: Рапира Ренессанса. Женщины+девушки 14-17 лет
+- weapon: rapier
+  gender: male
+  min_age: 14
+  max_age: 17
+  notes: Рапира Ренессанса. 14-17 лет. Юноши
+- weapon: saber
+  gender: female
+  min_age: 14
+  max_age: 17
+  notes: Дуэльная сабля. 14-17 лет. Девушки
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса. Basic
+- weapon: rapier
+  gender: male
+  notes: Рапира с кинжалом. Advanced
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля. Basic
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Advanced
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины. Basic
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины. Advanced

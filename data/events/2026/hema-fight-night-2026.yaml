@@ -1,0 +1,23 @@
+title: HEMA — FIGHT NIGHT
+starts: 2026-01-09
+ends: 2026-01-10
+city: Барнаул
+organizer: Тотентанц
+url: https://vk.com/totentanz_hema
+hemagon_url: https://hemagon.com/tournament/hema-figgth-night
+description: Турнир для тех, кто проводит день в кругу семьи, а ночью берет меч и горит в пылу битв. Два
+  параллельных ристалища, на одном фехтуют длинным мечом, а на другом рапирой с кинжалом. Битва длиною
+  в ночь ждет вас! Ламповый турнир, где каждый может примерить на себя роль бойца, судьи или секунданта.
+  Никакой спешки, никакого регламента, только бой!
+source: portal
+source_key: hema-fight-night-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира и кинжал (Мужчины)

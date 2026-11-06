@@ -1,0 +1,51 @@
+title: 'Level One: Chernozem'
+starts: 2026-02-14
+ends: 2026-02-15
+city: Воронеж
+organizer: Tournament Core
+co_organizers:
+- Сталь
+url: https://vk.com/level_one_chernozem
+hemagon_url: https://hemagon.com/tournament/level-one-chernozem-2026
+description: |-
+  Турнир для начинающих фехтовальщиков Level One: Chernozem!
+
+  Даты проведения: 14-15 февраля 2026
+
+  Номинации:
+  Федершверт, М и Ж
+  Меч и баклер, М и Ж
+  Дуэльная сабля, М и Ж
+
+  Приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет проверить свои силы и побороться за победу
+
+  До встречи в Воронеже!
+
+  О всех новостях следите по хештегу #level_one_chernozem
+source: portal
+source_key: level-one-chernozem-2026
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Федершверт (мужчины)
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Федершверт (женщины)
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля (мужчины)
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Дуэльная сабля (женщины)
+- weapon: buckler
+  gender: male
+  beginners: true
+  notes: Меч и баклер (мужчины)
+- weapon: buckler
+  gender: female
+  beginners: true
+  notes: Меч и баклер (женщины)

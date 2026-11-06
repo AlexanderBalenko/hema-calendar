@@ -1,0 +1,18 @@
+title: Фрайфехтшуле
+starts: 2027-06-12
+ends: 2027-06-14
+city: Краснодар
+organizer: Гладиатория
+source: portal
+source_key: frayfehtshule-2027
+nominations:
+- weapon: longsword
+  gender: male
+  notes: лонг валлерштайн
+- weapon: longsword
+  gender: female
+  notes: лонг валлерштайн
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female

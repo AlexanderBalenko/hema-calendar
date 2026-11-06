@@ -1,0 +1,45 @@
+title: Level One Tatarstan
+starts: 2025-03-29
+ends: 2025-03-30
+city: Казань
+organizer: Tournament Core
+url: https://vk.com/level_one_tatarstan
+hemagon_url: https://hemagon.com/tournament/level-one-tatarstan
+description: |-
+  Дата проведения: 29-30 марта 2025
+
+  Номинации:
+  Дуэльная сабля, М и Ж, кадеты
+  Рапира соло, М и Ж
+  Меч и Баклер, М и Ж
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет проверить свои силы и сразиться за победу
+
+  До встречи!
+source: portal
+source_key: level-one-tatarstan-2025
+nominations:
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Дуэльная сабля. Женщины
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира ренессанса. Мужчины
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: Рапира ренессанса. Женщины
+- weapon: buckler
+  gender: male
+  beginners: true
+  notes: Меч и Баклер. Мужчины
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля. Мужчины
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля. Кадеты. Юноши

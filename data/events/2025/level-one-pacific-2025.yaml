@@ -1,0 +1,24 @@
+title: 'Level One: Pacific'
+starts: 2025-07-26
+ends: 2025-07-27
+city: Владивосток
+organizer: Tournament Core
+url: https://vk.com/level_one_pacific
+hemagon_url: https://hemagon.com/tournament/level-one-pacific
+description: |-
+  Турнир для начинающих фехтовальщиков Level One: Pacific!
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет, проверить свои силы и сразиться за победу!
+
+  Подробная информация доступна в сообществе мероприятия в ВК
+source: portal
+source_key: level-one-pacific-2025
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Федершверт
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная Сабля

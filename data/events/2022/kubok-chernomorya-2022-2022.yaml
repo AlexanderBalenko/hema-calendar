@@ -1,0 +1,25 @@
+title: Кубок Черноморья 2022
+starts: 2022-09-03
+ends: 2022-09-04
+city: Сочи
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/cupofblacksea2022
+description: |-
+  Море, волны и звон мечей.
+  HEMA-weekend ждет вас.
+  "Кубок Черноморья" возвращается в Сочи.
+source: portal
+source_key: kubok-chernomorya-2022-2022
+nominations:
+- weapon: rapier
+  gender: male
+  notes: Рапира и кинжал
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Men
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Men
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Codex Wallerstein

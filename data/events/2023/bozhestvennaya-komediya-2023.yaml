@@ -1,0 +1,21 @@
+title: Божественная комедия
+starts: 2023-09-30
+ends: 2023-10-01
+city: Воронеж
+organizer: Сталь
+url: https://vk.ru/wall-221473151_99
+source: portal
+source_key: bozhestvennaya-komediya-2023
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Женщины

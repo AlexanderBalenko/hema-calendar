@@ -1,0 +1,24 @@
+title: Astana Open 2026
+starts: 2026-04-18
+ends: 2026-04-19
+city: Астана
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/astana-open-2026
+source: portal
+source_key: astana-open-2026-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: классика. Отборки; hemagon: Длинный меч: классика. Basic; hemagon: Фехтшуле. Мужчины;
+    hemagon: Длинный меч: классика. Advanced'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: классика. Отборки; hemagon: Длинный меч: классика. Basic; hemagon: Длинный меч:
+    классика. Advanced; hemagon: Длинный меч: классика. Женщины; hemagon: Фехтшуле. Женщины'
+- weapon: saber
+  gender: male
+  notes: 'Итальянская дуэльная сабля. Мужчины. Отборки; hemagon: Итальянская дуэльная сабля. Мужчины.
+    Basic; hemagon: Итальянская дуэльная сабля. Мужчины. Advanced'
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля. Женщины

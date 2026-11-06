@@ -1,0 +1,49 @@
+title: 'Level One: Tatarstan'
+starts: 2026-04-04
+ends: 2026-04-05
+city: Казань
+organizer: Tournament Core
+url: https://vk.com/level_one_tatarstan
+hemagon_url: https://hemagon.com/tournament/level-one-tatarstan-2026
+description: |-
+  Турнир для начинающих фехтовальщиков в г. Казань
+
+  Дата проведения: 4-5 апреля 2026 года
+
+  Номинации Level One: Tatarstan 2026:
+  Рапира Ренессанса (мужская/женская)
+  Федершверт (мужская/женская)
+  Дуэльная сабля (мужская/женская)
+
+  Мы приглашаем на Level One фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет!
+
+  Вас ждет много боев, чтобы проверить свои силы и сразиться за победу!
+
+  До встречи в Приволжском Федеральном Округе!
+source: portal
+source_key: level-one-tatarstan-2026
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Федершверт. Мужчины
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира ренессанса. Мужчины
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: Рапира ренессанса. Женщины
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля. Мужчины
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Дуэльная сабля. Женщины
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Федершверт. Женщины

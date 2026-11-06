@@ -1,0 +1,61 @@
+title: Jung Ritter II 2025
+starts: 2025-05-03
+ends: 2025-05-04
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/jungritter
+hemagon_url: https://hemagon.com/tournament/jung-ritter-ii-2025
+description: |-
+  Jung Ritter - турнир по историческому фехтованию для начинающих фехтовальщиков.
+  Концепция турнира - возможность соревноваться среди бойцов, чей турнирный стаж не превышает трех лет.
+
+  Турнир проходит в городе Краснодаре, в центре исторического фехтования "Гладиатория"
+
+  Дата проведения 02-03 мая 2025
+
+  Номинации:
+  - Длинный меч. Мужчины
+  - Длинный меч. Женщины
+  - Военная сабля
+  - Рапира и дага
+  - Меч и баклер
+  - Дюссак
+source: portal
+source_key: jung-ritter-ii-2025-2025
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: 'Длинный меч: Мужчины'
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: 'Длинный меч: Женщины'
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: 'Военная сабля: Мужчины'
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: 'Военная сабля: Женщины'
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: 'Рапира и дага: Мужчины'
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: 'Рапира и дага: Женщины'
+- weapon: dussack
+  gender: male
+  beginners: true
+  notes: 'Дюссак: Мужчины'
+- weapon: buckler
+  gender: male
+  beginners: true
+  notes: Меч и баклер
+- weapon: buckler
+  gender: female
+  beginners: true
+  notes: 'Меч и баклер: Женщины'

@@ -1,0 +1,36 @@
+title: 'Next Level Masters: СЗФО 2026'
+starts: 2026-06-06
+ends: 2026-06-07
+city: Санкт-Петербург
+organizer: CounterTime
+url: https://vk.com/nl_tournament_szfo
+hemagon_url: https://hemagon.com/tournament/next-level-masters-szfo-2026
+description: |-
+  Добро пожаловать на командные соревнования для "играющих тренеров" и их лучших учеников! Next Level - это открытые соревнования, на которых мы будем рады видеть команды, в состав которых входят как более опытные и именитые спортсмены, так и представители следующего поколения хемаистов.
+
+  Турнир "Следующий уровень" - это школа жизни через становление в фехтовании, через преемственность. Вы здесь, чтобы показать свой исторический максимум и уйти домой не просто с трофеями, а пройдя посвящение, которое однажды проходят все те, кто готов играть в долгую.
+
+  ▪первая волна регистрации — 05.05 (вт) - 11.05 (пн) до 22:00
+  ▪вторая волна регистрации — 12.05 (вт) - 01.06 (пн) до 22:00
+source: portal
+source_key: next-level-masters-szfo-2026-2026
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч, мужчины (с 18 лет)
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч, женщины (с 16 лет)
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса, смешанная (М - с 16 лет, Ж - с 18 лет)
+- weapon: saber
+  gender: male
+  team: true
+  notes: Дуэльная сабля, мужчины (с 16 лет)
+- weapon: saber
+  gender: female
+  team: true
+  notes: Дуэльная сабля, женщины (с 16 лет)

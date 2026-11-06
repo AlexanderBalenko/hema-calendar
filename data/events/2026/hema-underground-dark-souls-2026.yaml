@@ -1,0 +1,34 @@
+title: 'HEMA: UNDERGROUND DARK SOULS'
+starts: 2026-01-10
+ends: 2026-01-11
+city: Санкт-Петербург
+organizer: CounterTime
+url: https://tournamentcore.ru/
+hemagon_url: https://hemagon.com/tournament/hema-underground-dark-souls
+description: В зимних сумерках, когда день мимолетен, а тьма окутывает город, откроется турнир по HEMA.
+  Каждый бой будет испытанием воли, выносливости и смелости. Во времена холодов и ветров мы зовём всех,
+  кто готов проверить себя и, сразиться за титул Повелителя Пепла. Приди на арену, где прошлые победители
+  давно стали легендами, и впиши свое имя в летопись HEMA Underground. Либо ты зажжёшь новый огонь над
+  ареной, сам либо станешь пеплом под чужим клинком — выбор будет мгновенный. Санкт-Петербург и клуб CounterTime
+  созывает Негорящих на битву.
+source: portal
+source_key: hema-underground-dark-souls-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира. Женщины
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины

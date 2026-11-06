@@ -1,0 +1,15 @@
+title: Кубок Запада
+starts: 2026-03-15
+city: Иваново
+organizer: Белый отряд (Ивн)
+source: portal
+source_key: kubok-zapada-2026
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: HEMA Kids
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: HEMA Kids

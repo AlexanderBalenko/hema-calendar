@@ -1,0 +1,49 @@
+title: 'Level One: Ural 2023'
+starts: 2023-02-18
+ends: 2023-02-19
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/LevelOneUral2023
+description: |-
+  Турнир для начинающих "Level one: Ural".
+
+  Приглашаем к участию фехтовальщиков, чей стаж выступлений на соревнованиях по НЕМА и дуэльному фехтованию не превышает 2х лет.
+
+  Это турнир для начинающих, где вы в центре внимания. Здесь только опытные судьи. И вы можете полностью сконцентрироваться на красивом и качественном фехтовании.
+
+  Наша цель - дать возможность начинающим спортсменам проявить себя и пофехтовать с товарищами своего уровня. Здесь нет громких имен и топов HEMAratings. Это турнир для вас.
+source: portal
+source_key: level-one-ural-2023-2023
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира соло
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: Рапира соло. Женщины
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Дуэльная сабля. Женщины
+- weapon: buckler
+  gender: male
+  beginners: true
+  notes: Меч и баклер
+- weapon: buckler
+  gender: female
+  beginners: true
+  notes: Меч и баклер. Женщины
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Дуэльная сабля. Юноши

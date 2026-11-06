@@ -1,0 +1,44 @@
+title: Кубок "Золотого Сокола" по дуэльному фехтованию
+starts: 2020-05-30
+ends: 2020-05-31
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/goldenfalconcup
+description: |-
+  Номинации
+
+  Длинный меч - индивидуальный зачет
+  Меч и баклер - индивидуальный зачет
+  Военная сабля - командный зачет (команда - 4 человека)
+
+  Длинный меч - командный зачет (команда - 3 человека)
+source: portal
+source_key: kubok-zolotogo-sokola-po-duelnomu-fehtovaniyu-2020
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Advanced
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Женщины
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч. Командный зачет
+- weapon: saber
+  gender: male
+  team: true
+  notes: Военная сабля. Командный зачет
+- weapon: saber
+  gender: female
+  team: true
+  notes: Военная сабля. Командный зачет. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Basic
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Advanced

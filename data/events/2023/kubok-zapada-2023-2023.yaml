@@ -1,0 +1,42 @@
+title: Кубок Запада 2023
+starts: 2023-03-18
+city: Иваново
+organizer: Белый отряд (Ивн)
+hemagon_url: https://hemagon.com/tournament/KZ2023
+description: |-
+  Клуб "Белый Отряд" проводит весенние соревнования по историческому фехтованию для детей и подростков!
+  Участвовать может каждый, вне зависимости от стажа занятий.
+source: portal
+source_key: kubok-zapada-2023-2023
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Шпага 9-11 лет
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага 12-14 лет
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля 12-14 лет
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Сабля 15-17 лет. Юноши
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Сабля 15-17 лет. Девушки
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 17
+  team: true
+  notes: Сабля 12-17 лет. Командная

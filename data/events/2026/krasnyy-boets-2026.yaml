@@ -1,0 +1,42 @@
+title: Красный Боец
+starts: 2026-07-25
+city: Барнаул
+organizer: Стальной опоссум
+url: https://vk.com/long22
+hemagon_url: https://hemagon.com/tournament/krasniy-boets
+description: |-
+  Фестиваль исторического фехтования "Красный Боец"
+
+  В течение дня вас ждут Турнир ИСБ, HEMA и финал проф. Лиги.
+
+  Обязательно подтверждение заявки через сообщения группы https://vk.com/long22
+
+  Стоимость участия в турнирной части - 4500р, вне зависимости от количества номинаций
+  Аренда снаряжения обговаривается отдельно
+  Участие только в игровой части обговаривается отдельно
+
+  Начало заезда 24 июля. г. Барнаул
+source: portal
+source_key: krasnyy-boets-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч Мужчины
+- weapon: rapier
+  gender: male
+  notes: Рапира Open
+- weapon: rapier
+  gender: female
+  notes: Рапира Open
+- weapon: saber
+  gender: male
+  notes: Сабля Open
+- weapon: saber
+  gender: female
+  notes: Сабля Open
+- weapon: buckler
+  gender: male
+  notes: Меч и Баклер Open
+- weapon: buckler
+  gender: female
+  notes: Меч и Баклер Open

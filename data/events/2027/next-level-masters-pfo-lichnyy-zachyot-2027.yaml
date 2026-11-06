@@ -1,0 +1,27 @@
+title: Next Level, masters (ПФО), личный зачёт
+starts: 2027-04-03
+ends: 2027-04-04
+city: Казань
+organizer: Tournament Core
+co_organizers:
+- Раубриттер (Казань)
+hemagon_url: https://hemagon.com/tournament/next-level-masters-pfo-2027
+source: portal
+source_key: next-level-masters-pfo-lichnyy-zachyot-2027
+nominations:
+- weapon: saber
+  gender: male
+  notes: дуэльная сабля
+- weapon: saber
+  gender: female
+  notes: дуэльная сабля
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female
+- weapon: rapier
+  gender: male
+  notes: рапира Ренессанса
+- weapon: rapier
+  gender: female
+  notes: рапира Ренессанса

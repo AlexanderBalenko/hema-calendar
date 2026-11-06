@@ -1,0 +1,17 @@
+title: Зимний турнир клуба "Белый Отряд"
+starts: 2023-02-18
+city: Ярославль
+organizer: Белый Отряд (Яр)
+hemagon_url: https://hemagon.com/tournament/twc-winter
+description: |-
+  Внутреннее мероприятие клуба "Белый Отряд".
+  Принимаются заявки только от членов клуба.
+source: portal
+source_key: zimniy-turnir-kluba-belyy-otryad-2023
+nominations:
+- weapon: saber
+  gender: male
+  notes: Сабля Advanced
+- weapon: saber
+  gender: female
+  notes: Сабля Women

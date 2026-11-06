@@ -1,0 +1,42 @@
+title: 'Imperium: Decadance'
+starts: 2026-10-03
+ends: 2026-10-04
+city: Москва
+organizer: Renovatio
+url: https://vk.com/imperiumdecadance
+hemagon_url: https://hemagon.com/tournament/imperium-decadance
+description: |-
+  ӶΛሃҔΟӃΑ𐍉 ΟСξΗᏏ. ӶΟД ϷΑСПΑДΑ.
+
+  Когда листва начнет гнить, а небо затянет свинцовой пеленой агонии, — в самые мрачные дни октября, в числах третьем и четвертом, врата столицы распахнутся для Кровавой Мессы.
+
+  Мы собираем вас не на турнир. Мы созываем вас на Пир во время Чумы.
+
+  Здесь, среди заплеванных трибун и запаха озона, плоть встретится со сталью. Здесь не будет пощады, ибо мы ищем не победителей, но выживших, чей танец со смертью будет самым прекрасным.
+source: portal
+source_key: imperium-decadance-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, Basic
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, Advance
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, Basic
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, Advance
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер

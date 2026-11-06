@@ -1,0 +1,33 @@
+title: 'Level One: Nordwest'
+starts: 2022-04-23
+ends: 2022-04-24
+city: Санкт-Петербург
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/tournament-feeao
+description: |-
+  Для подготовки хорошего фехтовальщика, который хочет быть первым и лучшим, нужно не только много и усердно тренироваться, но и иметь большой соревновательный опыт.
+
+  Турниры Level One — прекрасная возможность получить опыт состязаний, подвести итог соревновательного сезона, получить свою первую медаль.
+source: portal
+source_key: level-one-nordwest-2022
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч мужчины
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч женщины
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Дуэльная сабля женщины
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира Ренессанса мужчины
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: Рапира Ренессанса женщины

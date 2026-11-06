@@ -1,0 +1,22 @@
+title: Зимний Кубок Ярославля по HEMA
+starts: 2026-02-14
+ends: 2026-02-15
+city: Ярославль
+organizer: Белый Отряд (Яр)
+url: https://vk.com/winter_hemacup_yar
+hemagon_url: https://hemagon.com/tournament/zimniy-kubok-yaroslavlya-po-hema-2026
+source: portal
+source_key: zimniy-kubok-yaroslavlya-po-hema-2026
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female

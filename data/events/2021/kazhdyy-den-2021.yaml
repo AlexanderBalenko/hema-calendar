@@ -1,0 +1,21 @@
+title: Каждый день
+starts: 2021-11-07
+city: Краснодар
+organizer: Гладиатория
+hemagon_url: https://hemagon.com/tournament/everyday
+description: Добро пожаловать на самый бюджетный турнир России;)
+source: portal
+source_key: kazhdyy-den-2021
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (женщины)
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (начинающие)
+- weapon: saber
+  gender: male
+  notes: Сабля (общая)

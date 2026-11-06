@@ -1,0 +1,30 @@
+title: Щегол 2024
+starts: 2024-11-30
+ends: 2024-12-01
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/turnier_stieglitz
+hemagon_url: https://hemagon.com/tournament/Stieglitz2024
+description: |-
+  Дамы и господа!
+  Клубы Unterwalden 1480 и Эфес г. Краснодар приглашают вас принять участие в турнире для начинающих фехтовальщиков "Щегол".
+
+  На соревнованиях будут представлены 3 номинации:
+  - Длинный меч
+  - Рапира Ренессанса
+  - Военная сабля
+source: portal
+source_key: schegol-2024-2024
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч (мужчины)
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира Ренессанса (общая)
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Военная сабля (мужчины)

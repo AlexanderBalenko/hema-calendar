@@ -1,0 +1,49 @@
+title: Кубок Запада HEMA kids 2025
+starts: 2025-03-15
+city: Иваново
+organizer: Белый отряд (Ивн)
+url: https://vk.com/hemakidsivanovo
+hemagon_url: https://hemagon.com/tournament/kubok-zapada-hema-kids
+description: |-
+  С радостью сообщаем, что этой весной, 15 марта, состоится ежегодный турнир по фехтованию для детей и подростков.
+  «Кубок Запада» — отличная возможность для ярких, смелых и энергичных юных бойцов из разных городов встретиться друг с другом и показать свои навыки!
+  ⚔️Номинации:
+  ▫️Шпага 9-11 лет
+  ▫️Шпага 12-14 лет
+  ▫️Шпага 15-17 лет
+  ▫️Сабля 12-14 лет
+  ▫️Сабля Юноши 15-17 лет
+  ▫️Сабля Девушки 15-17 лет
+source: portal
+source_key: kubok-zapada-hema-kids-2025-2025
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Шпага 9-11 лет
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага 12-14 лет
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Шпага 15-17 лет
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля 12-14 лет
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Сабля 15-17 лет. Юноши
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Сабля 15-17 лет. Девушки.

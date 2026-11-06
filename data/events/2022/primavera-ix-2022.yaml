@@ -1,0 +1,37 @@
+title: Primavera IX
+starts: 2022-05-21
+ends: 2022-05-22
+city: Санкт-Петербург
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/primavera2022
+description: |-
+  Воительницы, приглашаем вас принять участие в крупнейшем в России женском турнире Primavera.
+
+  История события становится всё длиннее и насыщеннее: весной 2022 состоятся девятые по счёту соревнования. Боёв будет много и каждый "с огоньком".
+
+  Мы всегда:
+  ⚔ собираем лучших из лучших
+  ⚔ допускаем во все номинации
+  ⚔ приглашаем в чистый светлый зал
+  ⚔ приглашаем опытных судей
+  ⚔ вручаем достойные призы
+
+  Список номинаций 2022: длинный меч, сабля, рапира с дагой, длинный меч (командный зачет)
+
+  🌹 Fight like a girl ⚔
+source: portal
+source_key: primavera-ix-2022
+nominations:
+- weapon: rapier
+  gender: female
+  notes: Рапира & дага
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля
+- weapon: longsword
+  gender: female
+  notes: Длинный меч
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч. Команды

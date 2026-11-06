@@ -1,0 +1,30 @@
+title: Щегол 2023
+starts: 2023-05-06
+ends: 2023-05-07
+city: Краснодар
+organizer: Гладиатория
+hemagon_url: https://hemagon.com/tournament/Shegol23
+description: Кто кого перещеголяет? Турнир для начинающих фехтовальщиков.
+source: portal
+source_key: schegol-2023-2023
+nominations:
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч (Женская)
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч (Общая)
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира и дага
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Военная сабля
+- weapon: buckler
+  gender: male
+  beginners: true
+  notes: Меч и баклер

@@ -1,0 +1,32 @@
+title: TRIAL
+starts: 2024-06-15
+city: Москва
+organizer: SwordMasters
+url: https://vk.com/hematrial
+hemagon_url: https://hemagon.com/tournament/hematrial
+description: |-
+  Школа фехтования SwordMasters представляет турнир Trial.
+  Турнир задумывается как площадка, где свои силы смогут испытать фехтовальщики, не имеющие наград выше небольших открытых турниров или соревнований для начинающих.
+
+  Мы предлагаем вашему вниманию две дисциплины и четыре номинации.
+  Длинный меч с afterblow (мужской и женский).
+  Военная сабля с приоритетом (мужская и женская).
+
+
+  Полные правила турнира, критерии допуска и прочая организационная информация - в группе ВК.
+  Подписывайтесь, следите за обновлениями!
+source: portal
+source_key: trial-2024
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (мужчины)
+- weapon: saber
+  gender: male
+  notes: Военная сабля (мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (женщины)
+- weapon: saber
+  gender: female
+  notes: Военная сабля (женщины)

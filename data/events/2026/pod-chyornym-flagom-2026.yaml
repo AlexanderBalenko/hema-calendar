@@ -1,0 +1,26 @@
+title: Под чёрным флагом
+starts: 2026-09-12
+city: Ростов-на-Дону
+organizer: САБЛЕЗУБЫЕ
+url: https://vk.com/wall-234616867_1224
+source: portal
+source_key: pod-chyornym-flagom-2026
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: 'Военная сабля для новичков: стаж HEMA меньше двух лет и нет медалей на турнирах по сабле'
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: 'Военная сабля для новичков: стаж HEMA меньше двух лет и нет медалей на турнирах по сабле'
+- weapon: saber
+  gender: male
+  notes: Военная сабля
+- weapon: saber
+  gender: female
+  notes: Военная сабля
+- weapon: buckler
+  notes: Меч-баклер, общая номинация
+- weapon: dussack
+  notes: Дюссак, общая номинация

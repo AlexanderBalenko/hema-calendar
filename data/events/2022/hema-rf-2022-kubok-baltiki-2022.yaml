@@ -1,0 +1,28 @@
+title: 'HEMA RF 2022: Кубок Балтики'
+starts: 2022-02-12
+ends: 2022-02-13
+city: Санкт-Петербург
+hemagon_url: https://hemagon.com/tournament/baltic-cup
+description: Приглашаем вас на отборочный этап Чемпионата России по HEMA. Начинайте готовиться, чтобы
+  в поединках показать свое мастерство и силу своего клуба!
+source: portal
+source_key: hema-rf-2022-kubok-baltiki-2022
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины

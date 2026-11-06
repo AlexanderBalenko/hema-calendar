@@ -1,0 +1,35 @@
+title: Spada Nerа Torneo 2025
+starts: 2025-03-22
+city: Москва
+organizer: Black Lion
+url: https://vk.com/rapier_tournament
+hemagon_url: https://hemagon.com/tournament/spada-nera-torneo-2025-test
+description: |-
+  Дамы и Господа, мы ждём вас на третьем турнире серии "Spada Nera"!
+  Дата проведения: 22 марта 2025 года.
+  Город: Москва.
+
+  Номинации будут представлены следующим образом:
+  - Квалификационные бои, по результатам которых будет составлен общий рейтинг участников и их вывод в плей-офф номинации согласно рейтингу.
+  Оружие: рапира соло.
+  - Бои с разделением участников на эшелоны в зависимости от результатов квалификационного этапа: Basic, Intermediate, Advanced для бойцов мужского пола, Basic и Advanced для бойцов женского пола.
+  Оружие для категории Basic: рапира соло.
+  Оружие для категорий Advanced и Intermediate: рапира-дага.
+source: portal
+source_key: spada-nera-torneo-2025-2025
+nominations:
+- weapon: rapier
+  gender: male
+  notes: Мужчины. Advanced
+- weapon: rapier
+  gender: male
+  notes: Мужчины. Intermediate
+- weapon: rapier
+  gender: male
+  notes: Мужчины. Basic
+- weapon: rapier
+  gender: female
+  notes: Женщины. Advanced
+- weapon: rapier
+  gender: female
+  notes: Женщины. Basic

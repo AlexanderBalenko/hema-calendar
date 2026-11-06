@@ -1,0 +1,15 @@
+title: Кубок Доблести (Cup of Valor)
+starts: 2026-12-05
+ends: 2026-12-06
+city: Тюмень
+organizer: VALOR
+hemagon_url: https://hemagon.com/tournament/kubok-doblesti-2026
+source: portal
+source_key: kubok-doblesti-cup-of-valor-2026
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+- weapon: longsword
+  gender: female
+  team: true

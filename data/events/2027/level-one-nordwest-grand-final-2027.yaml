@@ -1,0 +1,33 @@
+title: 'Level One: Nordwest (гранд-финал)'
+starts: 2027-05-08
+ends: 2027-05-09
+city: Санкт-Петербург
+organizer: Tournament Core
+co_organizers:
+- CounterTime
+hemagon_url: https://hemagon.com/tournament/level-one-nordwest-2027
+source: portal
+source_key: level-one-nordwest-grand-final-2027
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: дуэльная сабля
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: дуэльная сабля
+- weapon: longsword
+  gender: male
+  beginners: true
+- weapon: longsword
+  gender: female
+  beginners: true
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: рапира Ренессанса
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: рапира Ренессанса

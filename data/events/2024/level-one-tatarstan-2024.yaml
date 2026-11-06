@@ -1,0 +1,52 @@
+title: 'Level One: Tatarstan'
+starts: 2024-03-23
+ends: 2024-03-24
+city: Казань
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/lvl_kzn2024
+description: |-
+  Турнир для начинающих фехтовальщиков в г. Казань
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 3х лет проверить свои силы и сразиться за победу!
+
+
+  Дата проведения: 23-24 марта 2024
+
+  Номинации:
+  Длинный меч, М и Ж
+  Длинный меч, кадеты
+  Дуэльная сабля, М и Ж
+  Рапира соло, М и Ж
+
+  До встречи!
+source: portal
+source_key: level-one-tatarstan-2024
+nominations:
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч. Женщины
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: Рапира. Женщины
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира. Мужчины
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Сабля. Женщины
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Сабля. Мужчины
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч. Кадеты
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч. Мужчины

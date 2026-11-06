@@ -1,0 +1,33 @@
+title: Осенний кубок Сибири 2026
+starts: 2026-10-24
+ends: 2026-10-25
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+url: https://hema-magisterium.ru/hema-league
+hemagon_url: https://hemagon.com/tournament/oseniiy-kubok-sibiri-2026
+description: 'Осенний Кубок Сибири — традиционное соревнование по историческому фехтованию, открывающее
+  сезон рейтинговых турниров HEMA League в Новосибирске. Участников ждут три номинации: дуэльная сабля,
+  дуэльная рапира и фехтшуле. Турнир объединяет фехтовальщиков из разных городов Сибири и даёт старт к
+  борьбе за место в итоговом рейтинге Лиги. Победители получают рейтинговые баллы и право участвовать
+  в финальном турнире сезона.'
+source: portal
+source_key: osenniy-kubok-sibiri-2026-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Фехтшуле: Мужчины; hemagon: Фехтшуле: Продвинутый; hemagon: Фехтшуле: Базовый'
+- weapon: longsword
+  gender: female
+  notes: 'Фехтшуле: Женщины; hemagon: Фехтшуле: Продвинутый; hemagon: Фехтшуле: Базовый'
+- weapon: rapier
+  gender: male
+  notes: 'Дуэльная рапира: мужчины'
+- weapon: rapier
+  gender: female
+  notes: 'Дуэльная рапира: женщины'
+- weapon: saber
+  gender: male
+  notes: 'Дуэльная сабля: мужчины; hemagon: Дуэльная сабля: Продвинутый; hemagon: Дуэльная сабля: Базовая'
+- weapon: saber
+  gender: female
+  notes: 'Дуэльная сабля: Женщины; hemagon: Дуэльная сабля: Продвинутый; hemagon: Дуэльная сабля: Базовая'

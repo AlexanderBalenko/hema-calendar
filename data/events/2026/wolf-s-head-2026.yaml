@@ -1,0 +1,23 @@
+title: Wolf's Head
+starts: 2026-07-18
+ends: 2026-07-19
+city: Тбилиси
+organizer: HEMA Georgia
+hemagon_url: https://hemagon.com/tournament/wolfs-head2026
+source: portal
+source_key: wolf-s-head-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Longsword Open; hemagon: Longsword Women; hemagon: Saber Women; hemagon: Longsword Basic; hemagon:
+    Longsword Advanced; hemagon: Saber Advanced'
+- weapon: longsword
+  gender: female
+  notes: 'Longsword Open; hemagon: Longsword Women; hemagon: Saber Women; hemagon: Longsword Basic; hemagon:
+    Longsword Advanced; hemagon: Saber Advanced'
+- weapon: saber
+  gender: male
+  notes: 'Saber Open; hemagon: Saber Basic'
+- weapon: saber
+  gender: female
+  notes: 'Saber Open; hemagon: Saber Basic'

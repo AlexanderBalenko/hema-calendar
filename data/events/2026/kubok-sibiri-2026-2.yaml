@@ -1,0 +1,11 @@
+title: Кубок Сибири
+starts: 2026-03-15
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+source: portal
+source_key: kubok-sibiri-2026-2
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female

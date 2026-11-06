@@ -1,0 +1,33 @@
+title: 'Level One: Резной'
+starts: 2027-04-17
+ends: 2027-04-18
+city: Вологда
+organizer: Tournament Core
+co_organizers:
+- Ravenblade
+hemagon_url: https://hemagon.com/tournament/level-one-reznoy
+source: portal
+source_key: level-one-reznoy-2027
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: дуэльная сабля
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: дуэльная сабля
+- weapon: longsword
+  gender: male
+  beginners: true
+- weapon: longsword
+  gender: female
+  beginners: true
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: рапира Ренессанса
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: рапира Ренессанса

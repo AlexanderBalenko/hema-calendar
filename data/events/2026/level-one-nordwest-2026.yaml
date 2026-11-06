@@ -1,0 +1,37 @@
+title: 'Level One: Nordwest'
+starts: 2026-05-09
+ends: 2026-05-10
+city: Санкт-Петербург
+organizer: CounterTime
+co_organizers:
+- Tournament Core
+url: https://vk.com/level_one_nordwest
+hemagon_url: https://hemagon.com/tournament/level-one-nordwest-2026
+description: Гранд-финал серии Level One. Главный организатор — Елена Музурина. Стаж до 3 лет.
+source: portal
+source_key: level-one-nordwest-2026
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+- weapon: saber
+  gender: female
+  beginners: true
+- weapon: longsword
+  gender: male
+  beginners: true
+- weapon: longsword
+  gender: female
+  beginners: true
+- weapon: rapier
+  gender: male
+  beginners: true
+- weapon: rapier
+  gender: female
+  beginners: true
+- weapon: buckler
+  gender: male
+  beginners: true
+- weapon: buckler
+  gender: female
+  beginners: true

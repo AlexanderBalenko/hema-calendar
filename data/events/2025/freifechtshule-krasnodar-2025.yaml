@@ -1,0 +1,29 @@
+title: 'FreiFechtShule: Krasnodar'
+starts: 2025-04-30
+ends: 2025-05-02
+city: Краснодар
+organizer: FFG (Кдр)
+url: https://vk.com/freifechtschule_krd
+hemagon_url: https://hemagon.com/tournament/freifechtshule-krasnodar
+description: |-
+  Дамы и господа! Приглашаем на большое фехтовальное мероприятия на майские праздники!
+
+  Встречайте - фестиваль по историческому фехтованию FreiFechtShule: Krasnodar 2025
+  Программа фестиваля:
+  - 30 апреля-1 мая: пройдут семинары и мастер-классы с нашими гостями из Воронежа, Петербурга. Приезжайте большими делегациями, тренера и новички, ждите новостей в группе Гладиатории.
+  - 2 мая: проводим открытый турнир по длинному мечу в двух номинациях. Главным призом станет длинный меч!
+source: portal
+source_key: freifechtshule-krasnodar-2025
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: Мужчины (Fechtterra)'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: Женщины (Fechtterra)'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: Мужчины (Федершверт: фехтшуле)'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: Женщины (Федершверт: фехтшуле)'

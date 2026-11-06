@@ -1,0 +1,25 @@
+title: ЯWoman
+starts: 2024-03-09
+city: Асбест
+organizer: ЯАвтор
+hemagon_url: https://hemagon.com/tournament/IWoman-2024
+source: portal
+source_key: yawoman-2024
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 14
+  notes: Рапира 14+
+- weapon: rapier
+  gender: female
+  notes: Рапира 18+
+- weapon: saber
+  gender: male
+  min_age: 14
+  notes: Сабля 14+
+- weapon: saber
+  gender: female
+  notes: Сабля 18+
+- weapon: longsword
+  gender: male
+  notes: Длинный меч

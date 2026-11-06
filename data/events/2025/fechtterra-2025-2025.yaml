@@ -1,0 +1,36 @@
+title: FechtTerra 2025
+starts: 2025-12-06
+ends: 2025-12-07
+city: Санкт-Петербург
+organizer: FFG (СПб)
+url: https://vk.com/fechtterra
+hemagon_url: https://hemagon.com/tournament/fechtterra2025
+description: |-
+  Турнир по длинному мечу от FreifechterGilde в Санкт-Петербурге.
+  Подробности в группе ВК
+source: portal
+source_key: fechtterra-2025-2025
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Men's Team
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Women's Team
+- weapon: longsword
+  gender: male
+  notes: Men Intermediate
+- weapon: longsword
+  gender: male
+  notes: Men Advanced
+- weapon: longsword
+  gender: female
+  notes: Women Basic
+- weapon: longsword
+  gender: female
+  notes: Women Advanced
+- weapon: longsword
+  gender: male
+  notes: Man Playoff

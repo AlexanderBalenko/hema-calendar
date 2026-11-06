@@ -1,0 +1,39 @@
+title: Самарский турнир по дуэльному фехтованию 2021
+starts: 2021-09-11
+ends: 2021-09-12
+city: Самара
+organizer: DESPERADOS
+hemagon_url: https://hemagon.com/tournament/tournament-drsvw
+description: |-
+  https://vk.com/turnir_desperados
+  Регистрация: https://docs.google.com/forms/d/1JAfYz9r7_iTnlPQfIuroG-SZ4JfqAaaZvlWeR1WNXPI
+source: portal
+source_key: samarskiy-turnir-po-duelnomu-fehtovaniyu-2021-2021
+nominations:
+- weapon: saber
+  gender: female
+  notes: Военная Сабля Женская
+- weapon: longsword
+  gender: female
+  notes: Длинный Меч Женская
+- weapon: rapier
+  gender: female
+  notes: Рапира-дага Женская
+- weapon: saber
+  gender: male
+  notes: Военная Сабля Advanced
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч Basic
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч Advanced
+- weapon: rapier
+  gender: male
+  notes: Рапира-дага Basic
+- weapon: rapier
+  gender: male
+  notes: Рапира-дага Advanced
+- weapon: saber
+  gender: male
+  notes: Военная Сабля Basic

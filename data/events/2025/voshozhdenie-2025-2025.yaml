@@ -1,0 +1,29 @@
+title: Восхождение 2025
+starts: 2025-11-29
+ends: 2025-11-30
+city: Санкт-Петербург
+organizer: Tournament Core
+url: https://tournamentcore.ru/
+hemagon_url: https://hemagon.com/tournament/voskhozhdenie-2025
+description: Турнир, созданный для объединения в одном месте и времени тех, кто любит идеально подготовленные
+  атаки, точные рипосты и безответные контратаки. Наши клубы отличаются, мы учились у разных тренеров,
+  наши излюбленные действия не те же, что "коронные" приемы соперника. Но в одном мы безусловно едины
+  — пониманием, почему сабельное фехтование снискало свою славу. Мы знаем, почему этот огонь в сердце
+  может гореть вечно и в чем заключается та характерная красота сабельного боя.
+source: portal
+source_key: voshozhdenie-2025-2025
+nominations:
+- weapon: saber
+  gender: male
+  notes: Мужчины, лига Basic
+- weapon: saber
+  gender: male
+  notes: Мужчины, лига Advanced
+- weapon: saber
+  gender: male
+  team: true
+  notes: Мужчины, командный зачет
+- weapon: saber
+  gender: female
+  team: true
+  notes: Женщины, командный зачет

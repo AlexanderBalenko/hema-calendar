@@ -1,0 +1,14 @@
+title: Грошовая ХЕМА
+starts: 2026-04-04
+ends: 2026-04-05
+city: Саратов
+organizer: Ultima Ratio
+source: portal
+source_key: groshovaya-hema-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: рубка
+- weapon: longsword
+  gender: female
+  notes: рубка

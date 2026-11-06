@@ -1,0 +1,22 @@
+title: Орлиная Сопка 2024
+starts: 2024-11-16
+city: Владивосток
+organizer: Грань
+url: https://vk.com/orlinaya_sopka_vl
+hemagon_url: https://hemagon.com/tournament/sopka_vl24
+description: |-
+  Клуб "Грань" приглашает принять участие в традиционном осеннем турнире "Орлиная Сопка"!
+  В это году турнир пройдет в двух номинациях:
+  ⚔ Военная сабля
+  ⚔ Федершверт. Фехтшуле
+
+  Ждем бойцов и зрителей 16 ноября по адресу Корабельная набережная 21!
+source: portal
+source_key: orlinaya-sopka-2024-2024
+nominations:
+- weapon: saber
+  gender: male
+  notes: Сабля общая
+- weapon: longsword
+  gender: male
+  notes: Федершверт. Фехтшуле

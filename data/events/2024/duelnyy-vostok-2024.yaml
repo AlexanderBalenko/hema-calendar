@@ -1,0 +1,32 @@
+title: Дуэльный Восток
+starts: 2024-06-01
+ends: 2024-06-02
+city: Хабаровск
+organizer: Аскалон ДВ
+url: https://vk.com/topic-212862169_49288833
+hemagon_url: https://hemagon.com/tournament/hema_dv
+description: |-
+  Турнир по историческому Европейскому фехтованию "Дуэльный Восток", ежегодное мероприятие по историческому, европейскому фехтованию, которое проходит дважды в год в г. Хабаровске, под эгидой клуба "Аскалон ДВ", в начале июня и на новогодние праздники.
+
+  Номинации:
+
+  - Военная сабля, смешанная;
+  - Военная сабля, женская;
+  - Военная сабля, командная;
+  - Длинный меч, смешанный;
+source: portal
+source_key: duelnyy-vostok-2024
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля, смешанная
+- weapon: saber
+  gender: female
+  notes: Военная сабля, женская
+- weapon: saber
+  gender: male
+  team: true
+  notes: Военная сабля, командная
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, смешанный

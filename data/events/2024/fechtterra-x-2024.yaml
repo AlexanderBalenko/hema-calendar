@@ -1,0 +1,35 @@
+title: FechtTerra X
+starts: 2024-12-07
+ends: 2024-12-08
+city: Санкт-Петербург
+organizer: FFG (СПб)
+url: https://vk.com/fechtterra
+hemagon_url: https://hemagon.com/tournament/fechtterra2024
+description: 'Юбилейный турнир по длинному мечу от FreifechterGilde в Санкт-Петербурге. Подробности в
+  группе: https://vk.com/fechtterra'
+source: portal
+source_key: fechtterra-x-2024
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Men's Team
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Women's Team
+- weapon: longsword
+  gender: male
+  notes: Men Advanced
+- weapon: longsword
+  gender: male
+  notes: Men Intermediate
+- weapon: longsword
+  gender: male
+  notes: Men Basic
+- weapon: longsword
+  gender: female
+  notes: Women Advanced
+- weapon: longsword
+  gender: female
+  notes: Women Basic

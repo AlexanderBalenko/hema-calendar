@@ -1,0 +1,28 @@
+title: Кубок Севера
+starts: 2024-11-09
+ends: 2024-11-10
+city: Санкт-Петербург
+url: https://northcup.ru/
+hemagon_url: https://hemagon.com/tournament/northcup
+description: Готовься к важному событию года, где каждый удар клинка — это шаг к победе, а каждая команда
+  — единое целое. В этом турнире решают сила командного духа, слаженная работа и мастерство. Собери свою
+  команду мечты, стань легендой — завоюй Кубок Севера!
+source: portal
+source_key: kubok-severa-2024
+nominations:
+- weapon: saber
+  gender: female
+  team: true
+  notes: Дуэльная сабля, женщины
+- weapon: saber
+  gender: male
+  team: true
+  notes: Дуэльная сабля, мужчины
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч, женщины
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч, мужчины

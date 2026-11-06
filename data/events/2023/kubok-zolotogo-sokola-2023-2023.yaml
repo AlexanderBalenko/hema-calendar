@@ -1,0 +1,41 @@
+title: Кубок "Золотого Сокола" 2023
+starts: 2023-03-25
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/goldenfalconcup2023
+description: |-
+  Турнир для мечников всех категорий и направлений. Попробуйте себя в борьбе за Кубок "Золотого Сокола"!
+  Номинации
+  - Федершверт (Мужчины, Женщины)
+  - Длинный меч до 135 см (Мужчины, Женщины)
+  - Длинный меч до 120 см (Мужчины, Женщины)
+source: portal
+source_key: kubok-zolotogo-sokola-2023-2023
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Федершверт. Женщины
+- weapon: longsword
+  gender: female
+  notes: Кодекс Валлерштайн. Женщины
+- weapon: longsword
+  gender: female
+  notes: Судебный поединок. Женщины
+- weapon: longsword
+  gender: male
+  notes: Федершверт. Advanced
+- weapon: longsword
+  gender: male
+  notes: Федершверт. Basic
+- weapon: longsword
+  gender: male
+  notes: Кодекс Валлерштайн. Advanced
+- weapon: longsword
+  gender: male
+  notes: Кодекс Валлерштайн. Basic
+- weapon: longsword
+  gender: male
+  notes: Судебный поединок. Advanced
+- weapon: longsword
+  gender: male
+  notes: Судебный поединок. Basic

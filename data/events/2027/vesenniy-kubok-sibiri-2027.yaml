@@ -1,0 +1,13 @@
+title: Весенний Кубок Сибири
+starts: 2027-03-06
+ends: 2027-03-07
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+url: https://vk.ru/dff_siberian_cup
+source: portal
+source_key: vesenniy-kubok-sibiri-2027
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female

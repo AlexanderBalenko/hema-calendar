@@ -1,0 +1,17 @@
+title: турнир MwS
+starts: 2026-05-30
+city: Москва
+organizer: Men with Swords
+source: portal
+source_key: turnir-mws-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: ротелла
+- weapon: longsword
+  gender: female
+  notes: ротелла
+- weapon: spear
+  gender: male
+- weapon: spear
+  gender: female

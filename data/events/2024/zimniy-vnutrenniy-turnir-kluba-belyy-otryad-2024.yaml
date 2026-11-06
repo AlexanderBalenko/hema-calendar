@@ -1,0 +1,21 @@
+title: Зимний внутренний турнир клуба "Белый Отряд"
+starts: 2024-02-24
+city: Ярославль
+organizer: Белый Отряд (Яр)
+hemagon_url: https://hemagon.com/tournament/twc-winter-2024
+description: Внутреннее мероприятие клуба "Белый Отряд".
+source: portal
+source_key: zimniy-vnutrenniy-turnir-kluba-belyy-otryad-2024
+nominations:
+- weapon: saber
+  gender: female
+  notes: Сабля. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч
+- weapon: saber
+  gender: male
+  notes: Сабля. Мужчины
+- weapon: saber
+  gender: male
+  notes: Кадеты. Спортивная сабля

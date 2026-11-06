@@ -1,0 +1,20 @@
+title: Триатлон
+starts: 2026-10-24
+city: Екатеринбург
+organizer: HEMA Academy
+url: https://vk.ru/fencing_academy
+hemagon_url: https://hemagon.com/tournament/triatlon
+description: |-
+  24 октября в субботу проводим турнир в традиционном для клуба формате Триатлон. Бойцов ждет три раунда со сменой оружия:
+  — Рапира Паризе
+  — Рапира Ренессанса
+  — Рапира и дага
+source: portal
+source_key: triatlon-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Триатлон
+- weapon: longsword
+  gender: female
+  notes: Триатлон

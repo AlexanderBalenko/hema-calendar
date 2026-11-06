@@ -1,0 +1,17 @@
+title: Кубок Ярославля по HEMA 2023
+starts: 2023-10-21
+city: Ярославль
+organizer: Белый Отряд (Яр)
+hemagon_url: https://hemagon.com/tournament/yarcup2023
+source: portal
+source_key: kubok-yaroslavlya-po-hema-2023-2023
+nominations:
+- weapon: saber
+  gender: female
+  notes: Сабля. Женщины Basic
+- weapon: saber
+  gender: male
+  notes: Сабля. Мужчины Basic
+- weapon: saber
+  gender: male
+  notes: Сабля. Мужчины Intermediate

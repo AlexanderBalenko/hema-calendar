@@ -1,0 +1,11 @@
+title: 'Totentänzer: Rapier'
+starts: 2027-01-23
+city: Барнаул
+organizer: Тотентанц
+source: portal
+source_key: totent-nzer-rapier-2027
+nominations:
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female

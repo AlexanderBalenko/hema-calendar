@@ -1,0 +1,23 @@
+title: Epic Battle
+starts: 2027-03-13
+ends: 2027-03-14
+city: Воронеж
+organizer: АНТАРЕС
+url: https://vk.com/event223846873
+source: portal
+source_key: epic-battle-2027
+nominations:
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female
+- weapon: longsword
+  gender: male
+  notes: 'меч; исходный текст: меч - баклер.'
+- weapon: longsword
+  gender: female
+  notes: 'меч; исходный текст: меч - баклер.'
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female

@@ -1,0 +1,44 @@
+title: Восхождение IX
+starts: 2022-11-25
+ends: 2022-11-27
+city: Санкт-Петербург
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/tournament-h5t4m
+description: |-
+  Наша цель - не только выяснить, кто сильнее. Мы объединяем тех, чья душа отзывается на звон стали.
+
+  "Only fight matters" - вот что не меняется для нас год от года.
+
+  Дата проведения: 25-27 ноября 2022
+
+  Номинации:
+  Мужчины, лига А и В
+  Женщины, лига А и В
+  Мужчины, командный зачёт
+  Женщины, командный зачёт
+
+  Место проведения: г. Санкт-Петербург, наб. Обводного канала 136,
+  БЦ "Красный Треугольник", Футбольная арена.
+source: portal
+source_key: voshozhdenie-ix-2022
+nominations:
+- weapon: saber
+  gender: male
+  team: true
+  notes: Дуэльная сабля. Мужчины. Команды
+- weapon: saber
+  gender: female
+  team: true
+  notes: Дуэльная сабля. Женщины. Команды
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля. Мужчины. Категория А
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля. Мужчины. Категория В
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины. Категория А
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины. Категория В

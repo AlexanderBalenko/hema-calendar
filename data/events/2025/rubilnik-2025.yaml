@@ -1,0 +1,20 @@
+title: Рубильник
+starts: 2025-04-19
+ends: 2025-04-20
+city: Воронеж
+organizer: Сталь
+url: https://vk.ru/wall-213346670_232
+source: portal
+source_key: rubilnik-2025
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч. Команды. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: buckler
+  gender: male
+  team: true
+  notes: Меч и баклер. Команды. Мужчины

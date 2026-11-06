@@ -1,0 +1,20 @@
+title: 'FechtTerra: Longsword'
+starts: 2027-05-01
+ends: 2027-05-03
+city: Санкт-Петербург
+organizer: FFG (СПб)
+source: portal
+source_key: fechtterra-longsword-2027
+nominations:
+- weapon: longsword
+  gender: male
+  team: true
+- weapon: longsword
+  gender: female
+  team: true
+- weapon: longsword
+  gender: male
+  notes: рубка
+- weapon: longsword
+  gender: female
+  notes: рубка

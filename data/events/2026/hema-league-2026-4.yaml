@@ -1,0 +1,13 @@
+title: Hema League
+starts: 2026-04-11
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/hema-league-ural-rapira-renessansa
+description: Турнир в рамках Hema League «Золотого Сокола»
+source: portal
+source_key: hema-league-2026-4
+nominations:
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female

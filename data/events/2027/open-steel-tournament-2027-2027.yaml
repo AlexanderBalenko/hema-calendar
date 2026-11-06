@@ -1,0 +1,21 @@
+title: Open Steel Tournament 2027
+starts: 2027-03-27
+ends: 2027-03-28
+city: Воронеж
+organizer: Сталь
+hemagon_url: https://hemagon.com/tournament/open-steel-tournament2026
+source: portal
+source_key: open-steel-tournament-2027-2027
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч(мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч(женщины)
+- weapon: saber
+  gender: male
+  notes: Сабля(мужчины)
+- weapon: saber
+  gender: female
+  notes: Сабля(женщины)

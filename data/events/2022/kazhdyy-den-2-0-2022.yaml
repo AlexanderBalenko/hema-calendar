@@ -1,0 +1,26 @@
+title: Каждый день 2.0
+starts: 2022-02-12
+ends: 2022-02-13
+city: Краснодар
+organizer: Гладиатория
+hemagon_url: https://hemagon.com/tournament/everyday2
+description: Турнир на котором дерутся за еду возвращается!
+source: portal
+source_key: kazhdyy-den-2-0-2022
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (общий)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (женский)
+- weapon: spear
+  gender: male
+  notes: Копье (общее)
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага (общие)
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Командный меч финалы

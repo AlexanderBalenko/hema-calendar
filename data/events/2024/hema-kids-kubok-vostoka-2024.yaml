@@ -1,0 +1,69 @@
+title: HEMA Kids Кубок Востока
+starts: 2024-12-14
+ends: 2024-12-15
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+url: https://vk.com/hemakidschel?from=search
+hemagon_url: https://hemagon.com/tournament/hema-kids-kubok-vostoka
+description: |-
+  🗯️ Кубок Востока - это турнир, где юные фехтовальщики покажут, чему научились.
+
+  🔥 Это азарт поединков, кипящие эмоции, интересный вызов и пространство для развития молодых бойцов.
+
+  Когда: 14-15 декабря 2024 года.
+  Ждём младших и старших воинов со всех городов России от 6 до 17 лет в городе Челябинск.
+
+  🎗Приезжайте выступать, приезжайте болеть и наслаждайтесь турниром. Здесь вспыхивают таланты, зажигаются новые звезды. И каждый, даже самый юный боец, покорит новую вершину.
+source: portal
+source_key: hema-kids-kubok-vostoka-2024
+nominations:
+- weapon: saber
+  gender: male
+  min_age: 6
+  max_age: 8
+  notes: Спортивная сабля 6-8 лет
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спортивная сабля 9-11 лет
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спортивная шпага 9-11 лет
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Рапира 12-14 лет
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Дуэльная сабля. Юноши 15-17 лет
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Дуэльная сабля. Девушки 15-17 лет
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Рапира. Юноши 15-17 лет
+- weapon: longsword
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Длинный меч. Юноши 15-17
+- weapon: longsword
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Длинный меч. Девушки 15-17
+- weapon: rapier
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Рапира. Девушки 15-17 лет

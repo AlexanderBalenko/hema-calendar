@@ -1,0 +1,44 @@
+title: Молодая Гвардия
+starts: 2025-05-03
+ends: 2025-05-04
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+url: https://vk.com/golden_falcon_junior_tournament
+hemagon_url: https://hemagon.com/tournament/young-guard
+source: portal
+source_key: molodaya-gvardiya-2025
+nominations:
+- weapon: saber
+  gender: male
+  min_age: 11
+  max_age: 14
+  notes: Итальянская дуэльная сабля «Подростки» 11-14
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля «Женщины» N+
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Итальянская дуэльная сабля «Подростки» 15-17
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: классика «Женщины» N+'
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля «Мужчины» N
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля «Мужчины» N+
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса легкая «Мужчины» N+
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса легкая «Мужчины» N
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: классика «Мужчины» N+'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: классика «Мужчины» N'

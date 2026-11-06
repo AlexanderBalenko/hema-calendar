@@ -1,0 +1,13 @@
+title: 'Турнир: "Алга!"'
+starts: 2026-11-07
+ends: 2026-11-08
+city: Казань
+organizer: Раубриттер (Казань)
+url: https://vk.ru/alga_hema_pfo
+source: portal
+source_key: turnir-alga-2026
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female

@@ -1,0 +1,23 @@
+title: KatzenKampf
+starts: 2023-03-25
+city: Санкт-Петербург
+organizer: HEMA TEAM
+hemagon_url: https://hemagon.com/tournament/KatzenKampf-2023
+source: portal
+source_key: katzenkampf-2023
+nominations:
+- weapon: longsword
+  gender: male
+  notes: KatzenKampf Longsword Man
+- weapon: longsword
+  gender: female
+  notes: KatzenKampf Longsword Women
+- weapon: dussack
+  gender: male
+  notes: KatzenKampf Dussack Men
+- weapon: spear
+  gender: male
+  notes: KatzenKampf Spear Men
+- weapon: spear
+  gender: female
+  notes: KatzenKampf Spear Women

@@ -1,0 +1,36 @@
+title: Кубок "Золотого Сокола" 2021
+starts: 2021-04-24
+ends: 2021-04-25
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/goldenfalconcup2021
+description: |-
+  Ежегодный весенний турнир "Золотого Сокола" в городе Челябинск.
+
+  Личные и командные номинации, много боев и уральское гостеприимство.
+source: portal
+source_key: kubok-zolotogo-sokola-2021-2021
+nominations:
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Men
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Woman
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Woman
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч. Командный
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч. Командный. Woman
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Basic
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Advanced

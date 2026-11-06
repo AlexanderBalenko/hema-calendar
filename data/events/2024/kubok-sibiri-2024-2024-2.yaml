@@ -1,0 +1,28 @@
+title: Кубок Сибири 2024
+starts: 2024-02-24
+ends: 2024-02-25
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+url: siberian-cup-2024
+hemagon_url: https://hemagon.com/tournament/tournament-ams4s
+source: portal
+source_key: kubok-sibiri-2024-2024-2
+nominations:
+- weapon: rapier
+  gender: female
+  notes: Рапира - Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира - Продвинутые
+- weapon: rapier
+  gender: male
+  notes: Рапира - Базовая
+- weapon: saber
+  gender: female
+  notes: Сабля - Женщины
+- weapon: saber
+  gender: male
+  notes: Сабля - Продвинутые
+- weapon: saber
+  gender: male
+  notes: Сабля - Базовая

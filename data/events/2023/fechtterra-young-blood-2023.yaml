@@ -1,0 +1,37 @@
+title: Fechtterra Young Blood
+starts: 2023-04-15
+ends: 2023-04-16
+city: Санкт-Петербург
+organizer: FFG (СПб)
+hemagon_url: https://hemagon.com/tournament/fechtterra-youngblood
+description: |-
+  Турнир для начинающих участников HEMA движения в России от FFG.
+
+  Подробная информация о турнире в группе:  https://vk.com/fechtterrayb
+source: portal
+source_key: fechtterra-young-blood-2023
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (женщины)
+- weapon: saber
+  gender: male
+  notes: Сабля (мужчины)
+- weapon: saber
+  gender: female
+  notes: Сабля (женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира (мужчины)
+- weapon: rapier
+  gender: female
+  notes: Рапира (женщины)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (мужчины)
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер (женщины)

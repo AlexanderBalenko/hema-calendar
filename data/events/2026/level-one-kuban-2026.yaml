@@ -1,0 +1,33 @@
+title: 'Level One: Кубань'
+starts: 2026-11-14
+city: Краснодар
+organizer: Tournament Core
+co_organizers:
+- Эфес
+url: https://vk.com/club232204886
+hemagon_url: https://hemagon.com/tournament/level-one-kuban
+source: portal
+source_key: level-one-kuban-2026
+nominations:
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: дуэльная сабля
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: дуэльная сабля
+- weapon: longsword
+  gender: male
+  beginners: true
+- weapon: longsword
+  gender: female
+  beginners: true
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: рапира Ренессанса
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: рапира Ренессанса

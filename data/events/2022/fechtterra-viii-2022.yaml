@@ -1,0 +1,23 @@
+title: Fechtterra VIII
+starts: 2022-12-03
+ends: 2022-12-04
+city: Санкт-Петербург
+organizer: FFG (СПб)
+hemagon_url: https://hemagon.com/tournament/fechtterra2022
+description: 'Подробности в группе ВК: https://vk.com/fechtterra'
+source: portal
+source_key: fechtterra-viii-2022
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Longsword Woman
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Longsword Teams
+- weapon: longsword
+  gender: male
+  notes: Longsword Advanced
+- weapon: longsword
+  gender: male
+  notes: Longsword Basic

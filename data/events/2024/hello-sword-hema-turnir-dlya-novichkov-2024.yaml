@@ -1,0 +1,54 @@
+title: Hello_Sword! HEMA-турнир для новичков
+starts: 2024-02-03
+ends: 2024-02-04
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+url: https://vk.com/hellosword
+hemagon_url: https://hemagon.com/tournament/hello_sword2024
+description: |-
+  Hello Sword! - пора вывести эту фразу на экраны табло, ведь грядет турнир для начинающих.
+  Новички, разгоняйте свои процессоры и выбирайте язык фехтования:
+
+  - Дуэльная сабля
+  - Рапира Ренессанса
+  - Длинный меч
+  - Меч и баклер
+
+  А фехтовальную среду мы обеспечим в Челябинске 3-4 февраля.
+source: portal
+source_key: hello-sword-hema-turnir-dlya-novichkov-2024
+nominations:
+- weapon: saber
+  gender: female
+  min_age: 14
+  max_age: 17
+  notes: Дуэльная сабля. 14-17 лет. Девушки
+- weapon: saber
+  gender: male
+  min_age: 14
+  max_age: 17
+  notes: Дуэльная сабля. 14-17 лет. Юноши
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля. Мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса. Мужчины

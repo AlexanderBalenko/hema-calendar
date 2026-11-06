@@ -1,0 +1,22 @@
+title: Дуэльный Восток
+starts: 2023-06-10
+ends: 2023-06-11
+city: Хабаровск
+organizer: Аскалон ДВ
+hemagon_url: https://hemagon.com/tournament/duelingeast
+source: portal
+source_key: duelnyy-vostok-2023
+nominations:
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля
+- weapon: longsword
+  gender: male
+  notes: Длинный меч
+- weapon: rapier
+  gender: male
+  notes: Рапира с кинжалом
+- weapon: saber
+  gender: male
+  team: true
+  notes: Дуэльная сабля. Команды

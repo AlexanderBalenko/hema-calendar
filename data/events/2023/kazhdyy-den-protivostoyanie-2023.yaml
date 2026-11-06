@@ -1,0 +1,28 @@
+title: 'Каждый день: Противостояние'
+starts: 2023-11-04
+ends: 2023-11-05
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/everydaykrd2
+hemagon_url: https://hemagon.com/tournament/KDresist
+source: portal
+source_key: kazhdyy-den-protivostoyanie-2023
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Общая)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женская)
+- weapon: saber
+  gender: male
+  notes: Военная сабля (Общая)
+- weapon: rapier
+  gender: male
+  notes: Рапира соло (Общая)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (Общая)
+- weapon: spear
+  gender: male
+  notes: Копьё (Общая)

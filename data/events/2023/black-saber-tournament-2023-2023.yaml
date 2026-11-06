@@ -1,0 +1,29 @@
+title: Black Saber Tournament 2023
+starts: 2023-12-09
+city: Москва
+organizer: Black Lion
+url: https://vk.com/black_tournament
+hemagon_url: https://hemagon.com/tournament/bst2023
+description: |-
+  Фехтовальный клуб "Черный лев" с гордостью представляет третий турнир в серии Black Saber, и мы приглашаем всех спортсменов принять в нем участие!
+  Турнир пройдет в субботу 9 декабря.
+
+  Номинации пройдут по правилам приоритета атаки:
+  - Saber Advanced (men)
+  - Saber Basic (men)
+  - Saber Woman.
+
+  Регистрация откроется 11 сентября и продлится до 23:59 26 ноября 2023 года.
+  Также для удобства можно подписаться на наш канал в Телеграмме: https://t.me/+jVihHIeyolhlOWRi
+source: portal
+source_key: black-saber-tournament-2023-2023
+nominations:
+- weapon: saber
+  gender: male
+  notes: Advanced
+- weapon: saber
+  gender: male
+  notes: Basic
+- weapon: saber
+  gender: female
+  notes: Women

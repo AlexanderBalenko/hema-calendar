@@ -1,0 +1,31 @@
+title: 'Каждый день: битва за альтушку'
+starts: 2024-03-16
+ends: 2024-03-17
+city: Краснодар
+organizer: Гладиатория
+hemagon_url: https://hemagon.com/tournament/tournament-njvc
+description: |-
+  Год 2024! Кризис!
+
+  На госуслугах закончились альтушки. Последние остатки были обнаружены на складе под Краснодаром. Скуфы со всей страны съезжаются в районные МФЦ, чтобы подать заявки на участие в турнире. В турнире, который определит, кому же достанутся последние 3 альтушки.
+source: portal
+source_key: kazhdyy-den-bitva-za-altushku-2024
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Общая)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женская)
+- weapon: saber
+  gender: male
+  notes: Военная сабля
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Codex Wallerstein)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер
+- weapon: spear
+  gender: male
+  notes: Копьё

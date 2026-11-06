@@ -1,0 +1,20 @@
+title: Fechtterra Dual 2021
+starts: 2021-05-28
+city: Санкт-Петербург
+organizer: FFG (СПб)
+hemagon_url: https://hemagon.com/tournament/fechtterra-dual
+description: FechtTerra Dual – является продолжением серии турниров FechtTerra по Европейским Историческим
+  Боевым Искусствам (НЕМА), которую проводит Гильдия Вольных Фехтовальщиков СПб (FFG). На этом турнире
+  будет представлено парное оружие в номинациях "Меч и баклер" и "Рапира и кинжал".
+source: portal
+source_key: fechtterra-dual-2021-2021
+nominations:
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (мужчины)
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер (женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира и кинжал (общая)

@@ -1,0 +1,14 @@
+title: Hema League
+starts: 2026-01-24
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+hemagon_url: https://hemagon.com/tournament/hema-league-longsword-sibir-2026
+source: portal
+source_key: hema-league-2026-6
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч - Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный Меч - Женщины

@@ -1,0 +1,57 @@
+title: ЯKIDS
+starts: 2023-04-30
+ends: 2023-05-01
+city: Асбест
+organizer: ЯАвтор
+hemagon_url: https://hemagon.com/tournament/ya-kids-23-1
+source: portal
+source_key: yakids-2023
+nominations:
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Сабля, 9-11 лет
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля, 12-14 лет
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Сабля, 15-17 лет, юноши
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Рапира, 9-11 лет
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Рапира, 12-14 лет
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Рапира, 15-17 лет, юноши
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Сабля, 15-17 лет, девушки
+- weapon: rapier
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Рапира, 15-17 лет, девушки
+- weapon: saber
+  gender: male
+  team: true
+  notes: Сабля, командная
+- weapon: rapier
+  gender: male
+  team: true
+  notes: Рапира, командная

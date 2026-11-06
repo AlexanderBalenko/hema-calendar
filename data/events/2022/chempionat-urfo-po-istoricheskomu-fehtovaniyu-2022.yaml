@@ -1,0 +1,38 @@
+title: Чемпионат УрФО по историческому фехтованию
+starts: 2022-11-19
+ends: 2022-11-20
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/URFO_2022
+description: Ежегодный осенний турнир в Челябинске. В этом году он открытый - ждем участников со всех
+  регионов!
+source: portal
+source_key: chempionat-urfo-po-istoricheskomu-fehtovaniyu-2022
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Women
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Women
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса. Women
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Basic
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Advanced
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Basic
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер. Advanced
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса. Basic
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса. Advanced

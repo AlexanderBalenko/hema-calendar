@@ -1,0 +1,39 @@
+title: Каждый день 2024/25
+starts: 2024-12-21
+ends: 2024-12-22
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/everydaykrd2
+hemagon_url: https://hemagon.com/tournament/tournament-ertbg
+description: |-
+  Очередной турнир серии "Каждый день" состоится 21-22 декабря 2024 года в стенах @gladiatoria (Центр Ист. Фехтования «Гладиатория» | Краснодар).
+
+  Турнир пройдёт по следующим номинациям:
+  - Длинный меч: Общий
+  - Длинный меч: Женский
+  - Длинный меч: Команды
+  - Военная сабля
+  - Рапира и дага
+  - Меч и баклер
+source: portal
+source_key: kazhdyy-den-2024-25-2024
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: Общий'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: Женский'
+- weapon: longsword
+  gender: male
+  team: true
+  notes: 'Длинный меч: Команды'
+- weapon: saber
+  gender: male
+  notes: Военная сабля
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер

@@ -1,0 +1,20 @@
+title: Spada Sola
+starts: 2024-06-08
+city: Барнаул
+organizer: Тотентанц
+hemagon_url: https://hemagon.com/tournament/spada_sola2
+description: |-
+  "Spada Sola" — турнир по историческому фехтованию основной целью которого является проверка и совершенствование правил учебных поединков и создания новой для Сибири номинации, именуемой в современной литературе “Sidesword”, “Ранняя Рапира” и “Болонский меч”. Так как для нас важна не только спортивная составляющая, то мы ограничиваем ряд действий бойцов для соблюдения аутентичной традиции боя на выбранном оружии.
+
+  Это уже второй турнир, мы скорректировали правила и улучшили методы судейства, а также вводим дополнительную номинацию для продвинутых бойцов. В этом году вас ждет отборочный этап и две сетки плейофф, а также два комплекта наград и призов от спонсоров!
+
+  Правила доступны по ссылке: https://docs.google.com/document/d/147Aw08J-NPqNAJHtYyc6EFxQ9GlYLheHwCWEzem_aEw/edit?usp=sharing
+source: portal
+source_key: spada-sola-2024
+nominations:
+- weapon: sidesword
+  gender: male
+  notes: Sidesword (intermedite)
+- weapon: sidesword
+  gender: male
+  notes: Sidesword (base)

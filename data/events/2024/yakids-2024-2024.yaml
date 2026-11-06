@@ -1,0 +1,58 @@
+title: ЯKids 2024
+starts: 2024-05-10
+ends: 2024-05-11
+city: Асбест
+organizer: ЯАвтор
+url: https://sites.google.com/view/ikids-2024
+hemagon_url: https://hemagon.com/tournament/IKids-2024
+source: portal
+source_key: yakids-2024-2024
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 8
+  max_age: 11
+  notes: Шпага, 8-11 лет
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага, 12-14 лет
+- weapon: rapier
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Рапира, 15-17 лет, девушки
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Рапира, 15-17 лет, общая
+- weapon: saber
+  gender: male
+  min_age: 8
+  max_age: 11
+  notes: Сабля, 8-11 лет
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля, 12-14 лет
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Сабля, 15-17 лет, девушки
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Сабля, 15-17 лет, общая
+- weapon: rapier
+  gender: male
+  team: true
+  notes: Рапира, командная
+- weapon: saber
+  gender: male
+  team: true
+  notes: Сабля, командная

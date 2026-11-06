@@ -1,0 +1,18 @@
+title: Восхождение
+starts: 2021-11-20
+ends: 2021-11-21
+city: Санкт-Петербург
+organizer: Tournament Core
+hemagon_url: https://hemagon.com/tournament/Ascent2021
+description: Флагманский турнир по дуэльной сабле в России
+source: portal
+source_key: voshozhdenie-2021
+nominations:
+- weapon: saber
+  gender: male
+  team: true
+  notes: Дуэльная сабля, мужчины, команды
+- weapon: saber
+  gender: female
+  team: true
+  notes: Дуэльная сабля, женщины, команды

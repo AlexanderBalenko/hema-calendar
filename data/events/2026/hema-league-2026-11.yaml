@@ -1,0 +1,13 @@
+title: Hema League
+starts: 2026-05-24
+city: Новосибирск
+organizer: Золотой Сокол (Нск)
+hemagon_url: https://hemagon.com/tournament/hema-league-sibir-angliyskaya-gimnasticheskaya-sablya
+description: Турнир в рамках https://hema-league.ru/
+source: portal
+source_key: hema-league-2026-11
+nominations:
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female

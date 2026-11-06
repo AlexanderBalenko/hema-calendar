@@ -1,0 +1,34 @@
+title: Открытый турнир клуба "Valor"
+starts: 2025-10-25
+city: Тюмень
+organizer: VALOR
+url: https://docs.google.com/forms/d/e/1FAIpQLSeUX6e4NWsexWgWRXJbR_UgvWQq7_xAtmQV4dGuJd9CCv18Kg/viewform
+hemagon_url: https://hemagon.com/tournament/valor-base
+description: |-
+  Приглашаем к участию в открытом турнире клуба "Valor".
+
+  Турнир планируется в следующих номинациях:
+  - Длинный меч (Basic*, Women);
+  - Сабля (Basic*, Women).
+  *допускаются спортсмены без опыта участия в этапах плей-офф категории Advanced
+
+  Турнир состоится 25 октября
+  в г. Тюмени по адресу ул. Николая Чаплина 21 (2 этаж).
+
+  Техническая комиссия снаряжения: 11:00-12:00
+  Построение участников и начало турнира: 12:00
+source: portal
+source_key: otkrytyy-turnir-kluba-valor-2025-2
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч Мужчины База
+- weapon: longsword
+  gender: female
+  notes: Длинный меч Женщины
+- weapon: saber
+  gender: male
+  notes: Сабля Хаттона Мужчины База
+- weapon: saber
+  gender: female
+  notes: Сабля Хаттона Женщины

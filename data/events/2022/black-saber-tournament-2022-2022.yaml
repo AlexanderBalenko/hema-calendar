@@ -1,0 +1,17 @@
+title: Black Saber Tournament 2022
+starts: 2022-12-10
+city: Москва
+organizer: Black Lion
+hemagon_url: https://hemagon.com/tournament/BST2022
+source: portal
+source_key: black-saber-tournament-2022-2022
+nominations:
+- weapon: saber
+  gender: female
+  notes: Женская
+- weapon: saber
+  gender: male
+  notes: Basic
+- weapon: saber
+  gender: male
+  notes: Advanced

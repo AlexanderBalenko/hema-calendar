@@ -1,0 +1,49 @@
+title: Восхождение 2023 | Ascent Saber Tournament X
+starts: 2023-11-03
+ends: 2023-11-05
+city: Санкт-Петербург
+organizer: CounterTime
+url: https://vk.com/ascent_saber_tournament
+hemagon_url: https://hemagon.com/tournament/tournament-c1mht
+description: |-
+  Флагманский турнир по дуэльной сабле
+
+  "Only fight matters" - вот что объединяет тех, чья душа отзывается на звон стали.
+
+  Дата проведения: 3-5 ноября 2023
+  Место проведения: ФОК "Газпром-Доблести" по адресу ул. Доблести, 15, г. Санкт-Петербург
+
+  На юбилейном турнире будут представлены мужские и женские номинации (без разделения на лиги):
+
+  1. Личная дуэльная сабля, классические правила с афтерблоу - суббота 04.11
+
+  2. Личная дуэльная сабля, правила приоритета по А. Хаттону - суббота 04.11
+
+  3. Командная номинация, правила приоритета по А. Хаттону - воскресенье 05.11
+
+  В пятницу 03.11 вечером состоятся семинары в зале CounterTime на Большой Пушкарской, 10Е
+
+  Следите за новостями: #spbsaber
+source: portal
+source_key: voshozhdenie-2023-ascent-saber-tournament-x-2023
+nominations:
+- weapon: saber
+  gender: male
+  team: true
+  notes: Командное первенство, мужчины (правила - по А. Хаттону)
+- weapon: saber
+  gender: female
+  team: true
+  notes: Командное первенство, женщины (правила - по А. Хаттону)
+- weapon: saber
+  gender: male
+  notes: Личное первенство, мужчины (правила - классика)
+- weapon: saber
+  gender: male
+  notes: Личное первенство, мужчины (правила - по А. Хаттону)
+- weapon: saber
+  gender: female
+  notes: Личное первенство, женщины (правила - классика)
+- weapon: saber
+  gender: female
+  notes: Личное первенство, женщины (правила - по А. Хаттону)

@@ -1,0 +1,40 @@
+title: Кубок Запада HEMA Kids 2022
+starts: 2022-03-18
+ends: 2022-03-19
+city: Иваново
+organizer: Белый отряд (Ивн)
+hemagon_url: https://hemagon.com/tournament/hemakids2022
+description: Отборочный этап турнира HEMA Kids 2022
+source: portal
+source_key: kubok-zapada-hema-kids-2022-2022
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: 9-11 лет. Шпага
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: 12-14 лет. Рапира
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: 12-14 лет. Сабля
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: 15-17 лет. Сабля. Мужчины
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: 15-17 лет. Сабля. Женщины
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: 15-17 лет. Рапира

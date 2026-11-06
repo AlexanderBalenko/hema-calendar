@@ -1,0 +1,42 @@
+title: Кубок Востока HEMAkids 2021
+starts: 2021-12-18
+ends: 2021-12-19
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/eastcuphk2021
+description: 'Приглашаем вас на Кубок Востока HEMAkids 2021 в Челябинске. Это соревнования по историческому
+  фехтованию для детей и подростков. Участвовать может каждый, вне зависимости от стажа занятий. Приглашаем
+  участников со всех регионов! Регистрация по ссылке: https://vk.cc/c8wBLM'
+source: portal
+source_key: kubok-vostoka-hemakids-2021-2021
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спортивная шпага (9-11 лет)
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага HEMAkids (12-14 лет)
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Сабля (12-14 лет)
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Сабля. Мужчины (15-17 лет)
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Сабля. Женщины (15-17 лет)
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Рапира Ренессанса (15-17 лет)

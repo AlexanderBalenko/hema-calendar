@@ -1,0 +1,19 @@
+title: Под чёрным флагом
+starts: 2027-01-23
+city: Ростов-на-Дону
+organizer: САБЛЕЗУБЫЕ
+source: portal
+source_key: pod-chyornym-flagom-2027
+nominations:
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female
+- weapon: buckler
+  gender: male
+- weapon: buckler
+  gender: female
+- weapon: dussack
+  gender: male
+- weapon: dussack
+  gender: female

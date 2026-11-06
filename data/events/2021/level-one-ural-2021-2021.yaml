@@ -1,0 +1,49 @@
+title: 'Level One: Ural 2021'
+starts: 2021-03-27
+ends: 2021-03-28
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/level-one-ural-2021
+description: |-
+  Турнир для начинающих "Level one: Ural.
+
+  Приглашаем к участию фехтовальщиков, чей стаж выступлений на соревнованиях по НЕМА и дуэльному фехтованию не превышает 3х лет.
+
+  Это турнир для начинающих, где вы в центре внимания. Здесь только опытные судьи и гофмаршалы. И вы можете полностью сконцентрироваться на красивом и качественном фехтовании.
+
+  Наша цель - дать возможность начинающим спортсменам проявить себя и пофехтовать с товарищами своего уровня. Здесь нет громких имен и топов HEMAratings. Это турнир для вас.
+source: portal
+source_key: level-one-ural-2021-2021
+nominations:
+- weapon: rapier
+  gender: female
+  beginners: true
+  notes: 'Rapier: Woman'
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: 'Saber: Women'
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: 'Longsword: Men'
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: 'Longsword: Women'
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: 'Rapier: Men'
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: 'Saber: Men'
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: 'HEMAkids: Rapier'
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: 'HEMAkids: Saber'

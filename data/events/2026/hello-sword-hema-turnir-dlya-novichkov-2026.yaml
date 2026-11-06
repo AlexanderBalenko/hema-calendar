@@ -1,0 +1,29 @@
+title: Hello_Sword! | HEMA-турнир для новичков
+starts: 2026-01-30
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/hellosword-hema-turnir-dlya-novichkov
+source: portal
+source_key: hello-sword-hema-turnir-dlya-novichkov-2026
+nominations:
+- weapon: saber
+  gender: male
+  notes: Итальянская дуэльная сабля (мужчины)
+- weapon: saber
+  gender: female
+  notes: Итальянская дуэльная сабля (женщины)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (мужчины)
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер (женщины)
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч: классика (женщины)'
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: классика (мужчины)'
+- weapon: rapier
+  gender: male
+  notes: Рапира ренессанса (мужчины)

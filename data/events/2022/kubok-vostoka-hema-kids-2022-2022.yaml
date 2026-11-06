@@ -1,0 +1,60 @@
+title: Кубок Востока HEMA kids 2022
+starts: 2022-12-17
+ends: 2022-12-18
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/eastcuphk2022
+description: |-
+  Открытый турнир по историческому фехтованию для детей и подростков в Челябинске.
+
+  Приглашаем участников со всех регионов!
+source: portal
+source_key: kubok-vostoka-hema-kids-2022-2022
+nominations:
+- weapon: rapier
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спортивная шпага (9-11 лет)
+- weapon: saber
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спортивная сабля (9-11 лет)
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Шпага HEMAkids (12-14 лет)
+- weapon: saber
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Спортивная сабля (12-14 лет)
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Дуэльная сабля. Юноши (15-17 лет)
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Дуэльная сабля. Девушки (15-17 лет)
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Рапира Ренессанса (15-17 лет)
+- weapon: saber
+  gender: male
+  min_age: 10
+  max_age: 14
+  team: true
+  notes: Командная номинация. Спортивная сабля (10-14 лет)
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  team: true
+  notes: Командная номинация. Сабля Паризе (15-17 лет)

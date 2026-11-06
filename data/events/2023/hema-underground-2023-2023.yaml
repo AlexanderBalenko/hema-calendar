@@ -1,0 +1,27 @@
+title: 'HEMA: UNDERGROUND 2023'
+starts: 2023-01-07
+ends: 2023-01-08
+city: Санкт-Петербург
+organizer: CounterTime
+hemagon_url: https://hemagon.com/tournament/tournament-z80zb
+source: portal
+source_key: hema-underground-2023-2023
+nominations:
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса. Мужчины
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса. Женщины

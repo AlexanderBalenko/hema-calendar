@@ -1,0 +1,31 @@
+title: Осенний Кубок Ярославля по HEMA 2024
+starts: 2024-10-26
+city: Ярославль
+organizer: Белый Отряд (Яр)
+url: https://vk.com/autumn_hemacup_yar
+hemagon_url: https://hemagon.com/tournament/autumn_hemacup_yar_2024
+source: portal
+source_key: osenniy-kubok-yaroslavlya-po-hema-2024-2024
+nominations:
+- weapon: saber
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Cadet 15-17. Men
+- weapon: saber
+  gender: female
+  min_age: 15
+  max_age: 17
+  notes: Cadet 15-17. Women
+- weapon: saber
+  gender: male
+  notes: Men. Advanced
+- weapon: saber
+  gender: female
+  notes: Women. Advanced
+- weapon: saber
+  gender: male
+  notes: Men. Basic
+- weapon: saber
+  gender: female
+  notes: Women. Basic

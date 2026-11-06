@@ -1,0 +1,17 @@
+title: ЯWoman
+starts: 2025-03-08
+city: Асбест
+organizer: ЯАвтор
+hemagon_url: https://hemagon.com/tournament/yawoman
+source: portal
+source_key: yawoman-2025
+nominations:
+- weapon: rapier
+  gender: female
+  notes: Рапира
+- weapon: saber
+  gender: female
+  notes: Сабля
+- weapon: longsword
+  gender: female
+  notes: Длинный меч

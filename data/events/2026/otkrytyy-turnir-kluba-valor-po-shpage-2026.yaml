@@ -1,0 +1,38 @@
+title: Открытый турнир клуба "Valor" по Шпаге
+starts: 2026-05-11
+city: Тюмень
+organizer: VALOR
+url: https://vk.com/longsword72
+hemagon_url: https://hemagon.com/tournament/valorepee
+description: |-
+  Ждем вас в стенах школы фехтования VALOR!
+  Турнир состоится 11 мая в г. Тюмени по адресу ул. Земляной вал, 10 (2 этаж, вход с внутреннего двора здания).
+
+  Расписание открытого турнира Valor по шпаге
+  08:30 - Открытие зала
+  09:00 - Построение
+  09:00 - 10:00 - Шпага, кадеты
+  10:00 - 12:00 - Чемпионат, женщины; Чемпионат, мужчины (любители).
+  12:00 - 15:00 - Чемпионат мужчины
+source: portal
+source_key: otkrytyy-turnir-kluba-valor-po-shpage-2026
+nominations:
+- weapon: sport-epee
+  gender: male
+  notes: Чемпионат Мужчины, Любители
+- weapon: sport-epee
+  gender: male
+  notes: Чемпионат Мужчины
+- weapon: sport-epee
+  gender: female
+  min_age: 8
+  max_age: 17
+  notes: Шпага Девочки (возраст с хемагона не уточнён)
+- weapon: sport-epee
+  gender: male
+  min_age: 8
+  max_age: 17
+  notes: Шпага Юноши (возраст с хемагона не уточнён)
+- weapon: sport-epee
+  gender: female
+  notes: Чемпионат Женщины

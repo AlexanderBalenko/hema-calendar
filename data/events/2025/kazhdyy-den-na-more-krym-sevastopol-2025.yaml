@@ -1,0 +1,50 @@
+title: 'Каждый день: На море (Крым, Севастополь)'
+starts: 2025-08-09
+ends: 2025-08-10
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/everydaykrd2
+hemagon_url: https://hemagon.com/tournament/kazhdiy-den-na-more
+description: |-
+  Не был три года на море🙄?
+
+  Очередной турнир серии "Каждый день" стартует в Крыму!
+
+  Наименование турнира: Каждый день: На море
+  Место: Крым, г. Севастополь
+  Дата: 9-10 августа 2025 года
+
+  Номинации:
+  ⚔️Длинный меч (М и Ж)
+  ⚔️Сабля (М и Ж)
+  ⚔️ Меч и баклер (М и Ж)
+  ⚔️ Рапира ренессанса (Общая)
+  ⚔️Длинный меч (команды)
+source: portal
+source_key: kazhdyy-den-na-more-krym-sevastopol-2025
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Мужчины)
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч (Команды)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женщины)
+- weapon: rapier
+  gender: male
+  notes: Рапира Ренессанса (Общая)
+- weapon: saber
+  gender: male
+  notes: Сабля (Мужчины)
+- weapon: saber
+  gender: female
+  notes: Сабля (Женщины)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (Мужчины)
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер (Женщины)

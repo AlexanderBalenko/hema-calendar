@@ -1,0 +1,19 @@
+title: Ламповый турнир
+starts: 2022-05-28
+city: Санкт-Петербург
+organizer: Мистраль
+hemagon_url: https://hemagon.com/tournament/mistral_tournament
+description: 'HEMA турнир от ФРК "Мистраль", проводится в двух номинациях: военная сабля и "Парадоксы
+  защиты" - смешанная номинация, предполагающая разные типы оружия у участников.'
+source: portal
+source_key: lampovyy-turnir-2022
+nominations:
+- weapon: saber
+  gender: male
+  notes: Военная сабля (мужчины)
+- weapon: saber
+  gender: female
+  notes: Военная сабля (женщины)
+- weapon: spear
+  gender: male
+  notes: Парадоксы защиты

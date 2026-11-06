@@ -1,0 +1,33 @@
+title: Katzenkampf 2025
+starts: 2025-03-22
+city: Санкт-Петербург
+organizer: HEMA TEAM
+url: https://vk.com/katzenkampf
+hemagon_url: https://hemagon.com/tournament/katzenkampf-2025
+description: |-
+  Бойцы готовы? Судьи готовы? Бой!
+  Соскучились по этим словам? Мы тоже!
+
+  22 марта 2025 года в Петербурге состоится турнир Katzenkampf под эгидой HEMA TEAM! Пора врываться в наступивший 2025 год с новыми победами!
+
+  Весенний Katzenkampf всегда был новичковым турниром, однако в этот раз размах будет шире обычного – в длинном мече добавится базовая номинация! Бонусом будет общая номинация дюссака, поэтому бои будут динамичными и захватывающими!
+
+  Итак, до события ещё чуть больше двух месяцев – самое время начать усердно тренироваться, чтобы выиграть не только очки рейтинга и уважение коллег по HEMA, но и славные призы.
+
+  Ждём вас на нашем турнире Katzenkampf 2025!
+source: portal
+source_key: katzenkampf-2025-2025
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, Базовая, женщины
+- weapon: dussack
+  gender: male
+  notes: Дюссак, мужчины
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч, Начинающие, мужчины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, Базовая, мужчины

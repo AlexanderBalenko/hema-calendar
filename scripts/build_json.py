@@ -76,7 +76,13 @@ def main() -> None:
             "countryCode": city.get("country", "RU") if city else None,
             "locationManual": event.get("place"),
             "organizerName": event.get("organizer"),
+            # Со-организаторы едут и в указатель: по ним работает поиск в списке, а в ленте они
+            # видны на странице турнира. Пустой список не пишем — он есть у подавляющего
+            # большинства турниров и весил бы в указателе больше, чем значит.
+            **({"coOrganizers": [str(name).strip() for name in event["co_organizers"]]}
+               if event.get("co_organizers") else {}),
             "externalUrl": event.get("url"),
+            "hemagonUrl": event.get("hemagon_url"),
             "description": event.get("description"),
             "nominations": nominations,
         })
@@ -85,9 +91,28 @@ def main() -> None:
     # городов, где турниров не было никогда, фильтру не нужен — он его только раздувает.
     used_cities = {e["city"] for e in out_events if e["city"]}
     used_codes = {n["weaponCode"] for e in out_events for n in e["nominations"] if n["weaponCode"]}
+
+    # Порядок видов оружия в фильтре — по распространённости, а не по алфавиту: длинный меч,
+    # сабля и рапира есть в сотнях турниров, кинжал и мессер — в единицах, и прокручивать до
+    # сабли через дюссак с кинжалом человеку незачем. Считаем ТУРНИРЫ, а не номинации: турнир с
+    # четырьмя сабельными зачётами — всё равно один турнир, где есть сабля.
+    #
+    # Порядок считается на сборке, а не проставляется руками в weapons.yaml: данные меняются
+    # каждую ночь импортом, и список, который надо не забыть переставить, обязательно отстанет.
+    # Поле `order` из справочника осталось тай-брейком на случай равного счёта — иначе виды с
+    # одинаковым числом турниров менялись бы местами от сборки к сборке.
+    events_with_weapon: dict[str, int] = {}
+    for event in out_events:
+        for code in {n["weaponCode"] for n in event["nominations"] if n["weaponCode"]}:
+            events_with_weapon[code] = events_with_weapon.get(code, 0) + 1
+    by_popularity = sorted(
+        (w for w in weapons if w["code"] in used_codes),
+        key=lambda w: (-events_with_weapon.get(w["code"], 0), w.get("order", 0), w["name"]),
+    )
+
     directories = {
         "weapons": [{"id": i, "name": w["name"], "code": w["code"]}
-                    for i, w in enumerate(weapons, 1) if w["code"] in used_codes],
+                    for i, w in enumerate(by_popularity, 1)],
         "cities": [{"id": i, "name": c["name"], "macroRegion": c["region"],
                     "countryCode": c.get("country", "RU")}
                    for i, c in enumerate(cities, 1) if c["name"] in used_cities],
@@ -110,7 +135,9 @@ def main() -> None:
     # серверный компонент, его импорт в браузер не попадает вовсе.
     index_events = []
     for event in out_events:
-        slim = {k: v for k, v in event.items() if k not in ("description", "id")}
+        # Ссылка на хемагон нужна только странице турнира — в указатель, который целиком едет
+        # в браузер, её не кладём (377 ссылок это десятки килобайт на каждой загрузке).
+        slim = {k: v for k, v in event.items() if k not in ("description", "id", "hemagonUrl")}
         slim["nominations"] = [{k: v for k, v in n.items() if k != "notes"}
                                for n in event["nominations"]]
         index_events.append(slim)

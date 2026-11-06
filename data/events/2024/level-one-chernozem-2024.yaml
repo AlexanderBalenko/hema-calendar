@@ -1,0 +1,46 @@
+title: Level One:Chernozem
+starts: 2024-02-03
+ends: 2024-02-04
+city: Воронеж
+organizer: Tournament Core
+co_organizers:
+- Сталь
+url: https://vk.com/level_one_chernozem
+hemagon_url: https://hemagon.com/tournament/lvl_chernozem
+description: |-
+  Турнир для начинающих фехтовальщиков Level One: Chernozem! Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 2х лет проверить свои силы и сразиться за победу
+
+
+  Даты проведения: 3-4 февраля 2024
+
+  Номинации:
+  Длинный меч, М и Ж
+  Меч и баклер, М и Ж
+  Военная/дуэльная сабля, М и Ж
+source: portal
+source_key: level-one-chernozem-2024
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч - мужчины
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч - женщины
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Военная сабля - мужчины
+- weapon: saber
+  gender: female
+  beginners: true
+  notes: Военная сабля - женщины
+- weapon: buckler
+  gender: male
+  beginners: true
+  notes: Меч и баклер - мужчины
+- weapon: buckler
+  gender: female
+  beginners: true
+  notes: Меч и баклер - женщины

@@ -1,0 +1,33 @@
+title: Кубок Доблести
+starts: 2025-03-01
+ends: 2025-03-02
+city: Тюмень
+organizer: VALOR
+url: https://vk.com/cupofvalor
+hemagon_url: https://hemagon.com/tournament/valor-2025
+source: portal
+source_key: kubok-doblesti-2025
+nominations:
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер, женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер, мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч, женщины
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч, командный женский
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч, командный мужской
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, basic
+- weapon: longsword
+  gender: male
+  notes: Длинный меч, advanced

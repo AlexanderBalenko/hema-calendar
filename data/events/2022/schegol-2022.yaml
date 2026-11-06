@@ -1,0 +1,34 @@
+title: Щегол
+starts: 2022-05-01
+ends: 2022-05-02
+city: Краснодар
+organizer: Гладиатория
+hemagon_url: https://hemagon.com/tournament/stieglitz
+description: |-
+  Кто кого перещеголяет?
+
+  Турнир для начинающих фехтовальщиков.
+source: portal
+source_key: schegol-2022
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч. Женщины
+- weapon: longsword
+  gender: male
+  team: true
+  beginners: true
+  notes: Длинный меч. Команды
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Сабля
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира

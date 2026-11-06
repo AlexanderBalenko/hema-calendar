@@ -1,0 +1,35 @@
+title: HEMA Kids 2020
+starts: 2020-12-19
+city: Челябинск
+organizer: Золотой Сокол (Чел)
+hemagon_url: https://hemagon.com/tournament/hemakids2020
+description: Турнир HEMA среди детей и юниоров
+source: portal
+source_key: hema-kids-2020-2020
+nominations:
+- weapon: buckler
+  gender: male
+  min_age: 9
+  max_age: 11
+  notes: Спорт-меч (9-11 лет)
+- weapon: buckler
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Спорт-меч (12-14 лет)
+- weapon: rapier
+  gender: male
+  min_age: 12
+  max_age: 14
+  notes: Рапира соло (12-14 лет)
+- weapon: rapier
+  gender: male
+  min_age: 15
+  max_age: 17
+  notes: Рапира соло (15-17 лет)
+- weapon: saber
+  gender: male
+  notes: Военная сабля
+- weapon: rapier
+  gender: male
+  notes: Рапира пластик финалы

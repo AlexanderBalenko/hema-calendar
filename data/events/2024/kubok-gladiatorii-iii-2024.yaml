@@ -1,0 +1,64 @@
+title: Кубок Гладиатории III
+starts: 2024-09-28
+ends: 2024-09-29
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/gladiocup
+hemagon_url: https://hemagon.com/tournament/gladcup-III
+description: |-
+  Приглашаем на турнир по историческому фехтованию "Кубок Гладиатории III" в Центр Исторического Фехтования «Гладиатория» г. Краснодар
+
+  Турнир состоится 28 и 29 сентября 2024 года по следующим номинациям:
+
+  День 1. 28 сентября
+  - Длинный меч (М) **
+  - Длинный меч (Ж)
+  - Меч и баклер *
+
+  День 2. 29 сентября
+  - Длинный меч: Кодекс Валлерштайн
+  - Военная сабля *
+  - Рапира и дага *
+  - Дюссак
+
+  Примечания:
+  * Отдельные женские номинации состоятся при условии, что количество участниц будет не меньше 6 человек. В противном случае номинация проходит в смешанном формате.
+  ** Номинация длинный меч пройдёт в двух турах:
+  - Первый тур в формате отборочных по системе пулов.
+  - Второй тур в формате плейофф с разделением на две категории "А" (Advanced) и "B" (Basic). По результатам отборочных в группу "А" будут выведены не менее 8 бойцов. Оставшиеся бойцы переходят в категорию "B".
+source: portal
+source_key: kubok-gladiatorii-iii-2024
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женская)
+- weapon: saber
+  gender: male
+  notes: Военная сабля
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер
+- weapon: dussack
+  gender: male
+  notes: Дюссак
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер (Женская)
+- weapon: saber
+  gender: female
+  notes: Военная сабля (Женская)
+- weapon: rapier
+  gender: female
+  notes: Рапира и дага (Женская)
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч: Кодекс Валлерштайн'
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Advanced)
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Basic)

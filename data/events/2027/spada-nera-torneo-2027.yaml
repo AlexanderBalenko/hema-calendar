@@ -1,0 +1,12 @@
+title: Spada Nera Torneo
+starts: 2027-04-24
+ends: 2027-04-25
+city: Москва
+organizer: Black Lion
+source: portal
+source_key: spada-nera-torneo-2027
+nominations:
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female

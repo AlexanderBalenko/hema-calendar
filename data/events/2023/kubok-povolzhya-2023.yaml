@@ -1,0 +1,21 @@
+title: Кубок Поволжья
+starts: 2023-07-08
+ends: 2023-07-09
+city: Нижний Новгород
+organizer: White Dragons | Историческое фехтование HEMA НН
+hemagon_url: https://hemagon.com/tournament/tournament-3dgid
+source: portal
+source_key: kubok-povolzhya-2023
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (мужчины)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (женщины)
+- weapon: saber
+  gender: male
+  notes: Военная сабля (мужчины)
+- weapon: saber
+  gender: female
+  notes: Военная сабля (женщины)

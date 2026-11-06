@@ -1,0 +1,31 @@
+title: Jung Ritter 2024
+starts: 2024-04-28
+ends: 2024-04-29
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/jungritter
+hemagon_url: https://hemagon.com/tournament/jungritter24
+description: Турнир для начинающий фехтовальщиков Jung Ritter 2024
+source: portal
+source_key: jung-ritter-2024-2024
+nominations:
+- weapon: longsword
+  gender: male
+  beginners: true
+  notes: Длинный меч (Мужская)
+- weapon: longsword
+  gender: female
+  beginners: true
+  notes: Длинный меч (Женская)
+- weapon: saber
+  gender: male
+  beginners: true
+  notes: Военная сабля (Мужская)
+- weapon: rapier
+  gender: male
+  beginners: true
+  notes: Рапира Ренессанса. Соло
+- weapon: dussack
+  gender: male
+  beginners: true
+  notes: Дюссак

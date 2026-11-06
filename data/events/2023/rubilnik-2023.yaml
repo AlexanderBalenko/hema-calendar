@@ -1,0 +1,24 @@
+title: Рубильник
+starts: 2023-11-18
+ends: 2023-11-19
+city: Воронеж
+organizer: Сталь
+url: https://vk.ru/wall-213346670_177
+source: portal
+source_key: rubilnik-2023
+nominations:
+- weapon: longsword
+  gender: female
+  team: true
+  notes: Длинный меч. Команды. Женщины
+- weapon: longsword
+  gender: male
+  team: true
+  notes: Длинный меч. Команды. Мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и баклер. Личное первенство. Женщины
+- weapon: buckler
+  gender: male
+  team: true
+  notes: Меч и баклер. Команды. Мужчины

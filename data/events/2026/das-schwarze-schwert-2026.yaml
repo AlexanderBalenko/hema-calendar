@@ -1,0 +1,22 @@
+title: Das schwarze Schwert
+starts: 2026-10-17
+city: Москва
+organizer: Black Lion
+url: https://vk.com/dasschwarzeschwert
+hemagon_url: https://hemagon.com/tournament/das-schwarze-schwert-test
+description: |-
+  Открытый турнир по длинному мечу в Москве с разделением участников на эшелоны: адванс и база в мужской и женской номинациях.
+
+  Пройдёт 17 октября в Москве.
+
+
+  Адрес: Ташкентская 15к2.
+source: portal
+source_key: das-schwarze-schwert-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч, мужчины; hemagon: Мужчины. Base; hemagon: Мужчины. Advance'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч, женщины; hemagon: Женщины. Base; hemagon: Женщины. Advance'

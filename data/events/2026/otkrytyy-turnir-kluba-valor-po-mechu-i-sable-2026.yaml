@@ -1,0 +1,31 @@
+title: Открытый турнир клуба "Valor" по мечу и сабле
+starts: 2026-06-21
+city: Тюмень
+organizer: VALOR
+url: https://docs.google.com/forms/d/e/1FAIpQLSfoRh1erfsoamtS_VwbMn__P-4CZbdWPhqoHKRUh7afEreIpg/viewform
+hemagon_url: https://hemagon.com/tournament/otkrytiy-turnir-kluba-valor-po-mechu-i-sable
+description: |-
+  Открытый турнир клуба "Valor"!
+
+  Турнир планируется в следующих номинациях:
+  - Длинный меч м и ж;
+  - Дуэльная сабля м и ж;
+
+  Состоится 21 июня по адресу г.Тюмень ул. Земляной вал, 10 (2 этаж, вход с внутреннего двора здания).
+
+  Регистрация закрывается 17 июня.
+source: portal
+source_key: otkrytyy-turnir-kluba-valor-po-mechu-i-sable-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч; hemagon: Длинный меч Женщины'
+- weapon: saber
+  gender: male
+  notes: Военная Сабля
+- weapon: saber
+  gender: female
+  notes: 'Военная Сабля; hemagon: Военная Сабля Женщины'

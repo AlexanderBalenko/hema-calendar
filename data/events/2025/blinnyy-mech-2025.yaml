@@ -1,0 +1,16 @@
+title: Блинный меч
+starts: 2025-03-01
+city: Вологда
+organizer: Ravenblade
+url: https://vk.com/event229290196
+hemagon_url: https://hemagon.com/tournament/blinniy-mech
+description: Весна пришла, а значит пора развеять серые будни зимы. Да будут Масленичные бои!
+source: portal
+source_key: blinnyy-mech-2025
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч "Basic" - Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч "Basic" - Женщины

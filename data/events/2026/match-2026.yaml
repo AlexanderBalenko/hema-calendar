@@ -1,0 +1,37 @@
+title: MATCH
+starts: 2026-11-21
+ends: 2026-11-22
+city: Санкт-Петербург
+organizer: CounterTime
+hemagon_url: https://hemagon.com/tournament/match
+source: portal
+source_key: match-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч, мужчины; hemagon: Открытые бои, сб 18:00 - 20:30; hemagon: Открытые бои, вс 14:00
+    - 16:30; hemagon: МК по длинному мечу Петра Васильева; hemagon: МК по длинному мечу Елены Музуриной'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч, женщины; hemagon: Открытые бои, сб 18:00 - 20:30; hemagon: Открытые бои, вс 14:00
+    - 16:30; hemagon: МК по длинному мечу Петра Васильева; hemagon: МК по длинному мечу Елены Музуриной'
+- weapon: saber
+  gender: male
+  notes: 'Дуэльная сабля, мужчины; hemagon: МК по сабле Дмитрия Гибадуллина; hemagon: МК по сабле Вячеслава
+    Коротовских'
+- weapon: saber
+  gender: female
+  notes: 'Дуэльная сабля, женщины; hemagon: МК по сабле Дмитрия Гибадуллина; hemagon: МК по сабле Вячеслава
+    Коротовских'
+- weapon: rapier
+  gender: male
+  notes: МК по рапире Ренессанса Андрея Козлова
+- weapon: rapier
+  gender: female
+  notes: МК по рапире Ренессанса Андрея Козлова
+- weapon: buckler
+  gender: male
+  notes: МК по мечу и баклеру Андрея Некрылова
+- weapon: buckler
+  gender: female
+  notes: МК по мечу и баклеру Андрея Некрылова

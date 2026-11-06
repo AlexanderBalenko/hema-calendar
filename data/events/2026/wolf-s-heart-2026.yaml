@@ -1,0 +1,21 @@
+title: Wolf's Heart
+starts: 2026-02-21
+ends: 2026-02-22
+city: Тбилиси
+organizer: HEMA Georgia
+hemagon_url: https://hemagon.com/tournament/wolfs-heart-2026
+source: portal
+source_key: wolf-s-heart-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Longsword Open; hemagon: Longsword Beginner'
+- weapon: longsword
+  gender: female
+  notes: 'Longsword Open; hemagon: Longsword Beginner'
+- weapon: saber
+  gender: male
+  notes: 'Saber Beginner; hemagon: Saber Open'
+- weapon: saber
+  gender: female
+  notes: 'Saber Beginner; hemagon: Saber Open'

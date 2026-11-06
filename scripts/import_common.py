@@ -16,8 +16,8 @@ from calendar_data import ROOT, event_path, load_events, save_event, titles_look
 # Поля, которыми распоряжается источник: что он дал — то и записываем. Чего он не дал, в файле
 # остаётся нетронутым: город, дописанный человеком к турниру, у которого источник места не
 # знает, не должен пропадать на следующем прогоне.
-SOURCE_FIELDS = ["title", "starts", "ends", "city", "place", "organizer", "url", "description",
-                 "nominations"]
+SOURCE_FIELDS = ["title", "starts", "ends", "city", "place", "organizer", "co_organizers", "url",
+                 "description", "nominations"]
 
 TRANSLIT = {
     "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "e", "ж": "zh", "з": "z",
@@ -33,6 +33,15 @@ def slugify(title: str) -> str:
     transliterated = "".join(TRANSLIT.get(ch, ch) for ch in title.lower().strip())
     slug = re.sub(r"[^a-z0-9]+", "-", transliterated).strip("-")
     return slug[:60].strip("-") or "turnir"
+
+
+def slug_with_year(title: str, starts: str) -> str:
+    """Слаг с годом на конце — как в портале (`eleonora-2027`). Год нужен потому, что в имени
+    файла даты больше нет: без него «Кубок Сибири» каждого сезона садился бы на один адрес, и
+    второй получал бы приписку «-2», ничего не говорящую читателю."""
+    body = slugify(title)
+    year = starts[:4]
+    return body if body.endswith(year) else f"{body}-{year}"
 
 
 def as_date(value) -> dt.date:
@@ -93,10 +102,11 @@ class Importer:
                     f"({twin['_path']}) — не завожу второй записью")
                 return
 
-            path = event_path(item["starts"].isoformat(), slugify(item["title"]))
+            body = slug_with_year(item["title"], item["starts"].isoformat())
+            path = event_path(item["starts"].isoformat(), body)
             suffix = 2
             while str(path.relative_to(ROOT)).replace("\\", "/") in self.all_paths:
-                path = event_path(item["starts"].isoformat(), f"{slugify(item['title'])}-{suffix}")
+                path = event_path(item["starts"].isoformat(), f"{body}-{suffix}")
                 suffix += 1
             if not self.dry_run:
                 save_event(path, item)
@@ -122,11 +132,23 @@ class Importer:
         self.updated.append(f"{existing['_path']}: {merged['title']}")
 
     def _twin(self, item: dict) -> dict | None:
-        """Уже заведённый турнир того же дня, в том же месте и с похожим названием."""
-        starts = item["starts"].isoformat()
+        """Уже заведённый турнир тех же дней, в том же месте и с похожим названием.
+
+        Окно в три дня, а не «ровно тот же день»: один турнир источники датируют по-разному —
+        «Next Level, masters (ЮФО)» хемагона стоял 14-15 ноября, а «NEXT LEVEL MASTERS, ЮФО 2026»
+        из таблицы — 15-го, и прежняя проверка «день в день» их не сравнивала, заведя второй файл.
+
+        Эта же проверка защищает записи портала: он — источник правды (docs/Calendar.md §3а), и
+        ночной импорт не вправе заводить рядом с его турниром свой, с автором хемагона вместо
+        клуба-организатора."""
+        starts = item["starts"]
         where = str(item.get("city") or item.get("place") or "").strip().lower()
         for other in self.events:
-            if str(other.get("starts")) != starts:
+            try:
+                other_starts = as_date(other.get("starts"))
+            except (ValueError, TypeError):
+                continue
+            if abs((other_starts - starts).days) > 3:
                 continue
             other_where = str(other.get("city") or other.get("place") or "").strip().lower()
             if where != other_where:

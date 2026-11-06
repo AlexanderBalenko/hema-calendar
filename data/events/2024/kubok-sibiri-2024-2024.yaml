@@ -1,0 +1,24 @@
+title: Кубок Сибири 2024
+starts: 2024-10-26
+ends: 2024-10-27
+city: Новосибирск
+organizer: АНТАРЕС
+hemagon_url: https://hemagon.com/tournament/siberian-cup-2024-ls-sb
+source: portal
+source_key: kubok-sibiri-2024-2024
+nominations:
+- weapon: longsword
+  gender: female
+  notes: Длинный Меч - Женщины
+- weapon: buckler
+  gender: male
+  notes: Меч и Баклер - Мужчины
+- weapon: buckler
+  gender: female
+  notes: Меч и Баклер - Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч - Advanced мужчины
+- weapon: longsword
+  gender: male
+  notes: Длинный Меч - Basic Мужчины

@@ -1,0 +1,31 @@
+title: 'Каждый день 2023 #1'
+starts: 2023-02-24
+ends: 2023-02-25
+city: Краснодар
+organizer: Гладиатория
+hemagon_url: https://hemagon.com/tournament/everyday23-1
+description: |-
+  Это турнир для желающих набить как можно больше фрагов, чтобы зарядить себя перед турниром-флагманом.
+
+  Испытай себя и одержи победу, если сил хватит.
+source: portal
+source_key: kazhdyy-den-2023-1-2023
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Общий)
+- weapon: longsword
+  gender: female
+  notes: Длинный меч (Женский)
+- weapon: saber
+  gender: male
+  notes: Военная сабля (Общая)
+- weapon: rapier
+  gender: male
+  notes: Рапира (Соло; Общая)
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (Общий)
+- weapon: spear
+  gender: male
+  notes: Копьё (Общее)

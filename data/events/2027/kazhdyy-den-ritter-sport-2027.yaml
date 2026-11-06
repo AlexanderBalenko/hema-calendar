@@ -1,0 +1,22 @@
+title: 'Каждый день: Риттер спорт'
+starts: 2027-02-21
+ends: 2027-02-23
+city: Краснодар
+organizer: Гладиатория
+source: portal
+source_key: kazhdyy-den-ritter-sport-2027
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'штыковой бой; исходный текст: шпага'
+- weapon: longsword
+  gender: female
+  notes: 'штыковой бой; исходный текст: шпага'
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female

@@ -1,0 +1,24 @@
+title: Стальной Стандарт
+starts: 2026-11-07
+ends: 2026-11-08
+city: Барнаул
+organizer: Стальной опоссум
+hemagon_url: https://hemagon.com/tournament/stalnoy-standart
+source: portal
+source_key: stalnoy-standart-2026
+nominations:
+- weapon: longsword
+  gender: male
+  notes: 'Длинный меч Мужчины; hemagon: Длинный меч Мужчины до 2 лет; hemagon: Длинный меч, Кодекс Валлерштайна'
+- weapon: longsword
+  gender: female
+  notes: 'Длинный меч Женщины до 2 лет; hemagon: Длинный меч, Кодекс Валлерштайна'
+- weapon: saber
+  gender: male
+  notes: 'Дуэльная сабля Мужчины; hemagon: Дуэльная сабля Мужчины до 2 лет'
+- weapon: buckler
+  gender: male
+  notes: Меч и Баклер Open
+- weapon: buckler
+  gender: female
+  notes: Меч и Баклер Open

@@ -1,0 +1,43 @@
+title: 'Каждый День: День мужика'
+starts: 2026-02-21
+ends: 2026-02-22
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/everydaykrd2
+hemagon_url: https://hemagon.com/tournament/kazhdiy-den-den-muzhika-2026
+source: portal
+source_key: kazhdyy-den-den-muzhika-2026
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female
+- weapon: longsword
+  gender: male
+  team: true
+  notes: команды
+- weapon: longsword
+  gender: female
+  team: true
+  notes: команды
+- weapon: spear
+  gender: male
+- weapon: spear
+  gender: female
+- weapon: buckler
+  gender: male
+  notes: Меч и баклер (Общая)
+- weapon: saber
+  gender: male
+  notes: 'HEMAkids: Сабля (до 12 лет)'
+- weapon: saber
+  gender: male
+  notes: Сабля по Хаттону (Общая)

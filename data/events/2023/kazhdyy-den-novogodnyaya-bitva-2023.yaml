@@ -1,0 +1,25 @@
+title: 'Каждый день: Новогодняя битва'
+starts: 2023-12-23
+ends: 2023-12-24
+city: Краснодар
+organizer: Гладиатория
+url: https://vk.com/everydaykrd2
+hemagon_url: https://hemagon.com/tournament/ng2024
+source: portal
+source_key: kazhdyy-den-novogodnyaya-bitva-2023
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Общая)
+- weapon: longsword
+  gender: male
+  notes: Длинный меч (Codex Wallerstein)
+- weapon: rapier
+  gender: male
+  notes: Рапира и дага (Общая)
+- weapon: saber
+  gender: male
+  notes: Военная сабля (Общая)
+- weapon: spear
+  gender: male
+  notes: Копьё (Общая)

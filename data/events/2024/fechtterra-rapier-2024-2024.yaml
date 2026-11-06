@@ -1,0 +1,28 @@
+title: Fechtterra Rapier 2024
+starts: 2024-05-25
+ends: 2024-05-26
+city: Санкт-Петербург
+organizer: FFG (СПб)
+url: https://vk.com/ft_rapier
+hemagon_url: https://hemagon.com/tournament/fechtterra-rapier-2024
+description: 'Турнир по рапире от Freifechter Gilde в Санкт-Петербурге. Подробности в группе: https://vk.com/ft_rapier'
+source: portal
+source_key: fechtterra-rapier-2024-2024
+nominations:
+- weapon: rapier
+  gender: female
+  notes: Rapier and Dagger (W)
+- weapon: rapier
+  gender: male
+  team: true
+  notes: Rapier Teams (M)
+- weapon: rapier
+  gender: female
+  team: true
+  notes: Rapier Teams (W)
+- weapon: rapier
+  gender: male
+  notes: Rapier and Dagger Advanced (M)
+- weapon: rapier
+  gender: male
+  notes: Rapier and Dagger Basic (M)

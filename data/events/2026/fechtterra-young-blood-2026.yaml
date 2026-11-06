@@ -1,0 +1,36 @@
+title: 'FechtTerra: Young Blood'
+starts: 2026-04-04
+ends: 2026-04-05
+city: Санкт-Петербург
+organizer: FFG (СПб)
+url: https://vk.com/fechtterrayb
+hemagon_url: https://hemagon.com/tournament/fechtterra-young-blood-2026
+description: |-
+  Турнир для начинающих FechtTerra: Young Blood.
+
+  4-5 апреля 2026 года.
+
+  📍 Санкт-Петербург, набережная Обводного канала, 134-136-138к63, зал FFG
+
+  Номинации:
+  Меч & баклер
+  Длинный меч
+  Рапира соло
+  Сабля
+source: portal
+source_key: fechtterra-young-blood-2026
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female
+- weapon: buckler
+  gender: male
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female
