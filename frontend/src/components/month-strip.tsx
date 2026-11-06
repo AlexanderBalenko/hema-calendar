@@ -1,7 +1,13 @@
 import Link from 'next/link';
 
-import type { CalendarEvent } from '@/src/lib/data';
-import { filtersToSearch, monthKey, parseMonthKey, type CalendarFilters } from '@/src/lib/filters';
+import {
+  filtersToSearch,
+  monthKey,
+  RIBBON_WEEKS,
+  parseMonthKey,
+  type CalendarFilters,
+  type SelectedEvent,
+} from '@/src/lib/filters';
 import { MONTH_TITLES, parseDate } from '@/src/lib/month-layout';
 
 /**
@@ -24,8 +30,8 @@ export function MonthStrip({
   today,
 }: {
   filters: CalendarFilters;
-  /** Турниры, подходящие под фильтры без учёта дат. */
-  events: CalendarEvent[];
+  /** Турниры, отобранные фильтрами без учёта дат; неподходящие приезжают, когда включён глазик. */
+  events: SelectedEvent[];
   today: string;
 }) {
   const { year, month } = parseMonthKey(filters.month, today);
@@ -33,6 +39,10 @@ export function MonthStrip({
   const counts = Array.from({ length: 12 }, () => 0);
   let inYear = 0;
   for (const event of events) {
+    // Счётчики считают только ПОДХОДЯЩЕЕ, даже когда неподходящее показано: иначе включённый
+    // глазик возвращал бы числа как без фильтров, и полоска перестала бы отвечать на вопрос
+    // «где в году густо для МЕНЯ».
+    if (!event.isSuitable) continue;
     const date = parseDate(event.startsAt);
     if (date.year !== year) continue;
     counts[date.month] += 1;
@@ -40,8 +50,12 @@ export function MonthStrip({
   }
   const max = Math.max(1, ...counts);
 
+  // Выбор месяца начинает ленту заново: развёрнутое окно прошлого и будущего относится к
+  // ПРЕЖНЕЙ точке отсчёта, и тащить его в другой месяц значит показать человеку совсем не то,
+  // куда он ткнул.
+  const fresh = { weeks: RIBBON_WEEKS, back: 0 };
   const yearLink = (delta: number) =>
-    `/${filtersToSearch({ ...filters, month: monthKey(year + delta, month) }, today)}`;
+    `/${filtersToSearch({ ...filters, ...fresh, month: monthKey(year + delta, month) }, today)}`;
 
   return (
     <div className="flex items-center gap-2 rounded-xl bg-background-secondary px-2 py-1.5">
@@ -73,7 +87,7 @@ export function MonthStrip({
           return (
             <Link
               key={title}
-              href={`/${filtersToSearch({ ...filters, month: monthKey(year, index) }, today)}`}
+              href={`/${filtersToSearch({ ...filters, ...fresh, month: monthKey(year, index) }, today)}`}
               aria-current={isCurrent ? 'date' : undefined}
               aria-label={`${title} ${year}, турниров: ${counts[index]}`}
               className={[

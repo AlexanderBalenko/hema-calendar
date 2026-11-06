@@ -33,9 +33,47 @@
     --cal-past: 63 61 57; /* #3f3d39 */
     --cal-past-text: 214 210 202; /* #d6d2ca */
     --cal-past-text-muted: 150 145 138; /* #96918a */
+    /* Прошедшее НЕподходящее: та же светлота, что у неподходящего будущего (оно рисуется фоном
+       карточки), но нейтрально-серое — прошедшее неподходящее не должно выглядеть теплее и
+       цветнее просто неподходящего. */
+    --cal-past-unsuitable: 30 30 30; /* #1e1e1e */
+    --cal-past-unsuitable-text: 108 108 108; /* #6c6c6c */
   }
+}
+
+html {
+  /* Календарь всегда тёмный — без этого браузер рисует СВОИ элементы управления светлыми:
+     полосы прокрутки в выпадающих списках, стрелки у поля возраста, нативные поповеры.
+     На тёмной странице это выглядит чужеродно, а другого способа повлиять на них нет — обычным
+     CSS они не стилизуются. Перенесено из портала вместе с остальными токенами. */
+  color-scheme: dark;
 }
 
 body {
   @apply bg-background text-foreground;
+}
+
+@layer utilities {
+  /* Тонкая полоса прокрутки в гамме календаря: без дорожки и рамок, только скруглённый ползунок.
+     Та же утилита, что в портале. */
+  .thin-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-border-light)) transparent;
+  }
+  .thin-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .thin-scroll::-webkit-scrollbar-track {
+    background: transparent;
+    border: 0;
+  }
+  .thin-scroll::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--c-border-light));
+    border-radius: 9999px;
+    border: 0;
+  }
+  .thin-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--c-text-faint));
+  }
 }

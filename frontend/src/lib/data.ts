@@ -31,7 +31,11 @@ export type CalendarEvent = {
   countryCode: string | null;
   locationManual: string | null;
   organizerName: string | null;
+  /** Со-организаторы: турнир часто делают два клуба вместе. Поля нет у большинства турниров. */
+  coOrganizers?: string[];
   externalUrl: string | null;
+  /** Карточка турнира на хемагоне. Только в полном наборе: указателю она не нужна. */
+  hemagonUrl?: string | null;
   description?: string | null;
   nominations: Nomination[];
 };

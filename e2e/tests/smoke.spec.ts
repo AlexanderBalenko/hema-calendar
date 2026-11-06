@@ -83,8 +83,126 @@ test.describe('Календарь', () => {
     expect(filtered).toBeGreaterThan(0);
     expect(filtered).toBeLessThan(before);
 
+    // Закрываем список оружия, как это делает человек: рабочая область сжата до 912px
+    // (layout.tsx, CONTENT_WIDTH), строка фильтров переносится на два ряда, и раскрытая панель
+    // накрывает второй ряд вместе со «Сбросить». Клик мимо открытой панели — не сценарий
+    // пользователя, а артефакт теста: раньше он проходил только потому, что строка была одна.
+    await page.getByTitle(/^Оружие/).click();
+    await expect(weaponPanel).toBeHidden();
+
     await page.getByRole('button', { name: 'Сбросить' }).click();
     await expect(rows).toHaveCount(before);
+  });
+
+  test('лента подгружается прокруткой, а не кнопкой', async ({ page }) => {
+    await page.goto('');
+    await expect(page.getByRole('button', { name: 'Показать ещё' })).toHaveCount(0);
+
+    const bars = page.locator('a[href*="/events/"]');
+    const before = await bars.count();
+    expect(before).toBeGreaterThan(0);
+
+    // Прокрутка до низа ленты: сентинел попадает в поле зрения и окно растёт само.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(page).toHaveURL(/weeks=\d+/);
+    await expect.poll(() => bars.count()).toBeGreaterThan(before);
+  });
+
+  test('лента листается и вверх, в прошлое, не прыгая под руками', async ({ page }) => {
+    await page.goto('');
+    const bars = page.locator('a[href*="/events/"]');
+    const before = await bars.count();
+
+    // Шаг вниз нужен, чтобы верхний сентинел не сработал сам при загрузке: прошлое подгружается
+    // по движению человека, а не до него.
+    await page.evaluate(() => window.scrollBy(0, 400));
+    // Мерим ОДНУ И ТУ ЖЕ плашку по её адресу: после подгрузки прошлого первой в разметке
+    // окажется другая, более ранняя, и сравнение «первой с первой» ничего не проверяет.
+    const probe = await page.evaluate(() => {
+      const bar = document.querySelector('a[href*="/events/"]') as HTMLAnchorElement | null;
+      return bar ? { href: bar.getAttribute('href'), top: Math.round(bar.getBoundingClientRect().top) } : null;
+    });
+    expect(probe).not.toBeNull();
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(page).toHaveURL(/back=\d+/);
+    await expect.poll(() => bars.count()).toBeGreaterThan(before);
+
+    // Компенсация прокрутки. Плашку мерили при прокрутке 400, потом ушли в самый верх — без
+    // подгрузки она оказалась бы на `top + 400`. Там же она должна остаться и после неё: новые
+    // недели встали НАД видимой областью, а прокрутку на их высоту домотали.
+    const after = await page.evaluate((href: string) => {
+      const bar = document.querySelector(`a[href="${href}"]`);
+      return {
+        top: bar ? Math.round(bar.getBoundingClientRect().top) : null,
+        scrollY: Math.round(window.scrollY),
+      };
+    }, probe!.href!);
+    expect(after.top).not.toBeNull();
+    expect(after.scrollY).toBeGreaterThan(0);
+    expect(Math.abs((after.top ?? 0) - (probe!.top + 400))).toBeLessThan(200);
+  });
+
+  test('подписи баров, доходящих до правого края, стоят на одной вертикали', async ({ page }) => {
+    // Бар с аннексированным понедельником физически продлён на ширину хвоста, и его правый
+    // текст дважды оказывался не там: сначала уезжал под хвостовую плашку и обрывался, потом
+    // вставал на восемь пикселей правее соседних. Проверяем не код, а результат на экране.
+    await page.goto('?month=2027-05');
+    const edges = await page.evaluate(() => {
+      const rows = Array.from(document.querySelectorAll('div.relative.grid'));
+      const found: number[] = [];
+      for (const row of rows) {
+        const rowRight = row.getBoundingClientRect().right;
+        for (const bar of Array.from(row.querySelectorAll('a[href*="/events/"]'))) {
+          // Только те, что доходят до правого края строки: у коротких баров подпись и должна
+          // кончаться раньше.
+          if (bar.getBoundingClientRect().right < rowRight - 2) continue;
+          const place = Array.from(bar.querySelectorAll('span')).filter((e) => e.children.length === 0 && e.textContent?.trim());
+          const last = place[place.length - 1];
+          if (last) found.push(Math.round(last.getBoundingClientRect().right));
+        }
+      }
+      return found;
+    });
+
+    expect(edges.length).toBeGreaterThan(1);
+    expect(Math.max(...edges) - Math.min(...edges)).toBeLessThanOrEqual(2);
+  });
+
+  test('при наведении подсвечивается весь бар, включая хвостовой понедельник', async ({ page }) => {
+    // Хвост раньше был отдельной плашкой ПОВЕРХ бара: наведение красило бар, а хвост оставался
+    // тёмным, и строка подсвечивалась не целиком (замечание заказчика 06.11.2026).
+    await page.goto('?month=2027-05');
+    const bar = page.locator('a[href*="fechtterra-longsword"]').first();
+
+    const background = () => bar.evaluate((node) => getComputedStyle(node).backgroundColor);
+    const idle = await background();
+    await bar.hover();
+    // Цвет меняется переходом (transition-colors, 150 мс), и сразу после наведения он ещё
+    // прежний — ждём, а не читаем один раз.
+    await expect.poll(background).not.toBe(idle);
+
+    // В зоне хвоста — сам бар, а не наложенный поверх элемент: подсветка одного элемента
+    // покрывает его целиком, лагать нечему.
+    const sameElement = await bar.evaluate((node) => {
+      const box = node.getBoundingClientRect();
+      const row = node.closest('.grid')!.getBoundingClientRect();
+      return document.elementFromPoint(row.right + 12, box.top + box.height / 2) === node;
+    });
+    expect(sameElement).toBe(true);
+  });
+
+  test('глазик показывает неподходящие турниры неактивными и объясняет причину', async ({ page }) => {
+    await page.goto('?view=list&period=all&weapons=saber');
+    const rows = page.locator('a[href*="/events/"]');
+    const onlySuitable = await rows.count();
+    expect(onlySuitable).toBeGreaterThan(0);
+
+    await page.getByTitle('Показывать неподходящие турниры неактивными').click();
+    await expect(page).toHaveURL(/showUnsuitable=1/);
+    // Неподходящие не исчезли, а вернулись в список — и каждый говорит, чем не подошёл.
+    expect(await rows.count()).toBeGreaterThan(onlySuitable);
+    await expect(page.locator('a[title^="Не подходит:"]').first()).toBeVisible();
   });
 
   test('фильтры переживают перезагрузку: ссылкой можно поделиться', async ({ page }) => {
@@ -119,7 +237,7 @@ test.describe('Календарь', () => {
 test.describe('Подача турнира', () => {
   test('страница объясняет оба пути: форму и правку данных', async ({ page }) => {
     await page.goto('submit/');
-    await expect(page.getByRole('heading', { name: 'Подать турнир' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Анонсировать турнир' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'data/events' })).toBeVisible();
     // Регистрация не нужна — это обещание страницы, и оно должно на ней быть.
     await expect(page.getByText(/Регистрация не нужна/)).toBeVisible();

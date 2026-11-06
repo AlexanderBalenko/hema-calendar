@@ -2,19 +2,25 @@
 
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { CalendarDays, LayoutList, MapPin, Rows3, Search, Sprout, Swords, UsersRound } from 'lucide-react';
+import {
+  CalendarClock, CalendarDays, ChevronDown, Eye, EyeOff, LayoutList, MapPin, Rows3, Search, Sprout,
+  Swords, UsersRound,
+} from 'lucide-react';
 
 import type { Directories } from '@/src/lib/data';
 import {
   filtersToSearch,
   hasActiveFilters,
+  hasPersonalFilters,
   type BeginnerFilter,
   type CalendarFilters,
   type Period,
+  type ViewerGender,
   type ViewMode,
 } from '@/src/lib/filters';
 import { MultiDropdown } from './multi-dropdown';
 import { Dropdown } from './select-arrow';
+import { Mars, Venus, VenusAndMars } from './gender-icons';
 import { WeaponIcon } from './weapon-icon';
 
 /**
@@ -22,8 +28,13 @@ import { WeaponIcon } from './weapon-icon';
  * оружие и регионы свёрнуты в дропдауны-мультиселекты (чипов было слишком много и строка
  * распухала), номинации — тумблеры, всё одной высоты 32px с одинаковой рамкой.
  *
- * Чего здесь нет из портального: критериев УЧАСТНИКА (возраст, пол, смешанные номинации) и
- * «уведомлять о новых» — это про залогиненного человека, которого календарь не знает.
+ * Строка — аккордеон, как в портале: критерии турнира (оружие, регион, номинации) видны всегда,
+ * критерии УЧАСТНИКА (возраст, пол, смешанные) уезжают за стрелку с точкой-индикатором. В портале
+ * они приезжают из профиля и переопределяются руками; у нас аккаунтов нет, поэтому только руками —
+ * и в браузере, ничего никуда не отправляя.
+ *
+ * Чего здесь нет из портального: «уведомлять о новых» и сохранённого фильтра — это про
+ * залогиненного человека, которого календарь не знает.
  *
  * Своего состояния строка почти не держит: любое переключение — новый адрес страницы, а
  * перерисовка идёт из уже загруженных данных. Исключение — поля ввода: им нужен локальный
@@ -51,6 +62,9 @@ export function FilterBar({
   const router = useRouter();
   const pathname = usePathname();
   const [pending, startTransition] = useTransition();
+  // Свёрнутый аккордеон с заданными критериями участника выглядел бы как необъяснимо урезанный
+  // календарь, поэтому открыт, если по ссылке уже пришёл возраст, пол или снятые смешанные.
+  const [personalOpen, setPersonalOpen] = useState(hasPersonalFilters(filters));
 
   const apply = (next: CalendarFilters) => {
     startTransition(() => router.push(`${pathname}${filtersToSearch(next, today)}`, { scroll: false }));
@@ -65,8 +79,9 @@ export function FilterBar({
   return (
     <div
       aria-busy={pending}
-      className={`flex flex-wrap items-center gap-1.5 transition-opacity ${pending ? 'opacity-60' : ''}`}
+      className={`flex flex-col gap-1.5 transition-opacity ${pending ? 'opacity-60' : ''}`}
     >
+      <div className="flex flex-wrap items-center gap-1.5">
       <MultiDropdown
         label="Оружие"
         icon={<Swords className="size-3.5 shrink-0" aria-hidden="true" />}
@@ -145,18 +160,59 @@ export function FilterBar({
         />
       )}
 
+      {/* Стрелка аккордеона: за ней критерии участника. Точка-индикатор обязательна — без неё
+          заданный в свёрнутом состоянии возраст необъяснимо режет выдачу. */}
+      <button
+        type="button"
+        aria-expanded={personalOpen}
+        onClick={() => setPersonalOpen((open) => !open)}
+        title="Критерии участника: возраст, пол, смешанные номинации"
+        aria-label="Критерии участника: возраст, пол, смешанные номинации"
+        className={`${FILTER_CONTROL_CLASS} ${hasPersonalFilters(filters) ? ACTIVE_CLASS : IDLE_CLASS}`}
+      >
+        <ChevronDown
+          className={`size-3.5 shrink-0 transition-transform ${personalOpen ? 'rotate-180' : ''}`}
+          aria-hidden="true"
+        />
+        Подходит мне
+        {hasPersonalFilters(filters) && (
+          <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
+        )}
+      </button>
+
       {hasActiveFilters(filters) && (
         <button
           type="button"
-          onClick={() => apply({ ...filters, weapons: null, regions: null, city: null, team: false, beginner: 'all', q: '' })}
+          onClick={() => apply({
+            ...filters,
+            weapons: null, regions: null, city: null, team: false, beginner: 'all', q: '',
+            age: null, gender: null, mixed: true,
+          })}
           className="px-2 text-xs text-text-muted hover:text-primary"
         >
           Сбросить
         </button>
       )}
 
-      {/* Виды — иконками справа, как в портале. */}
+      {/* Глазик и виды — одной группой справа: оба про показ, а не про отбор. В портале глазик
+          живёт в полоске месяцев, но она у нас не показывается в виде «список», где он нужен
+          ровно так же. */}
       <div className="ml-auto flex items-center gap-0.5">
+        <button
+          type="button"
+          aria-pressed={filters.showUnsuitable}
+          onClick={() => apply({ ...filters, showUnsuitable: !filters.showUnsuitable })}
+          title={filters.showUnsuitable ? 'Скрывать неподходящие турниры' : 'Показывать неподходящие турниры неактивными'}
+          aria-label={filters.showUnsuitable ? 'Скрывать неподходящие турниры' : 'Показывать неподходящие турниры неактивными'}
+          className={`mr-1 flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+            filters.showUnsuitable ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
+          }`}
+        >
+          {filters.showUnsuitable
+            ? <Eye className="size-4" aria-hidden="true" />
+            : <EyeOff className="size-4" aria-hidden="true" />}
+        </button>
+
         {(['ribbon', 'month', 'list'] as ViewMode[]).map((mode) => {
           const Icon = VIEW_ICON[mode];
           const active = filters.view === mode;
@@ -177,8 +233,118 @@ export function FilterBar({
           );
         })}
       </div>
+      </div>
+
+      {personalOpen && (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <AgeChip age={filters.age} onChange={(age) => apply({ ...filters, age })} />
+
+          <Dropdown
+            value={filters.gender ?? ''}
+            onChange={(value) => apply({ ...filters, gender: value === '' ? null : (value as ViewerGender) })}
+            icon={
+              filters.gender === 'male' ? <Mars className="size-3.5 shrink-0" />
+                : filters.gender === 'female' ? <Venus className="size-3.5 shrink-0" />
+                  : (
+                    <span className="flex shrink-0 items-center -space-x-1">
+                      <Venus className="size-3.5" />
+                      <Mars className="size-3.5" />
+                    </span>
+                  )
+            }
+            ariaLabel="Пол участника"
+            trigger={
+              <span className="truncate">
+                {filters.gender === 'male' ? 'мужской' : filters.gender === 'female' ? 'женский' : 'любой пол'}
+              </span>
+            }
+            options={[
+              { value: '', label: 'Любой' },
+              { value: 'male', label: 'Мужской' },
+              { value: 'female', label: 'Женский' },
+            ]}
+            className={`${FILTER_CONTROL_CLASS} ${filters.gender ? ACTIVE_CLASS : IDLE_CLASS}`}
+          />
+
+          {/* «Смешанные» — единственный тумблер, включённый по умолчанию: для одних смешанный
+              зачёт шанс побиться с сильными, для других он просто опасен. Стоит вплотную к полу —
+              уточняет именно его. */}
+          <button
+            type="button"
+            aria-pressed={filters.mixed}
+            onClick={() => apply({ ...filters, mixed: !filters.mixed })}
+            title="Считать смешанные номинации подходящими"
+            className={`${FILTER_CONTROL_CLASS} font-medium ${filters.mixed ? ACTIVE_CLASS : IDLE_CLASS}`}
+          >
+            <VenusAndMars className="size-3.5 shrink-0" />
+            Смешанные
+          </button>
+
+          <span className="px-1 text-xs text-text-faint">
+            Возраст и пол никуда не отправляются — отбор идёт в браузере.
+          </span>
+        </div>
+      )}
     </div>
   );
+}
+
+/**
+ * Возраст — чип, который по клику превращается в поле. Так в портале: ввод нужен редко, а место в
+ * строке дорого. Отправляется по уходу из поля и по Enter, иначе адрес менялся бы на каждую цифру.
+ */
+function AgeChip({ age, onChange }: { age: number | null; onChange: (age: number | null) => void }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(age === null ? '' : String(age));
+
+  if (editing) {
+    return (
+      <input
+        type="number"
+        min={1}
+        max={120}
+        autoFocus
+        value={draft}
+        placeholder="Возраст"
+        aria-label="Возраст участника"
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={() => {
+          setEditing(false);
+          const parsed = Number(draft);
+          onChange(draft.trim() === '' || Number.isNaN(parsed) ? null : parsed);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') e.currentTarget.blur();
+        }}
+        // Нативные стрелки-спиннеры красятся браузером и в тёмной теме выглядят чужеродно.
+        className="h-8 w-20 shrink-0 rounded-lg bg-background px-2 text-xs text-foreground ring-1 ring-inset ring-primary/40 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+      />
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      title="Возраст участника — по нему отсекаются номинации не по годам"
+      onClick={() => {
+        setDraft(age === null ? '' : String(age));
+        setEditing(true);
+      }}
+      className={`${FILTER_CONTROL_CLASS} ${age === null ? IDLE_CLASS : ACTIVE_CLASS}`}
+    >
+      <CalendarClock className="size-3.5 shrink-0" aria-hidden="true" />
+      {age === null ? 'Возраст' : `${age} ${plural(age, ['год', 'года', 'лет'])}`}
+    </button>
+  );
+}
+
+function plural(count: number, forms: [string, string, string]): string {
+  const mod100 = count % 100;
+  if (mod100 >= 11 && mod100 <= 14) return forms[2];
+  const mod10 = count % 10;
+  if (mod10 === 1) return forms[0];
+  if (mod10 >= 2 && mod10 <= 4) return forms[1];
+  return forms[2];
 }
 
 /** Поиск: локальный текст и отложенная отправка, иначе на каждую букву менялся бы адрес. */

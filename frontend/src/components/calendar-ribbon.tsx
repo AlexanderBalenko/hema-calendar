@@ -4,15 +4,17 @@ import Link from 'next/link';
 import { memo, useLayoutEffect, useRef, useState } from 'react';
 
 import type { CalendarEvent } from '@/src/lib/data';
-import { formatPlace } from '@/src/lib/text';
+import { formatOrganizers, formatPlace } from '@/src/lib/text';
 import {
   MAX_THREAD_LANES,
   MONTH_LABELS,
   MONTH_TITLES,
   TAIL_COLUMN,
   addDays,
+  eventBodyStyle,
   parseDate,
   type BarPlacement,
+  type EventBodyStyle,
   type StripePlacement,
   type ThreadColor,
   type ThreadPlacement,
@@ -26,19 +28,16 @@ import {
  * понедельник-хвост.
  *
  * Чего здесь нет из портального и не будет: рельса «пойду»/«был», медалей, результатов, звезды
- * флагмана, иконок типа события и ховер-карточки с отметками — всё это про залогиненного
- * человека, которого календарь не знает. Поэтому и стилей тела плашки два, а не четыре:
- * обычное и прошедшее (в портале ещё два — «не подходит мне»).
+ * флагмана и иконок типа события — всё это про залогиненного человека, которого календарь
+ * не знает.
  */
 
-export type GridEvent = CalendarEvent & { isPast: boolean };
-
-/** Стиль тела плашки: прошедшее «остывает» в графит, остальное — тёплая полоса календаря. */
-type EventBodyStyle = 'normal' | 'past';
-
-function eventBodyStyle(isPast: boolean): EventBodyStyle {
-  return isPast ? 'past' : 'normal';
-}
+export type GridEvent = CalendarEvent & {
+  isPast: boolean;
+  /** Подходит ли под фильтр. Неподходящие попадают в сетку только при включённом глазике. */
+  isSuitable: boolean;
+  unsuitableReason: string | null;
+};
 
 /**
  * Сетка недель календаря (docs/slices/Events.md §7). Вся геометрия посчитана заранее чистой
@@ -65,14 +64,16 @@ const DAY_TILE_WIDTH = 30;
  * Раньше здесь стояло 44px — «зона рельса» больше, чем сама видимая плашка. Рельс (29px,
  * CalendarRail) в обычной (не хвостовой) колонке НЕ добавляет ширины сверх плашки дня — он лежит
  * поверх правой части той же плашки (absolute right:0 внутри бара, чья ширина и есть ширина
- * плашки). В хвосте рельс живёт в TailPiece, а не в баре, и лишние 14px делали хвостовое тело
- * шире плашки дня-хвоста — правый край бара уезжал за правый край TailPiece/плашки дня (фидбог
+ * плашки). Лишние 14px делали хвостовое тело шире плашки дня-хвоста — правый край бара
+ * уезжал за правый край плашки дня (фидбек
  * заказчика на Level One: Chernozem, «плашка события заметно длиннее плашки дня-хвоста»; заодно
  * от лишнего запаса текст города/организатора визуально садился ближе к рельсу, чем в остальных
  * колонках). Теперь хвост — точный аналог обычной колонки: рельс перекрывает ту же ширину, что и
  * плашка дня, ничего сверх неё.
  */
 const TAIL_WIDTH = DAY_TILE_WIDTH + 1;
+/** Внутренний отступ плашки (`px-2`) — числом, потому что его приходится складывать с хвостом. */
+const BAR_PADDING = 8;
 
 /** Подписи шапки: будни сокращённо, уикенд — полным словом (как на макетах). */
 const HEADER_LABELS = ['пн', 'вт', 'ср', 'чт', 'пт', 'суббота', 'воскресенье'];
@@ -149,6 +150,9 @@ const PAST_COLOR = 'rgb(var(--cal-past))';
 
 function threadHex(color: ThreadColor | null, style: EventBodyStyle): string {
   if (style === 'past') return PAST_COLOR;
+  // Будущая неподходящая нить металл сохраняет — её гасит затемняющий слой карточки; а вот
+  // прошедшая неподходящая уходит в тот же нейтральный серый, что и её карточка.
+  if (style === 'pastUnsuitable') return 'rgb(var(--cal-past-unsuitable))';
   // Металлы нити — по-прежнему литералы: это смысловой код (золото/бронза/серебро/сталь), он
   // одинаков в любой теме. Запасной цвет без металла — токен рамки, он темы слушается.
   return color ? THREAD_HEX[color] : 'rgb(var(--c-border-light))';
@@ -177,26 +181,51 @@ function eventDayRange(event: GridEvent): string {
  */
 const PAST_CLASS = 'bg-calendar-past text-calendar-pastText ring-1 ring-inset ring-border-light/20';
 
+/** Неподходящее под фильтр будущее: тело гаснет в фон карточки, текст — блёклый. */
+const MUTED_CLASS = 'bg-card text-text-faint ring-1 ring-inset ring-border-light/40';
+
 /**
- * Прошедшее НЕподходящее (пересмотр 2026-08-07, 4-й стиль тела §11): те же тона светлоты/контраста,
- * что у MUTED_CLASS выше (тот же ring, тот же приглушённый код), но обесцвеченные — обычное
- * bg-card/text-faint тёплые, а этот стиль нейтрально-серый той же яркости (см. tailwind.config,
+ * Прошедшее НЕподходящее (4-й стиль тела): те же тона светлоты и контраста, что у MUTED_CLASS
+ * выше (тот же ring, тот же приглушённый код), но обесцвеченные — обычные bg-card/text-faint
+ * тёплые, а этот стиль нейтрально-серый той же яркости (см. tailwind.config,
  * calendar.pastUnsuitable/pastUnsuitableText).
  */
+const PAST_UNSUITABLE_CLASS =
+  'bg-calendar-pastUnsuitable text-calendar-pastUnsuitableText ring-1 ring-inset ring-border-light/40';
 
 const BODY_CLASS: Record<EventBodyStyle, string> = {
+  unsuitable: MUTED_CLASS,
+  pastUnsuitable: PAST_UNSUITABLE_CLASS,
   past: PAST_CLASS,
   normal: 'bg-calendar-bar text-foreground hover:bg-calendar-barHover',
 };
 
+/**
+ * Дополнительное затемнение неподходящего события: сам фон карточки читался недостаточно
+ * «выключенным» — полупрозрачный слой поверх ВСЕГО содержимого (включая текст) усиливает эффект.
+ */
+function UnsuitableOverlay({ style }: { style: EventBodyStyle }) {
+  if (style !== 'unsuitable' && style !== 'pastUnsuitable') return null;
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-[5] rounded-[inherit] bg-background/50"
+    />
+  );
+}
+
 /** Цвет вторичного текста (город/организатор) на теле плашки — past ведёт в свой тусклый тон, чтобы
  *  не сливаться с читаемым pastText основной строки. */
 const SECONDARY_TEXT_CLASS: Record<EventBodyStyle, string> = {
+  unsuitable: 'text-text-faint',
+  pastUnsuitable: 'text-calendar-pastUnsuitableText',
   past: 'text-calendar-pastTextMuted',
   normal: 'text-text-secondary',
 };
-/** Типы, у которых есть своя иконка (п.6) — Tournament (дефолт) и прочее в календаре без иконки. */
+/** Третья строка плашки (организатор) — на тон тусклее второй. */
 const TERTIARY_TEXT_CLASS: Record<EventBodyStyle, string> = {
+  unsuitable: 'text-text-faint',
+  pastUnsuitable: 'text-calendar-pastUnsuitableText',
   past: 'text-calendar-pastTextMuted',
   // Организатор на ЦВЕТНОЙ плашке — text-secondary, а не text-muted: плашка (--cal-bar) светлее
   // фона страницы, и на светлой теме muted давал 4.27 при пороге 4.5. На тёмной теме плашка
@@ -222,7 +251,14 @@ function EventBlock({
   children: React.ReactNode;
 }) {
   return (
-    <Link href={`/events/${event.slug}`} className={`group relative ${className}`} style={style}>
+    <Link
+      href={`/events/${event.slug}`}
+      // Причина «не подходит» — словами и прямо на плашке: пока ховер-карточки нет, это
+      // единственное место, где человек узнаёт, почему турнир показан неактивным.
+      title={event.isSuitable ? undefined : `Не подходит: ${event.unsuitableReason}`}
+      className={`group relative ${className}`}
+      style={style}
+    >
       {children}
     </Link>
   );
@@ -245,7 +281,7 @@ function EventLabel({ event, style }: { event: GridEvent; style: EventBodyStyle 
 
 /** Полоса (многонедельное событие): однострочная подпись во всю ширину. */
 function StripeContent({ stripe }: { stripe: StripePlacement<GridEvent> }) {
-  const style = eventBodyStyle(stripe.event.isPast);
+  const style = eventBodyStyle(stripe.event.isSuitable, stripe.event.isPast);
   return (
     <span className="flex w-full min-w-0 items-center">
       <EventLabel event={stripe.event} style={style} />
@@ -259,7 +295,7 @@ function StripeContent({ stripe }: { stripe: StripePlacement<GridEvent> }) {
  * жалоба была именно на обрезанные названия.
  */
 function BarContent({ event }: { event: GridEvent }) {
-  const style = eventBodyStyle(event.isPast);
+  const style = eventBodyStyle(event.isSuitable, event.isPast);
   const titleRef = useRef<HTMLSpanElement>(null);
   // Название заняло одну строку → показываем дату второй строкой; заняло две — без даты.
   // Измеряем после layout, не дёргая видимую разметку.
@@ -281,6 +317,7 @@ function BarContent({ event }: { event: GridEvent }) {
   }, [event.title]);
 
   const place = formatPlace(event.city, event.locationManual);
+  const organizers = formatOrganizers(event.organizerName, event.coOrganizers);
   return (
     <span className="flex w-full min-w-0 items-center gap-1.5 overflow-hidden">
       <span className="flex min-w-0 flex-1 items-start gap-1">
@@ -299,8 +336,8 @@ function BarContent({ event }: { event: GridEvent }) {
 
       <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
         {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
-        {event.organizerName && (
-          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{event.organizerName}</span>
+        {organizers && (
+          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{organizers}</span>
         )}
       </span>
     </span>
@@ -316,9 +353,9 @@ function Bar({
   continuationColor?: ThreadColor | null;
 }) {
   const { event } = bar;
-  const style = eventBodyStyle(event.isPast);
+  const style = eventBodyStyle(event.isSuitable, event.isPast);
   // Аннексированный понедельник живёт за правым краем контейнера — сам бар в сетке доходит до
-  // воскресенья, а «хвост» дорисовывается отдельным элементом (см. TailPiece).
+  // воскресенья, а в зону хвоста бар продлевается сам (см. width ниже).
   const annexed = bar.endColumn === TAIL_COLUMN;
   return (
     <EventBlock
@@ -332,9 +369,8 @@ function Bar({
         `z-10 flex items-center ${annexed ? '' : 'overflow-hidden'} px-2 text-xs transition-colors`,
         'rounded-md',
         bar.continuesLeft ? 'rounded-l-none' : '',
-        // Аннексированный пн — НЕ rounded-r-none (было раньше): бар физически продлён вплотную
-        // под хвост (TailPiece, тот же style/цвет), и его правый край совпадает с правым краем
-        // хвоста. Квадратный угол бара торчал острым уголком именно там, где скруглённый угол
+        // Аннексированный пн — НЕ rounded-r-none: бар физически продлён в зону хвоста, и его
+        // скруглённый правый край совпадает с правым краем хвостовой плашки дня. Квадратный угол бара торчал острым уголком именно там, где скруглённый угол
         // хвоста открывает то, что под ним (геометрия покруглений не совпадала — фидбек, п.7а).
         // У бара тот же rounded-md, тот же цвет — угол совпадает с хвостом и шва не видно.
         // Квадратный — только ВЕРХНИЙ правый угол: это и есть знак «событие продолжается», он же
@@ -352,9 +388,9 @@ function Bar({
         gridRow: bar.lane + 1,
         // Правый отступ 1px (margin-right) у обычного бара — от него плашка не доходит до линии
         // грида на 1px, и в зазор проглядывал фон строки. У аннексированного бара этот зазор
-        // приходился ровно на стык с TailPiece — однопиксельная вертикальная линия-разрез (фидбек
+        // приходился ровно на стык с хвостом — однопиксельная вертикальная линия-разрез (фидбек
         // заказчика, п.3б). У аннексированных правый отступ убран, а сам блок физически продлён на
-        // TAIL_WIDTH (calc(100% + …)) — тогда его правый край совпадает с левым краем TailPiece
+        // TAIL_WIDTH (calc(100% + …)) — тогда его правый край совпадает с правым краем плашки
         // (тот тоже стоит вплотную, left: 100% контейнера) без зазора, а вторичный текст
         // (город/организатор), выровненный по правому краю СВОЕГО контейнера, естественно съезжает
         // к настоящему концу плашки — хвосту, а не к границе воскресенья (фидбек, п.3а).
@@ -362,35 +398,21 @@ function Bar({
         minWidth: 0,
         // -1px: margin-left:1px сдвигает бокс вправо, не уменьшая ширину, посчитанную от %
         // (containing block — область грида, margin своего элемента на неё не влияет) — без
-        // поправки правый край на 1px перехлёстывал скруглённый край хвоста (TailPiece).
+        // поправки правый край на 1px перехлёстывал правый край хвостовой плашки дня.
         ...(annexed ? { width: `calc(100% + ${TAIL_WIDTH - 1}px)` } : {}),
+        // Содержимое аннексированного бара не заезжает в зону хвоста: хвостовая плашка
+        // непрозрачна и лежит ВЫШЕ бара, поэтому город и организатор, прижатые к правому краю,
+        // уходили под неё и обрывались на полуслове («Санкт-Петерб», «FFG (» — замечание
+        // заказчика 06.11.2026). Бар остаётся продлённым (шва с хвостом не видно), а текст
+        // встаёт ровно туда же, где он у обычного бара: ширина хвоста ПЛЮС внутренний отступ
+        // плашки (px-2). Без второго слагаемого подписи соседних строк не совпадали на восемь
+        // пикселей — это видно глазом, когда баров несколько подряд.
+        ...(annexed ? { paddingRight: TAIL_WIDTH + BAR_PADDING } : {}),
       }}
     >
       <BarContent event={event} />
+      <UnsuitableOverlay style={style} />
     </EventBlock>
-  );
-}
-
-/**
- * Понедельник-хвост: продолжение бара ЗА правой границей рабочей области. Именно так заказчик и
- * попросил — «расширим сб и вс; понедельник-хвост пусть вылезает вправо за границы», чтобы правый
- * край воскресенья совпал с правым краем строки фильтров и полоски месяцев.
- */
-function TailPiece({ bar }: { bar: BarPlacement<GridEvent> }) {
-  const style = eventBodyStyle(bar.event.isPast);
-  return (
-    <Link
-      href={`/events/${bar.event.slug}`}
-      aria-hidden="true"
-      tabIndex={-1}
-      className={['absolute z-20 rounded-r-md', BODY_CLASS[style]].join(' ')}
-      style={{
-        left: '100%',
-        width: TAIL_WIDTH,
-        top: bar.lane * LANE_HEIGHT + 2,
-        height: LANE_HEIGHT - 4,
-      }}
-    />
   );
 }
 
@@ -406,8 +428,9 @@ function TailPiece({ bar }: { bar: BarPlacement<GridEvent> }) {
  * нижних (иначе длинный столб нижней нити пересекал бы карточку верхней).
  */
 function ThreadCardContent({ event }: { event: GridEvent }) {
-  const style = eventBodyStyle(event.isPast);
+  const style = eventBodyStyle(event.isSuitable, event.isPast);
   const place = formatPlace(event.city, event.locationManual);
+  const organizers = formatOrganizers(event.organizerName, event.coOrganizers);
   return (
     <span className="flex min-w-0 flex-1 items-center gap-3">
       <span className="flex min-w-0 flex-col leading-tight">
@@ -421,8 +444,8 @@ function ThreadCardContent({ event }: { event: GridEvent }) {
 
       <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
         {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
-        {event.organizerName && (
-          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{event.organizerName}</span>
+        {organizers && (
+          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{organizers}</span>
         )}
       </span>
     </span>
@@ -440,7 +463,7 @@ function ThreadZone({ threads, today }: { threads: ThreadPlacement<GridEvent>[];
     >
       {threads.map((thread) => {
         const { event } = thread;
-        const style = eventBodyStyle(event.isPast);
+        const style = eventBodyStyle(event.isSuitable, event.isPast);
         const color = threadHex(thread.color, style);
         // Градиент занимает ровно дни события и тянется от плашек вниз до кромки своей карточки:
         // строки 1 … 2*lane+1 включительно.
@@ -488,6 +511,7 @@ function ThreadZone({ threads, today }: { threads: ThreadPlacement<GridEvent>[];
               }}
             >
               <ThreadCardContent event={event} />
+              <UnsuitableOverlay style={style} />
             </EventBlock>
           </div>
         );
@@ -518,10 +542,11 @@ const WeekRow = memo(function WeekRow({ week, isCurrent, today }: { week: WeekLa
             'flex items-center overflow-hidden rounded-md px-2 py-1 text-xs',
             stripe.continuesLeft ? 'rounded-l-none' : '',
             stripe.continuesRight ? 'rounded-r-none' : '',
-            BODY_CLASS[eventBodyStyle(stripe.event.isPast)],
+            BODY_CLASS[eventBodyStyle(stripe.event.isSuitable, stripe.event.isPast)],
           ].join(' ')}
         >
           <StripeContent stripe={stripe} />
+          <UnsuitableOverlay style={eventBodyStyle(stripe.event.isSuitable, stripe.event.isPast)} />
         </EventBlock>
       ))}
 
@@ -633,7 +658,7 @@ const WeekRow = memo(function WeekRow({ week, isCurrent, today }: { week: WeekLa
                   // Плашка дня в хвостовой зоне — DAY_TILE_WIDTH (тот же видимый размер, что у
                   // будних плашек: их 32px колонка минус margin 0 1px, см. day.column выше).
                   // TAIL_WIDTH = DAY_TILE_WIDTH + 1 ровно из расчёта, чтобы правый край тела бара
-                  // и TailPiece (см. Bar/TailPiece выше) совпадал с правым краем ЭТОЙ плашки —
+                  // (см. Bar выше) совпадал с правым краем ЭТОЙ плашки —
                   // отступ слева 1px здесь и есть та единица разницы.
                   style={{ left: 'calc(100% + 1px)', width: DAY_TILE_WIDTH, top: 0, height: laneRows * LANE_HEIGHT }}
                 >
@@ -654,11 +679,6 @@ const WeekRow = memo(function WeekRow({ week, isCurrent, today }: { week: WeekLa
             />
           ))}
 
-          {week.bars
-            .filter((bar) => bar.endColumn === TAIL_COLUMN)
-            .map((bar) => (
-              <TailPiece key={`tail-${bar.event.slug}`} bar={bar} />
-            ))}
         </div>
 
         {week.threads.length > 0 && <ThreadZone threads={week.threads} today={today} />}

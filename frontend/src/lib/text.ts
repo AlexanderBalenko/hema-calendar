@@ -37,3 +37,20 @@ export function weaponSummary(nominations: readonly NominationLike[]): string[] 
   if (known.length > 0) return known;
   return [...new Set(nominations.map((n) => n.weapon).filter((w) => w && w.trim().length > 0))];
 }
+
+/**
+ * Организаторы одной строкой. Турнир часто делают вместе два клуба, и второй обязан быть назван —
+ * иначе его работу припишут первому. Соединяется по-русски («А и Б», «А, Б и В»), а не запятыми:
+ * это читают люди, а не разбирает машина.
+ */
+export function formatOrganizers(
+  organizerName: string | null | undefined,
+  coOrganizers?: readonly string[],
+): string {
+  const names = [organizerName, ...(coOrganizers ?? [])]
+    .map((name) => (name ?? '').trim())
+    .filter(Boolean);
+  if (names.length === 0) return '';
+  if (names.length === 1) return names[0];
+  return `${names.slice(0, -1).join(', ')} и ${names[names.length - 1]}`;
+}

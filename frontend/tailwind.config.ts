@@ -36,6 +36,8 @@ const config: Config = {
           past: 'rgb(var(--cal-past) / <alpha-value>)',
           pastText: 'rgb(var(--cal-past-text) / <alpha-value>)',
           pastTextMuted: 'rgb(var(--cal-past-text-muted) / <alpha-value>)',
+          pastUnsuitable: 'rgb(var(--cal-past-unsuitable) / <alpha-value>)',
+          pastUnsuitableText: 'rgb(var(--cal-past-unsuitable-text) / <alpha-value>)',
         },
         foreground: 'rgb(var(--c-text) / <alpha-value>)',
         text: {

@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 
 /**
- * Подать турнир. Сайт статический — принять форму ему нечем, поэтому заявка уходит в
+ * Анонсировать турнир. Сайт статический — принять форму ему нечем, поэтому заявка уходит в
  * Google-форму, а раз в сутки сборщик превращает новые ответы в пул-реквест с файлом турнира
  * (docs/Data.md). Для заявителя это по-прежнему одна форма без регистрации; для календаря —
  * обычная правка данных, которую видно в истории.
  */
 export const metadata: Metadata = {
-  title: 'Подать турнир',
+  title: 'Анонсировать турнир',
   description: 'Как добавить турнир в календарь HEMA: форма заявки или правка файла в репозитории.',
 };
 
@@ -17,7 +17,7 @@ const REPO_URL = 'https://github.com/AlexanderBalenko/hema-calendar';
 export default function SubmitPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h1 className="font-display text-xl text-foreground">Подать турнир</h1>
+      <h1 className="font-display text-xl text-foreground">Анонсировать турнир</h1>
       <p className="text-sm text-text-secondary">
         Регистрация не нужна. Заявку посмотрит человек — поэтому оставьте контакт, без него
         уточнить детали будет негде.

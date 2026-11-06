@@ -78,6 +78,24 @@ export function addDays(value: string, days: number): string {
 }
 
 /** Прошедшее событие: дата окончания раньше сегодняшней — сравнение по дневным номерам. */
+/**
+ * Стиль тела плашки турнира — матрица портала (§3.6), четыре комбинации isSuitable × isPast:
+ *  - `unsuitable` — не подходит под фильтр, будущее: тело гаснет в цвет карточки, текст блёклый;
+ *  - `pastUnsuitable` — не подходит И прошло: та же светлота, но без цветности;
+ *  - `past` — подходит, но прошло: обесцвеченный графит, текст читаемый;
+ *  - `normal` — подходит и не прошло: полный цвет.
+ *
+ * Чистая функция, а не порядок условий в компонентах: четыре случая кодируются явно, и их нельзя
+ * перепутать, правя один из трёх видов. «Не подходит» главнее «прошло» — фильтр человек задал
+ * сам, и ответ на него важнее времени.
+ */
+export type EventBodyStyle = 'unsuitable' | 'pastUnsuitable' | 'past' | 'normal';
+
+export function eventBodyStyle(isSuitable: boolean, isPast: boolean): EventBodyStyle {
+  if (!isSuitable) return isPast ? 'pastUnsuitable' : 'unsuitable';
+  return isPast ? 'past' : 'normal';
+}
+
 export function isPastEvent(endsAt: string, todayIso: string): boolean {
   return dayNumber(endsAt) < dayNumber(todayIso);
 }

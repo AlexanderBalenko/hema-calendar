@@ -97,8 +97,11 @@ export function MultiDropdown({
         <ChevronDown className={`size-3 shrink-0 transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>
 
+      {/* w-max у панели: она шире своей кнопки, и без него упиралась в min-w-[200px], а длинные
+          названия («Спортивная шпага» с пиктограммой) вылезали — к вертикальной полосе прокрутки
+          добавлялась горизонтальная. Ширину ограничиваем экраном, а не кнопкой. */}
       {open && (
-        <div className="absolute left-0 top-[calc(100%+4px)] z-40 max-h-72 min-w-[200px] overflow-y-auto rounded-lg bg-card p-1 shadow-lg ring-1 ring-inset ring-border-light">
+        <div className="thin-scroll absolute left-0 top-[calc(100%+4px)] z-40 max-h-72 w-max min-w-[200px] max-w-[min(20rem,90vw)] overflow-y-auto rounded-lg bg-card p-1 shadow-lg ring-1 ring-inset ring-border-light">
           {options.length === 0 && <p className="px-2 py-1.5 text-sm text-text-muted">Нет вариантов</p>}
 
           {options.length > 0 && (

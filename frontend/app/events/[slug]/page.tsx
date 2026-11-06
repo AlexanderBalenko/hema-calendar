@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import full from '@/src/generated/events.json';
 import type { CalendarEvent } from '@/src/lib/data';
 import { formatDateRange } from '@/src/lib/month-layout';
-import { formatPlace } from '@/src/lib/text';
+import { formatOrganizers, formatPlace } from '@/src/lib/text';
+import { BackToCalendar } from '@/src/components/back-to-calendar';
 
 /**
  * Страница турнира — статическая: на сборке их получается по одной на каждый турнир календаря.
@@ -32,9 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const event = find(slug);
   if (!event) return { title: 'Турнир не найден' };
   const place = formatPlace(event.city, event.locationManual);
+  const organizers = formatOrganizers(event.organizerName, event.coOrganizers);
   return {
     title: `${event.title} — ${formatDateRange(event.startsAt, event.endsAt, true)}`,
-    description: [place, event.organizerName].filter(Boolean).join(' · ') || undefined,
+    description: [place, organizers].filter(Boolean).join(' · ') || undefined,
   };
 }
 
@@ -44,10 +45,11 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
   if (!event) notFound();
 
   const place = formatPlace(event.city, event.locationManual);
+  const organizers = formatOrganizers(event.organizerName, event.coOrganizers);
 
   return (
     <article className="flex flex-col gap-4">
-      <Link href="/" className="text-xs text-text-muted hover:text-primary">← ко всем турнирам</Link>
+      <BackToCalendar />
 
       <header className="flex flex-col gap-1">
         <h1 className="font-display text-2xl text-foreground">{event.title}</h1>
@@ -56,7 +58,11 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           {place && ` · ${place}`}
           {event.macroRegion && <span className="text-text-muted"> · {event.macroRegion}</span>}
         </p>
-        {event.organizerName && <p className="text-sm text-text-muted">Организатор: {event.organizerName}</p>}
+        {organizers && (
+          <p className="text-sm text-text-muted">
+            {(event.coOrganizers?.length ?? 0) > 0 ? 'Организаторы' : 'Организатор'}: {organizers}
+          </p>
+        )}
       </header>
 
       {event.description && (
@@ -84,10 +90,22 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         </section>
       )}
 
-      {event.externalUrl && (
-        <a href={event.externalUrl} target="_blank" rel="noreferrer noopener" className="text-sm text-primary hover:underline">
-          Страница турнира у организатора
-        </a>
+      {/* Две разные ссылки, а не одна «внешняя»: анонс у организатора рассказывает про турнир,
+          карточка хемагона показывает сетку, номинации и участников. Раньше карточка приезжала
+          в то же поле и подписывалась «страницей организатора», хотя это не она. */}
+      {(event.externalUrl || event.hemagonUrl) && (
+        <div className="flex flex-wrap gap-4">
+          {event.externalUrl && (
+            <a href={event.externalUrl} target="_blank" rel="noreferrer noopener" className="text-sm text-primary hover:underline">
+              Анонс у организатора
+            </a>
+          )}
+          {event.hemagonUrl && (
+            <a href={event.hemagonUrl} target="_blank" rel="noreferrer noopener" className="text-sm text-primary hover:underline">
+              Турнир на Хемагоне
+            </a>
+          )}
+        </div>
       )}
 
       {/* Результатов здесь нет и не будет: календарь их не хранит (docs/Calendar.md §2). */}

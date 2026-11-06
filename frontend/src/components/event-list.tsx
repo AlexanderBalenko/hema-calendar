@@ -1,8 +1,15 @@
 import Link from 'next/link';
 
-import type { CalendarEvent } from '@/src/lib/data';
-import { formatDateRange, MONTH_TITLES, parseDate } from '@/src/lib/month-layout';
-import { formatPlace, weaponSummary } from '@/src/lib/text';
+import type { SelectedEvent } from '@/src/lib/filters';
+import {
+  eventBodyStyle,
+  formatDateRange,
+  MONTH_TITLES,
+  parseDate,
+  type EventBodyStyle,
+} from '@/src/lib/month-layout';
+import { formatOrganizers, formatPlace, weaponSummary } from '@/src/lib/text';
+import { WeaponIcon } from './weapon-icon';
 
 /**
  * Список турниров строками, как в календаре портала hema.ru
@@ -10,10 +17,11 @@ import { formatPlace, weaponSummary } from '@/src/lib/text';
  * оружие, место и организатор — каждый в своей. Плотно: за экран видно полтора десятка
  * турниров, а не четыре.
  *
- * Отличие от портального, вынужденное: там виды оружия показаны иконками из его справочника
- * (админ загружает SVG), здесь их взять неоткуда — оружие словами.
+ * Оружие — до четырёх пиктограмм, как в портале. У шести видов из десяти своей картинки нет
+ * (в портале они приезжают из справочника, куда админ загружает SVG) — им достаются скрещённые
+ * клинки, а названия словами остаются в подсказке по наведению.
  */
-export function EventList({ events, today }: { events: CalendarEvent[]; today: string }) {
+export function EventList({ events, today }: { events: SelectedEvent[]; today: string }) {
   let lastMonth = '';
 
   return (
@@ -41,19 +49,36 @@ export function EventList({ events, today }: { events: CalendarEvent[]; today: s
   );
 }
 
-function EventRow({ event, today }: { event: CalendarEvent; today: string }) {
+const BODY_CLASS: Record<EventBodyStyle, string> = {
+  unsuitable: 'bg-card text-text-faint',
+  pastUnsuitable: 'bg-calendar-pastUnsuitable text-calendar-pastUnsuitableText',
+  past: 'bg-calendar-past text-calendar-pastText',
+  normal: 'bg-calendar-bar text-foreground hover:bg-calendar-barHover',
+};
+
+const SECONDARY_CLASS: Record<EventBodyStyle, string> = {
+  unsuitable: 'text-text-faint',
+  pastUnsuitable: 'text-calendar-pastUnsuitableText',
+  past: 'text-calendar-pastTextMuted',
+  normal: 'text-text-secondary',
+};
+
+function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
   const isPast = event.endsAt < today;
   const place = formatPlace(event.city, event.locationManual);
   const weapons = weaponSummary(event.nominations);
+  // Пиктограммы — по порядку номинаций, без повторов: подряд идущие зачёты одного вида оружия
+  // (личный и командный) не должны съесть все четыре места.
+  const weaponCodes = [...new Set(event.nominations.map((n) => n.weaponCode).filter((c): c is string => !!c))];
 
-  const row = isPast
-    ? 'bg-calendar-past text-calendar-pastText'
-    : 'bg-calendar-bar text-foreground hover:bg-calendar-barHover';
-  const secondary = isPast ? 'text-calendar-pastTextMuted' : 'text-text-secondary';
+  const style = eventBodyStyle(event.isSuitable, isPast);
+  const row = BODY_CLASS[style];
+  const secondary = SECONDARY_CLASS[style];
 
   return (
     <Link
       href={`/events/${event.slug}`}
+      title={event.isSuitable ? undefined : `Не подходит: ${event.unsuitableReason}`}
       className={`group relative flex min-h-11 items-center gap-2 rounded-md px-2 py-1 transition-colors ${row}`}
     >
       <span className={`w-28 shrink-0 text-right text-xs tabular-nums ${secondary}`}>
@@ -62,12 +87,19 @@ function EventRow({ event, today }: { event: CalendarEvent; today: string }) {
       <span className="min-w-0 flex-1 truncate text-sm font-medium">{event.title}</span>
       {/* Колонки справа убираются по мере сужения экрана: на телефоне остаются дата и
           название, остальное есть на странице турнира. */}
-      <span className={`hidden w-[170px] shrink-0 truncate text-xs md:block ${secondary}`}>
-        {weapons.join(' · ')}
+      <span
+        className={`hidden w-[170px] shrink-0 items-center gap-1 md:flex ${secondary}`}
+        title={weapons.join(' · ')}
+      >
+        {weaponCodes.slice(0, 4).map((code) => <WeaponIcon key={code} code={code} size={16} />)}
+        {weaponCodes.length > 4 && <span className="text-[10px] leading-none">+{weaponCodes.length - 4}</span>}
+        {/* Номинация без вида оружия (катана, триатлон) пиктограммы не имеет — для таких
+            турниров в колонке остаётся прежний текст, иначе она выглядела бы пустой. */}
+        {weaponCodes.length === 0 && <span className="truncate text-xs">{weapons.join(' · ')}</span>}
       </span>
       <span className={`hidden w-[130px] shrink-0 truncate text-xs sm:block ${secondary}`}>{place}</span>
       <span className={`hidden w-[140px] shrink-0 truncate text-xs lg:block ${secondary}`}>
-        {event.organizerName}
+        {formatOrganizers(event.organizerName, event.coOrganizers)}
       </span>
     </Link>
   );

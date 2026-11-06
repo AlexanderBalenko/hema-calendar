@@ -8,6 +8,7 @@ import {
   fromDayNumber,
   isPastEvent,
   layoutMonth,
+  layoutRange,
   monthGridBounds,
   parseDate,
   shiftMonth,
@@ -170,5 +171,85 @@ describe('layoutMonth', () => {
     const reversed = layoutMonth(2026, 10, [...events].reverse(), '2026-11-05')[1].segments.map((s) => s.event.slug);
     assert.deepEqual(direct, ['a', 'b', 'c']);
     assert.deepEqual(direct, reversed);
+  });
+});
+
+/**
+ * Лента недель: бар, полоса, нить. Правила тонкие и целиком переносились из портала, а до сих пор
+ * их не проверял ни один тест — хотя именно в них легче всего ошибиться при правке соседнего кода.
+ *
+ * Декабрь 2026: 7 декабря — понедельник, 12-13 декабря — суббота и воскресенье.
+ */
+describe('layoutRange: бар, полоса и нить', () => {
+  const week = (weeks: ReturnType<typeof layoutRange>, start: string) =>
+    weeks.find((w) => w.weekStart === start)!;
+
+  it('чисто будничное событие рисуется нитью, а не баром', () => {
+    const weeks = layoutRange('2026-12-07', '2026-12-13', [EVENT('будни', '2026-12-08', '2026-12-10')]);
+    const w = week(weeks, '2026-12-07');
+    assert.equal(w.bars.length, 0, 'бара нет: событие не задевает уикенд');
+    assert.deepEqual(w.threads.map((t) => [t.event.slug, t.startColumn, t.endColumn]), [['будни', 1, 3]]);
+    assert.equal(w.threads[0].color, 'gold', 'первая нить недели — золото');
+  });
+
+  it('событие на уикенде рисуется баром', () => {
+    const weeks = layoutRange('2026-12-07', '2026-12-13', [EVENT('уикенд', '2026-12-12', '2026-12-13')]);
+    const w = week(weeks, '2026-12-07');
+    assert.equal(w.threads.length, 0);
+    assert.deepEqual(w.bars.map((b) => [b.startColumn, b.endColumn]), [[5, 6]]);
+  });
+
+  it('остаток в один понедельник бар аннексирует хвостом и нити не заводит', () => {
+    // Воскресенье 13-е + понедельник 14-е: весь остаток — один день.
+    const weeks = layoutRange('2026-12-07', '2026-12-20', [EVENT('вс-пн', '2026-12-13', '2026-12-14')]);
+    const first = week(weeks, '2026-12-07');
+    assert.equal(first.bars[0].endColumn, 7, 'понедельник живёт в хвостовой 8-й колонке этой же строки');
+    assert.equal(first.bars[0].continuesRight, false, 'бар не «продолжается»: он уже показал остаток');
+    assert.equal(week(weeks, '2026-12-14').threads.length, 0, 'второй раз тот же понедельник не рисуем');
+  });
+
+  it('остаток в два дня и больше уезжает нитью следующей недели — с понедельника', () => {
+    // Решение заказчика 27.10.2026: турнир вс–вт раньше вылезал за правый край и дорисовывался
+    // со вторника, читаясь как два разных события.
+    const weeks = layoutRange('2026-12-07', '2026-12-20', [EVENT('вс-вт', '2026-12-13', '2026-12-15')]);
+    const first = week(weeks, '2026-12-07');
+    assert.equal(first.bars[0].endColumn, 6, 'хвост НЕ аннексирован: остаток длиннее одного дня');
+    assert.equal(first.bars[0].continuesRight, true);
+
+    const next = week(weeks, '2026-12-14');
+    assert.deepEqual(next.threads.map((t) => [t.event.slug, t.startColumn, t.endColumn]), [['вс-вт', 0, 1]],
+      'остаток рисуется нитью с понедельника, а не куском бара со вторника');
+
+    // Нить-продолжение: бар первой недели носит кромку того же металла, что нить во второй.
+    assert.deepEqual(first.continuations.map((c) => [c.event.slug, c.color]), [['вс-вт', next.threads[0].color]],
+      'иначе два сегмента читаются как разные события');
+  });
+
+  it('нити упорядочены: длинная выше, и металлы идут по порядку', () => {
+    const weeks = layoutRange('2026-12-07', '2026-12-13', [
+      EVENT('короткая', '2026-12-08', '2026-12-08'),
+      EVENT('длинная', '2026-12-08', '2026-12-10'),
+    ]);
+    const w = week(weeks, '2026-12-07');
+    assert.deepEqual(w.threads.map((t) => [t.event.slug, t.color]), [
+      ['длинная', 'gold'],
+      ['короткая', 'bronze'],
+    ], 'при равном начале выше та, что заканчивается позже, — у неё и первый металл');
+  });
+
+  it('нитей больше четырёх в неделю не рисуется — лишние уходят в overflow', () => {
+    const weeks = layoutRange('2026-12-07', '2026-12-13',
+      Array.from({ length: 6 }, (_, i) => EVENT(`н${i}`, '2026-12-08', '2026-12-09')));
+    const w = week(weeks, '2026-12-07');
+    assert.equal(w.threads.length, 4, 'металлов всего четыре');
+    assert.equal(w.overflowThreads.length, 2, 'остальные не теряются, а считаются отдельно');
+  });
+
+  it('событие длиннее недели рисуется полосой во всю ширину', () => {
+    const weeks = layoutRange('2026-12-07', '2026-12-20', [EVENT('лагерь', '2026-12-07', '2026-12-16')]);
+    const first = week(weeks, '2026-12-07');
+    assert.equal(first.stripes.length, 1);
+    assert.equal(first.stripes[0].continuesRight, true);
+    assert.equal(first.bars.length, 0, 'полоса вместо бара: неделя покрыта целиком');
   });
 });

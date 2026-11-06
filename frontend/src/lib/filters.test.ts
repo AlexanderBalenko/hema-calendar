@@ -27,7 +27,24 @@ describe('разбор адреса', () => {
       team: false,
       beginner: 'all',
       q: '',
+      age: null,
+      gender: null,
+      mixed: true,
+      showUnsuitable: false,
+      weeks: 12,
+      back: 0,
     });
+  });
+
+  it('развёрнутая лента читается из адреса и переживает мусор', () => {
+    assert.equal(parseFilters({ weeks: '28' }, TODAY).weeks, 28);
+    assert.equal(parseFilters({ weeks: '4' }, TODAY).weeks, 12, 'меньше начального окна не бывает');
+    assert.equal(parseFilters({ weeks: '100000' }, TODAY).weeks, 520, 'рост окна ограничен');
+    assert.equal(parseFilters({ weeks: 'много' }, TODAY).weeks, 12);
+    assert.equal(parseFilters({ weeks: '12.5' }, TODAY).weeks, 12);
+    assert.equal(parseFilters({ back: '16' }, TODAY).back, 16);
+    assert.equal(parseFilters({ back: '-4' }, TODAY).back, 0, 'назад меньше нуля не листают');
+    assert.equal(parseFilters({ back: '100000' }, TODAY).back, 520);
   });
 
   it('читает всё, что умеет', () => {
@@ -41,6 +58,10 @@ describe('разбор адреса', () => {
       team: '1',
       beginner: 'only',
       q: '  Алга!  ',
+      age: '17',
+      gender: 'Female',
+      mixed: '0',
+      showUnsuitable: '1',
     }, TODAY);
     assert.equal(filters.view, 'list');
     assert.equal(filters.period, 'past');
@@ -51,6 +72,21 @@ describe('разбор адреса', () => {
     assert.equal(filters.team, true);
     assert.equal(filters.beginner, 'only');
     assert.equal(filters.q, 'Алга!');
+    assert.equal(filters.age, 17);
+    assert.equal(filters.gender, 'female', 'пол из портальной ссылки пишется с большой буквы');
+    assert.equal(filters.mixed, false);
+    assert.equal(filters.showUnsuitable, true);
+  });
+
+  it('возраст и пол переживают мусор: это тоже правят руками', () => {
+    assert.equal(parseFilters({ age: '0' }, TODAY).age, null, 'нулевого возраста не бывает');
+    assert.equal(parseFilters({ age: '121' }, TODAY).age, null);
+    assert.equal(parseFilters({ age: 'семнадцать' }, TODAY).age, null);
+    assert.equal(parseFilters({ age: '17.5' }, TODAY).age, null);
+    assert.equal(parseFilters({ age: '17' }, TODAY).age, 17);
+    assert.equal(parseFilters({ gender: 'другой' }, TODAY).gender, null,
+      'нераспознанный пол — «любой»: молча урезать человеку календарь по мусору хуже всего');
+    assert.equal(parseFilters({ mixed: 'нет' }, TODAY).mixed, true, 'смешанные выключает только «0»');
   });
 
   it('переживает мусор в параметрах: ссылку правят руками', () => {
@@ -68,7 +104,8 @@ describe('разбор адреса', () => {
     assert.equal(filters.month, '2026-11', 'тринадцатого месяца не бывает');
     assert.deepEqual(filters.weapons, ['longsword', 'saber'], 'пустые куски и дубли выброшены');
     assert.equal(parseFilters({ weapons: '' }, TODAY).weapons, null, 'пустой параметр — «все»');
-    assert.deepEqual(parseFilters({ weapons: '-' }, TODAY).weapons, [], 'дефис — «ничего не выбрано»');
+    assert.deepEqual(parseFilters({ weapons: 'none' }, TODAY).weapons, [], '«none» — ничего не выбрано');
+    assert.deepEqual(parseFilters({ weapons: '-' }, TODAY).weapons, [], 'дефис из прежних ссылок — тоже');
     assert.equal(filters.city, null);
     assert.equal(filters.team, false, 'булев фильтр включается только значением «1»');
     assert.equal(filters.q.length, 100, 'длинный поиск обрезан');
@@ -99,6 +136,15 @@ describe('сборка адреса', () => {
     assert.equal(filtersToSearch({ ...base, month: '2027-03' }, TODAY), '?month=2027-03');
   });
 
+  it('развёрнутая лента пишется в адрес, начальная — нет', () => {
+    // Без этого развёрнутая лента забывалась, стоило зайти в турнир и вернуться назад.
+    assert.equal(filtersToSearch({ ...base, weeks: 12, back: 0 }, TODAY), '');
+    assert.equal(filtersToSearch({ ...base, weeks: 28 }, TODAY), '?weeks=28');
+    assert.equal(filtersToSearch({ ...base, back: 16 }, TODAY), '?back=16', 'прошлое — своим параметром');
+    assert.equal(filtersToSearch({ ...base, view: 'list', weeks: 28 }, TODAY), '?view=list',
+      'в списке и сетке месяца окно ленты ничего не значит');
+  });
+
   it('вид по умолчанию — лента, и в адрес он не пишется', () => {
     assert.equal(base.view, 'ribbon');
     assert.equal(filtersToSearch(base, TODAY), '');
@@ -121,6 +167,12 @@ describe('сборка адреса', () => {
       team: true,
       beginner: 'only',
       q: 'алга',
+      age: 17,
+      gender: 'female',
+      mixed: false,
+      showUnsuitable: true,
+      weeks: 12,
+      back: 0,
     };
     const search = filtersToSearch(filters, TODAY);
     const params = Object.fromEntries(new URLSearchParams(search.slice(1)));
@@ -236,10 +288,157 @@ describe('отбор турниров', () => {
     assert.deepEqual(slugs({ city: 'казань' }), ['сабля-казань'], 'город без учёта регистра');
     assert.deepEqual(slugs({ team: true }), ['меч-москва']);
     assert.deepEqual(slugs({ beginner: 'only' }), ['сабля-казань']);
-    assert.deepEqual(slugs({ beginner: 'hide' }), ['меч-москва'], 'скрыть новичковые — убрать турниры с ними');
+    assert.deepEqual(slugs({ beginner: 'hide' }), ['меч-москва'],
+      'скрыть новичковые — убрать турнир, где новичковые ВСЕ номинации');
     assert.deepEqual(slugs({ weapons: ['saber', 'longsword'] }), ['сабля-казань', 'меч-москва'],
       'несколько видов оружия — это ИЛИ, а не И');
     assert.deepEqual(slugs({ weapons: [] }), [], 'снятый выбор показывает пустой календарь, а не всё');
+  });
+
+  it('«скрыть новичковые» оставляет турнир, где новичковый зачёт лишь один из нескольких', () => {
+    const events = [
+      event({
+        slug: 'оба-зачёта',
+        startsAt: '2027-05-01',
+        nominations: [nomination({ isBeginnerFriendly: true }), nomination()],
+      }),
+      event({ slug: 'только-новички', startsAt: '2027-05-02', nominations: [nomination({ isBeginnerFriendly: true })] }),
+    ];
+    const all = { ...base, view: 'list' as const, period: 'all' as const };
+    assert.deepEqual(
+      selectEvents(events, { ...all, beginner: 'hide' }, TODAY).map((e) => e.slug),
+      ['оба-зачёта'],
+      'опытному бойцу турнир со взрослым зачётом подходит, даже если рядом есть новичковый',
+    );
+    assert.deepEqual(
+      selectEvents(events, { ...all, beginner: 'only' }, TODAY).map((e) => e.slug),
+      ['оба-зачёта', 'только-новички'],
+      '«только новички» — где такой зачёт ЕСТЬ, а не где он единственный',
+    );
+  });
+
+  it('турнир без номинаций проходит любой номинационный фильтр, но не фильтр региона', () => {
+    const events = [
+      event({ slug: 'без-номинаций', startsAt: '2027-05-01', macroRegion: 'Центр', nominations: [] }),
+      event({ slug: 'с-саблей', startsAt: '2027-05-02', macroRegion: 'Центр', nominations: [nomination()] }),
+    ];
+    const all = { ...base, view: 'list' as const, period: 'all' as const };
+    const slugs = (f: Partial<CalendarFilters>) => selectEvents(events, { ...all, ...f }, TODAY).map((e) => e.slug);
+
+    // Лекция и лагерь без сетки — тоже турниры календаря: прятать по оружию то, у чего оружия не
+    // заявлено, значит вычеркнуть их для всех, кто хоть раз тронул фильтр.
+    assert.deepEqual(slugs({ weapons: ['rapier'] }), ['без-номинаций']);
+    assert.deepEqual(slugs({ weapons: [] }), ['без-номинаций']);
+    assert.deepEqual(slugs({ age: 30 }), ['без-номинаций', 'с-саблей']);
+    assert.deepEqual(slugs({ age: 12 }), ['без-номинаций'],
+      'у турнира без номинаций нет и возрастных рамок — в отличие от взрослой номинации рядом');
+    assert.deepEqual(slugs({ team: true }), ['без-номинаций']);
+    assert.deepEqual(slugs({ beginner: 'only' }), ['без-номинаций']);
+    // Регион — свойство турнира, не номинации, и действует даже когда номинаций нет.
+    assert.deepEqual(slugs({ regions: ['Урал'] }), []);
+  });
+
+  it('пригодность считается пересечением на уровне номинации — канонический пример спеки', () => {
+    // Турнир со смешанной рапирой 16+ и мужским длинным мечом 18+.
+    const events = [
+      event({
+        slug: 'рапира-и-меч',
+        startsAt: '2027-05-01',
+        nominations: [
+          nomination({ weapon: 'Рапира', weaponCode: 'rapier', minAge: 16 }),
+          nomination({ weapon: 'Длинный меч', weaponCode: 'longsword', gender: 'Male', minAge: 18 }),
+        ],
+      }),
+    ];
+    const all = { ...base, view: 'list' as const, period: 'all' as const };
+    const count = (f: Partial<CalendarFilters>) => selectEvents(events, { ...all, ...f }, TODAY).length;
+
+    assert.equal(count({ weapons: ['rapier', 'saber'], age: 17, gender: 'male' }), 1, 'парню 17 рапира подходит');
+    assert.equal(count({ weapons: ['rapier', 'saber'], age: 19, gender: 'female' }), 1, 'девушке 19 — тоже');
+    assert.equal(count({ weapons: ['saber', 'longsword'], age: 17, gender: 'male' }), 0,
+      'меч есть, но ему 18+ — а рапира под фильтр оружия не попала');
+    assert.equal(count({ weapons: ['saber', 'longsword'], age: 19, gender: 'female' }), 0,
+      'меч по возрасту подходит, но он мужской');
+    assert.equal(count({ weapons: ['saber', 'longsword'], age: 19, gender: 'male' }), 1);
+  });
+
+  it('номинация без указанного возраста — взрослая, 18+', () => {
+    // Так в портале: MinAge — поле обязательное со значением по умолчанию 18, состояния «возраст
+    // не указан» там нет. У нас возраст проставлен у одной номинации из десяти, и без этого
+    // правила двенадцатилетнему подходил бы весь календарь.
+    const events = [
+      event({ slug: 'взрослый', startsAt: '2027-05-01', nominations: [nomination()] }),
+      event({ slug: 'юношеский', startsAt: '2027-05-02', nominations: [nomination({ minAge: 12, maxAge: 17 })] }),
+      event({ slug: 'с-14', startsAt: '2027-05-03', nominations: [nomination({ minAge: 14 })] }),
+    ];
+    const all = { ...base, view: 'list' as const, period: 'all' as const };
+    const slugs = (f: Partial<CalendarFilters>) => selectEvents(events, { ...all, ...f }, TODAY).map((e) => e.slug);
+
+    assert.deepEqual(slugs({ age: 12 }), ['юношеский'], 'двенадцатилетнему взрослый турнир не подходит');
+    assert.deepEqual(slugs({ age: 16 }), ['юношеский', 'с-14']);
+    assert.deepEqual(slugs({ age: 18 }), ['взрослый', 'с-14'], 'в юношеский с верхней границей 17 уже поздно');
+    assert.deepEqual(slugs({}), ['взрослый', 'юношеский', 'с-14'], 'без указанного возраста не отсекаем ничего');
+  });
+
+  it('тумблер «смешанные» — часть проверки пола', () => {
+    const events = [
+      event({ slug: 'только-смешанная', startsAt: '2027-05-01', nominations: [nomination()] }),
+      event({
+        slug: 'есть-женская',
+        startsAt: '2027-05-02',
+        nominations: [nomination(), nomination({ gender: 'Female' })],
+      }),
+    ];
+    const all = { ...base, view: 'list' as const, period: 'all' as const };
+    const slugs = (f: Partial<CalendarFilters>) => selectEvents(events, { ...all, ...f }, TODAY).map((e) => e.slug);
+
+    assert.deepEqual(slugs({ gender: 'female' }), ['только-смешанная', 'есть-женская'],
+      'смешанная номинация подходит женщине, пока тумблер включён');
+    assert.deepEqual(slugs({ gender: 'female', mixed: false }), ['есть-женская'],
+      'выключили смешанные — остался турнир с отдельным женским зачётом');
+    assert.deepEqual(slugs({ mixed: false }), ['есть-женская'],
+      'тумблер работает и без указанного пола: это выбор фильтра, а не свойство человека');
+  });
+
+  it('глазик показывает неподходящие неактивными, а не скрывает их', () => {
+    const events = [
+      event({ slug: 'сабля', startsAt: '2027-05-01', nominations: [nomination()] }),
+      event({
+        slug: 'меч',
+        startsAt: '2027-05-02',
+        nominations: [nomination({ weapon: 'Длинный меч', weaponCode: 'longsword' })],
+      }),
+    ];
+    const all = { ...base, view: 'list' as const, period: 'all' as const, weapons: ['saber'] };
+
+    assert.deepEqual(selectEvents(events, all, TODAY).map((e) => e.slug), ['сабля'],
+      'по умолчанию неподходящее скрыто: иначе эффект фильтра не считывается');
+
+    const shown = selectEvents(events, { ...all, showUnsuitable: true }, TODAY);
+    assert.deepEqual(shown.map((e) => [e.slug, e.isSuitable, e.unsuitableReason]), [
+      ['сабля', true, null],
+      ['меч', false, 'нет выбранного оружия'],
+    ]);
+  });
+
+  it('причина «не подходит» — сужающимся каскадом: оружие, потом пол, потом возраст', () => {
+    const reason = (over: Partial<CalendarEvent>, f: Partial<CalendarFilters>) => selectEvents(
+      [event({ slug: 'т', startsAt: '2027-05-01', macroRegion: 'Центр', ...over })],
+      { ...base, view: 'list', period: 'all', showUnsuitable: true, ...f },
+      TODAY,
+    )[0]?.unsuitableReason;
+
+    const saberOnly = { nominations: [nomination({ gender: 'Male' as const, minAge: 18 })] };
+    assert.equal(reason(saberOnly, { weapons: ['rapier'] }), 'нет выбранного оружия');
+    assert.equal(reason(saberOnly, { weapons: ['saber'], gender: 'female' }), 'нет номинаций вашего пола');
+    assert.equal(reason(saberOnly, { weapons: ['saber'], gender: 'male', age: 15 }),
+      'возраст не попадает в номинации', 'пол подошёл — говорим уже про возраст');
+    assert.equal(reason({ nominations: [nomination()] }, { mixed: false }), 'только смешанные номинации');
+    assert.equal(reason(saberOnly, { team: true }), 'нет командной номинации');
+    assert.equal(reason(saberOnly, { regions: ['Урал'] }), 'не ваш регион: Центр');
+    assert.equal(reason({ macroRegion: null, nominations: [nomination()] }, { regions: ['Урал'] }),
+      'у турнира не указан регион', 'молча прятать турнир без региона нельзя — человек должен видеть, почему');
+    assert.equal(reason(saberOnly, { regions: [] }), 'регион не выбран');
   });
 
   it('поиск идёт по названию и организатору, без учёта регистра и ё', () => {

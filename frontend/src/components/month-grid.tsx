@@ -1,10 +1,12 @@
 import Link from 'next/link';
 
-import type { CalendarEvent } from '@/src/lib/data';
+import type { SelectedEvent } from '@/src/lib/filters';
 import {
+  eventBodyStyle,
   formatDateRange,
   layoutMonth,
   MONTH_LABELS,
+  type EventBodyStyle,
   type MonthDayCell,
   type MonthSegment,
   type MonthWeekLayout,
@@ -36,7 +38,7 @@ export function MonthGrid({
 }: {
   year: number;
   month: number;
-  events: CalendarEvent[];
+  events: SelectedEvent[];
   today: string;
 }) {
   const weeks = layoutMonth(year, month, events, today);
@@ -67,7 +69,7 @@ export function MonthGrid({
   );
 }
 
-function WeekRow({ week, today }: { week: MonthWeekLayout<CalendarEvent>; today: string }) {
+function WeekRow({ week, today }: { week: MonthWeekLayout<SelectedEvent>; today: string }) {
   // Высота строки растёт по числу ярусов: лимита «+ ещё N» нет намеренно — спрятанное событие
   // никто не находит.
   const height = week.laneCount === 0 ? 44 : 24 + week.laneCount * LANE_STEP + 8;
@@ -109,24 +111,31 @@ function DayCell({ day }: { day: MonthDayCell }) {
   );
 }
 
-function Segment({ segment, today }: { segment: MonthSegment<CalendarEvent>; today: string }) {
+/** Те же четыре стиля тела, что в ленте, но без рамки: полоса месяца всего 11px высотой. */
+const BODY_CLASS: Record<EventBodyStyle, string> = {
+  unsuitable: 'bg-card text-text-faint',
+  pastUnsuitable: 'bg-calendar-pastUnsuitable text-calendar-pastUnsuitableText',
+  past: 'bg-calendar-past text-calendar-pastText',
+  normal: 'bg-calendar-bar text-foreground hover:bg-calendar-barHover',
+};
+
+function Segment({ segment, today }: { segment: MonthSegment<SelectedEvent>; today: string }) {
   const { event } = segment;
   const isPast = event.endsAt < today;
   const place = formatPlace(event.city, event.locationManual);
   const width = (segment.endColumn - segment.startColumn + 1) / 7;
+  const reason = event.isSuitable ? '' : ` · не подходит: ${event.unsuitableReason}`;
 
   return (
     <Link
       href={`/events/${event.slug}`}
-      title={`${event.title} · ${formatDateRange(event.startsAt, event.endsAt)}${place ? ` · ${place}` : ''}`}
+      title={`${event.title} · ${formatDateRange(event.startsAt, event.endsAt)}${place ? ` · ${place}` : ''}${reason}`}
       className={[
         'absolute flex items-center overflow-hidden px-1.5 text-[11px] transition-colors',
         // Обрезанный край — сигнал продолжения: с той стороны полоса остаётся прямоугольной.
         segment.continuesLeft ? 'rounded-l-none' : 'rounded-l-[4px]',
         segment.continuesRight ? 'rounded-r-none' : 'rounded-r-[4px]',
-        isPast
-          ? 'bg-calendar-past text-calendar-pastText'
-          : 'bg-calendar-bar text-foreground hover:bg-calendar-barHover',
+        BODY_CLASS[eventBodyStyle(event.isSuitable, isPast)],
       ].join(' ')}
       style={{
         left: `calc(${(segment.startColumn / 7) * 100}% + 2px)`,

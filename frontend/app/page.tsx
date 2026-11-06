@@ -1,16 +1,26 @@
 'use client';
 
-import { Suspense, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { CalendarGrid, CalendarWeekdayHeader, type GridEvent } from '@/src/components/calendar-ribbon';
+import { CALENDAR_SEARCH_KEY } from '@/src/components/back-to-calendar';
 import { EventList } from '@/src/components/event-list';
 import { FilterBar } from '@/src/components/filter-bar';
 import { MonthGrid } from '@/src/components/month-grid';
 import { MonthStrip } from '@/src/components/month-strip';
 import { BUILT_AT, DIRECTORIES, EVENTS } from '@/src/lib/data';
-import { parseFilters, parseMonthKey, selectEvents, type RawParams } from '@/src/lib/filters';
-import { addDays, isPastEvent, layoutRange, startOfWeek, todayLocal } from '@/src/lib/month-layout';
+import {
+  filtersToSearch,
+  MAX_RIBBON_WEEKS,
+  parseFilters,
+  parseMonthKey,
+  RIBBON_STEP,
+  selectEvents,
+  type CalendarFilters,
+  type RawParams,
+} from '@/src/lib/filters';
+import { addDays, dayNumber, isPastEvent, layoutRange, startOfWeek, todayLocal } from '@/src/lib/month-layout';
 
 /**
  * Календарь: лента недель (главный вид, как на портале), сетка месяца или список. Фильтры —
@@ -21,9 +31,6 @@ import { addDays, isPastEvent, layoutRange, startOfWeek, todayLocal } from '@/sr
  * сборку (см. src/lib/data.ts), так что ни фильтр, ни переключение месяца не ждут сети.
  */
 
-/** Сколько недель ленты показываем сразу и сколько добавляет кнопка «Показать ещё». */
-const RIBBON_WEEKS = 12;
-const RIBBON_STEP = 8;
 
 export default function HomePage() {
   return (
@@ -48,7 +55,20 @@ function Calendar({ params }: { params: RawParams }) {
   // неё становится настоящей.
   const [today, setToday] = useState(BUILT_AT);
   useEffect(() => setToday(todayLocal()), []);
-  const [extraWeeks, setExtraWeeks] = useState(0);
+
+  // Куда возвращаться со страницы турнира: адрес календаря со всеми фильтрами и развёрнутой
+  // лентой. Пишется при каждом изменении адреса; читает его `BackToCalendar`.
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(CALENDAR_SEARCH_KEY, window.location.search);
+    } catch {
+      // приватный режим — ссылка «ко всем турнирам» просто сработает как обычная
+    }
+  }, [params]);
+  const router = useRouter();
+  const pathname = usePathname();
+  const requestedWeeks = useRef(0);
+  const requestedBack = useRef(0);
 
   const filters = parseFilters(params, today);
   const { year, month } = parseMonthKey(filters.month, today);
@@ -62,10 +82,12 @@ function Calendar({ params }: { params: RawParams }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- то же состояние из адреса
     [params, today]);
 
-  // Лента: окно недель от начала выбранного месяца. Портал подгружает недели бесконечной
-  // прокруткой с сервера; здесь все данные уже в браузере, поэтому окно просто растёт кнопкой.
-  const ribbonFrom = startOfWeek(`${filters.month}-01`);
-  const ribbonTo = addDays(ribbonFrom, (RIBBON_WEEKS + extraWeeks) * 7 - 1);
+  // Лента растёт в обе стороны от одной точки отсчёта — недели, в которой начинается выбранный
+  // месяц. Именно от неё, а не от текущего края окна: иначе подгрузка вверх меняла бы смысл
+  // параметров в адресе на каждом шаге.
+  const anchorWeek = startOfWeek(`${filters.month}-01`);
+  const ribbonFrom = addDays(anchorWeek, -filters.back * 7);
+  const ribbonTo = addDays(anchorWeek, filters.weeks * 7 - 1);
   const weeks = useMemo(() => {
     if (filters.view !== 'ribbon') return [];
     const inWindow: GridEvent[] = inYear
@@ -75,10 +97,90 @@ function Calendar({ params }: { params: RawParams }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- окно и фильтры приходят из адреса
   }, [inYear, ribbonFrom, ribbonTo, filters.view, today]);
 
-  // Смена месяца или фильтров начинает окно ленты заново: иначе «показать ещё» тянулось бы с
-  // прошлого просмотра.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => setExtraWeeks(0), [filters.month, params]);
+  // Ближайшие турниры за краями окна: до них лента и дотягивается. Пустых недель за последним
+  // турниром не рисуем — расти в пустоту некуда и незачем.
+  const nextStart = useMemo(
+    () => inYear.find((event) => event.endsAt > ribbonTo)?.startsAt ?? null,
+    [inYear, ribbonTo],
+  );
+  const prevStart = useMemo(() => {
+    let found: string | null = null;
+    for (const event of inYear) {
+      if (event.endsAt >= ribbonFrom) break;
+      found = event.startsAt;
+    }
+    return found;
+  }, [inYear, ribbonFrom]);
+
+  const isRibbon = filters.view === 'ribbon';
+  const canGrow = isRibbon && nextStart !== null && filters.weeks < MAX_RIBBON_WEEKS;
+  const canGrowBack = isRibbon && prevStart !== null && filters.back < MAX_RIBBON_WEEKS;
+
+  const grow = (patch: Partial<CalendarFilters>) =>
+    router.replace(`${pathname}${filtersToSearch({ ...filters, ...patch }, today)}`, { scroll: false });
+
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (!node || !canGrow) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries[0]?.isIntersecting) return;
+      // Шаг — восемь недель, но если ближайший турнир дальше, дотягиваемся сразу до него:
+      // иначе прокрутка ползла бы пустыми неделями по восемь за раз.
+      const step = Math.max(filters.weeks, requestedWeeks.current) + RIBBON_STEP;
+      const reach = nextStart === null ? step
+        : Math.ceil((dayNumber(nextStart) - dayNumber(anchorWeek) + 1) / 7) + 1;
+      const next = Math.min(Math.max(step, reach), MAX_RIBBON_WEEKS);
+      if (next <= requestedWeeks.current) return;
+      requestedWeeks.current = next;
+      grow({ weeks: next });
+    }, { rootMargin: '600px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- состояние целиком приходит из адреса
+  }, [canGrow, nextStart, anchorWeek, params, today]);
+
+  // --- вверх, в прошлое ----------------------------------------------------------------------
+  // Подгрузка сверху добавляет содержимое НАД видимой областью, и браузер уезжает вместе с ним.
+  // Поэтому перед ростом запоминаем высоту страницы, а сразу после отрисовки (до кадра, в
+  // useLayoutEffect) доматываем на разницу: лента под курсором остаётся на месте.
+  const topSentinelRef = useRef<HTMLDivElement>(null);
+  const heightBeforeGrow = useRef<number | null>(null);
+  // Верхний сентинел в начале ленты виден сразу при загрузке, и без этой задержки лента
+  // подгружала бы прошлое сама, до единого движения человека.
+  const [scrolledOnce, setScrolledOnce] = useState(false);
+  useEffect(() => {
+    if (scrolledOnce) return;
+    const onScroll = () => setScrolledOnce(true);
+    window.addEventListener('scroll', onScroll, { once: true, passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [scrolledOnce]);
+
+  useEffect(() => {
+    const node = topSentinelRef.current;
+    if (!node || !canGrowBack || !scrolledOnce) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries[0]?.isIntersecting) return;
+      const step = Math.max(filters.back, requestedBack.current) + RIBBON_STEP;
+      const reach = prevStart === null ? step
+        : (dayNumber(anchorWeek) - dayNumber(startOfWeek(prevStart))) / 7;
+      const next = Math.min(Math.max(step, reach), MAX_RIBBON_WEEKS);
+      if (next <= requestedBack.current) return;
+      requestedBack.current = next;
+      heightBeforeGrow.current = document.documentElement.scrollHeight;
+      grow({ back: next });
+    }, { rootMargin: '600px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- состояние целиком приходит из адреса
+  }, [canGrowBack, prevStart, anchorWeek, params, today, scrolledOnce]);
+
+  useLayoutEffect(() => {
+    if (heightBeforeGrow.current === null) return;
+    const delta = document.documentElement.scrollHeight - heightBeforeGrow.current;
+    heightBeforeGrow.current = null;
+    if (delta > 0) window.scrollBy({ top: delta, behavior: 'instant' as ScrollBehavior });
+  }, [filters.back]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -97,14 +199,22 @@ function Calendar({ params }: { params: RawParams }) {
 
       {filters.view === 'ribbon' && (
         <>
+          {/* Сентинел прошлого: лента листается и вверх. Строка «раньше турниров нет» нужна,
+              чтобы край ленты не выглядел оборванным. */}
+          <div ref={topSentinelRef} aria-hidden="true" className="h-1" />
+          {!canGrowBack && weeks.length > 0 && (
+            <p className="self-center py-2 text-xs text-text-faint">Раньше турниров нет</p>
+          )}
           <CalendarGrid weeks={weeks} currentWeek={startOfWeek(today)} today={today} />
-          <button
-            type="button"
-            onClick={() => setExtraWeeks((value) => value + RIBBON_STEP)}
-            className="self-center rounded-lg border border-border px-4 py-2 text-sm text-text-secondary hover:border-border-light hover:text-foreground"
-          >
-            Показать ещё
-          </button>
+          {/* Лента растёт прокруткой, а не кнопкой (решение заказчика 06.11.2026): сентинел
+              внизу, подгрузка за 600px до него — так следующие недели готовы раньше, чем до них
+              доскроллили, и рывка не видно. Кнопки больше нет, поэтому важно, что окно всё
+              равно дотягивается до ближайшего турнира: иначе у узкого фильтра (один город)
+              человек упирался бы в пустоту без способа заглянуть дальше. */}
+          <div ref={sentinelRef} aria-hidden="true" className="h-1" />
+          {!canGrow && weeks.length > 0 && (
+            <p className="self-center py-2 text-xs text-text-faint">Дальше турниров нет</p>
+          )}
         </>
       )}
 
