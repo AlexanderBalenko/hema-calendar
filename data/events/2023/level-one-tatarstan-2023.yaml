@@ -1,0 +1,37 @@
+title: 'Level One: Tatarstan'
+starts: 2023-03-25
+place: Kazbekovsky District
+organizer: Клуб CounterTime
+url: https://hemagon.com/tournament/tournament-euej
+description: |-
+  Турнир для начинающих фехтовальщиков в г. Казань
+
+  Дата проведения: 25 марта 2023
+
+  Номинации:
+  Длинный меч, М и Ж
+  Дуэльная сабля, М и Ж
+  Меч и баклер, М
+
+  Мы приглашаем фехтовальщиков и фехтовальщиц, чей опыт выступлений не превышает 3х лет проверить свои силы и сразиться за победу
+
+  До встречи!
+
+  О всех новостях следите по хештегу в ВК #level_one_tatarstan
+source: hemagon
+source_key: tournament-euej
+nominations:
+- weapon: saber
+  gender: male
+  notes: Дуэльная сабля. Мужчины
+- weapon: saber
+  gender: female
+  notes: Дуэльная сабля. Женщины
+- weapon: longsword
+  gender: male
+  notes: Длинный меч. Мужчины
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины
+- weapon: buckler
+  notes: Меч баклер

@@ -1,0 +1,20 @@
+title: Astana Open
+starts: 2023-04-22
+city: Астана
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/astana_open2023
+description: Клуб Золотой Сокол 22 апреля проводит первый в Астане турнир по HEMA! Приглашаем вас поучаствовать
+  или придти в качестве зрителя.
+source: hemagon
+source_key: astana_open2023
+nominations:
+- weapon: longsword
+  notes: Длинный меч
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Женщины.
+- weapon: saber
+  notes: Военная сабля
+- weapon: saber
+  gender: female
+  notes: Военная сабля. Женщины.

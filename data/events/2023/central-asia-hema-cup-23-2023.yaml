@@ -1,0 +1,32 @@
+title: Central Asia HEMA Cup'23
+starts: 2023-11-11
+ends: 2023-11-12
+city: Алматы
+organizer: Golden Falcon Org
+url: https://hemagon.com/tournament/tournament-7scbg
+description: |-
+  Ежегодный турнир у подножья Тянь-Шаньских гор!
+  Длинный меч, классический и по итальянским судебным правилам, военная сабля и меч с баклером - четыре номинации, два дня сражений и десятки бойцов ждут вас!
+source: hemagon
+source_key: tournament-7scbg
+nominations:
+- weapon: longsword
+  notes: 'Longsword: Classic'
+- weapon: longsword
+  gender: female
+  notes: 'Longsword: Classic (Women)'
+- weapon: longsword
+  notes: 'Longsword: Judicial Duel'
+- weapon: longsword
+  gender: female
+  notes: 'Longsword: Judicial Duel (Women)'
+- weapon: saber
+  notes: Military Saber
+- weapon: saber
+  gender: female
+  notes: Military Saber (Women)
+- weapon: buckler
+  notes: Sword & Buckler
+- weapon: buckler
+  gender: female
+  notes: Sword & Buckler (Women)

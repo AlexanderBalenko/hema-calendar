@@ -1,0 +1,21 @@
+title: Серия турниров 1703. Федершверт
+starts: 2025-09-13
+city: Барнаул
+organizer: Стальной Опоссум
+url: https://vk.com/long22
+description: |-
+  Серия турниров 1703. 13 сентября пройдет номинация Федершверт.
+  Открытие зала 13.00
+  Начало 14.00
+  Регистрация только через hemagon. Подтвержденной считается оплаченная заявка. Стоимость участия 500 руб. Количество слотов 16 мужчины, 8 девушки. Бои ведутся до победы в 5 раундах из 9.
+source: hemagon
+source_key: seriya-turnirov-1703-federshvert
+nominations:
+- weapon: longsword
+  notes: Федершверт М
+- weapon: longsword
+  gender: female
+  notes: Федершверт Ж
+- weapon: rapier
+  gender: female
+  notes: Рапира Женщины
