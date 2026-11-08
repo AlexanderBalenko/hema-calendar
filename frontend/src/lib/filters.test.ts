@@ -142,7 +142,12 @@ describe('сборка адреса', () => {
     assert.equal(filtersToSearch({ ...base, weeks: 28 }, TODAY), '?weeks=28');
     assert.equal(filtersToSearch({ ...base, back: 16 }, TODAY), '?back=16', 'прошлое — своим параметром');
     assert.equal(filtersToSearch({ ...base, view: 'list', weeks: 28 }, TODAY), '?view=list',
-      'в списке и сетке месяца окно ленты ничего не значит');
+      'ширина окна ленты в списке ничего не значит');
+    // А вот подтянутое прошлое значит и в списке: он листается вверх так же, как лента, и
+    // ссылкой с ним делятся так же.
+    assert.equal(filtersToSearch({ ...base, view: 'list', back: 16 }, TODAY), '?view=list&back=16');
+    assert.equal(filtersToSearch({ ...base, view: 'list', period: 'past', back: 16 }, TODAY),
+      '?view=list&period=past', 'у «прошедших» прокрутка вверх смысла не имеет');
   });
 
   it('вид по умолчанию — лента, и в адрес он не пишется', () => {
@@ -204,6 +209,16 @@ describe('видимый отрезок', () => {
     assert.deepEqual(visibleRange({ ...base, view: 'list', period: 'future' }, TODAY), { from: TODAY, to: null });
     assert.deepEqual(visibleRange({ ...base, view: 'list', period: 'past' }, TODAY), { from: null, to: TODAY });
     assert.deepEqual(visibleRange({ ...base, view: 'list', period: 'all' }, TODAY), { from: null, to: null });
+  });
+
+  it('подтянутое прокруткой прошлое опускает нижнюю границу списка', () => {
+    // Список листается вверх так же, как лента: `back` — недели прошлого, уже подтянутые
+    // прокруткой. Без этого нижняя граница оставалась бы «сегодня», и вверх расти было бы некуда.
+    assert.deepEqual(visibleRange({ ...base, view: 'list', period: 'future', back: 2 }, TODAY),
+      { from: '2026-10-22', to: null }, 'две недели назад от 5 ноября');
+    // На «прошедшие» и «все» прокрутка вверх не влияет: там и так всё прошлое.
+    assert.deepEqual(visibleRange({ ...base, view: 'list', period: 'past', back: 2 }, TODAY),
+      { from: null, to: TODAY });
   });
 });
 

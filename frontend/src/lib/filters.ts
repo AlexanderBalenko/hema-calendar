@@ -198,7 +198,12 @@ export function filtersToSearch(filters: CalendarFilters, today: string): string
   // Развёрнутая лента остаётся в адресе — и в ссылке, которой делятся, тоже: она про то, что
   // человек сейчас видит.
   if (filters.view === 'ribbon' && filters.weeks !== RIBBON_WEEKS) params.set('weeks', String(filters.weeks));
-  if (filters.view === 'ribbon' && filters.back > 0) params.set('back', String(filters.back));
+  // `back` пишется и для списка: подтянутое прошлое — часть того, что человек видит, и ссылкой
+  // этим делятся так же, как развёрнутой лентой.
+  if (filters.back > 0 && (filters.view === 'ribbon'
+    || (filters.view === 'list' && filters.period === 'future'))) {
+    params.set('back', String(filters.back));
+  }
 
   const search = params.toString();
   return search ? `?${search}` : '';
@@ -230,7 +235,13 @@ export function visibleRange(filters: CalendarFilters, today: string): { from: s
     const { firstWeek, lastWeek } = monthGridBounds(year, month);
     return { from: firstWeek, to: addDays(lastWeek, 6) };
   }
-  if (filters.period === 'future') return { from: today, to: null };
+  // Список листается в прошлое так же, как лента (решение заказчика 08.11.2026): `back` — это
+  // сколько недель прошлого человек уже подтянул прокруткой вверх. Ноль — только будущее, как
+  // и было; переключатель периода при этом никуда не делся и по-прежнему даёт «только
+  // прошедшие» одним движением.
+  if (filters.period === 'future') {
+    return { from: filters.back > 0 ? addDays(today, -filters.back * 7) : today, to: null };
+  }
   // «Прошедшие» — то, что ЗАКОНЧИЛОСЬ раньше сегодня: турнир, который идёт прямо сейчас,
   // прошедшим называть нельзя.
   if (filters.period === 'past') return { from: null, to: today };

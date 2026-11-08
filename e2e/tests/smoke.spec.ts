@@ -164,6 +164,20 @@ test.describe('Календарь', () => {
     await expect.poll(() => bars.count()).toBeGreaterThan(before);
   });
 
+  test('список подтягивает прошедшее прокруткой вверх, как лента', async ({ page }) => {
+    await page.goto('?view=list');
+    await page.waitForLoadState('load');
+    const rows = page.locator('a[href*="/events/"]');
+    const before = await rows.count();
+    expect(before).toBeGreaterThan(0);
+
+    await page.mouse.move(400, 300);
+    await page.mouse.wheel(0, -600);
+
+    await expect(page).toHaveURL(/back=\d+/);
+    await expect.poll(() => rows.count()).toBeGreaterThan(before);
+  });
+
   test('подписи баров, доходящих до правого края, стоят на одной вертикали', async ({ page }) => {
     // Бар с аннексированным понедельником физически продлён на ширину хвоста, и его правый
     // текст дважды оказывался не там: сначала уезжал под хвостовую плашку и обрывался, потом

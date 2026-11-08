@@ -88,6 +88,16 @@ function Calendar({ params }: { params: RawParams }) {
   const anchorWeek = startOfWeek(`${filters.month}-01`);
   const ribbonFrom = addDays(anchorWeek, -filters.back * 7);
   const ribbonTo = addDays(anchorWeek, filters.weeks * 7 - 1);
+
+  // Вверх, в прошлое, растут оба вида — и лента, и список (решение заказчика 08.11.2026).
+  // Нижняя граница у них считается по-разному: лента живёт неделями от якорной, список — просто
+  // «сегодня минус подтянутые недели», недель у списка нет. Один и тот же параметр `back`
+  // означает в обоих случаях одно: сколько прошлого уже подтянуто прокруткой.
+  const growsBack = filters.view === 'ribbon'
+    || (filters.view === 'list' && filters.period === 'future');
+  const backFrom = filters.view === 'ribbon'
+    ? ribbonFrom
+    : (filters.back > 0 ? addDays(today, -filters.back * 7) : today);
   const weeks = useMemo(() => {
     if (filters.view !== 'ribbon') return [];
     const inWindow: GridEvent[] = inYear
@@ -106,15 +116,15 @@ function Calendar({ params }: { params: RawParams }) {
   const prevStart = useMemo(() => {
     let found: string | null = null;
     for (const event of inYear) {
-      if (event.endsAt >= ribbonFrom) break;
+      if (event.endsAt >= backFrom) break;
       found = event.startsAt;
     }
     return found;
-  }, [inYear, ribbonFrom]);
+  }, [inYear, backFrom]);
 
   const isRibbon = filters.view === 'ribbon';
   const canGrow = isRibbon && nextStart !== null && filters.weeks < MAX_RIBBON_WEEKS;
-  const canGrowBack = isRibbon && prevStart !== null && filters.back < MAX_RIBBON_WEEKS;
+  const canGrowBack = growsBack && prevStart !== null && filters.back < MAX_RIBBON_WEEKS;
 
   const grow = (patch: Partial<CalendarFilters>) =>
     router.replace(`${pathname}${filtersToSearch({ ...filters, ...patch }, today)}`, { scroll: false });
@@ -183,8 +193,14 @@ function Calendar({ params }: { params: RawParams }) {
     const observer = new IntersectionObserver((entries) => {
       if (!entries[0]?.isIntersecting) return;
       const step = Math.max(filters.back, requestedBack.current) + RIBBON_STEP;
+      // Шаг — восемь недель, но если ближайший турнир в прошлом дальше, дотягиваемся сразу до
+      // него: иначе прокрутка ползла бы пустыми неделями. У списка отсчёт от сегодня, а не от
+      // якорной недели: недель у него нет, и «back» он понимает буквально — столько-то дней
+      // прошлого назад.
       const reach = prevStart === null ? step
-        : (dayNumber(anchorWeek) - dayNumber(startOfWeek(prevStart))) / 7;
+        : isRibbon
+          ? (dayNumber(anchorWeek) - dayNumber(startOfWeek(prevStart))) / 7
+          : Math.ceil((dayNumber(today) - dayNumber(prevStart)) / 7) + 1;
       const next = Math.min(Math.max(step, reach), MAX_RIBBON_WEEKS);
       if (next <= requestedBack.current) return;
       requestedBack.current = next;
@@ -255,7 +271,18 @@ function Calendar({ params }: { params: RawParams }) {
       {filters.view === 'list' && (
         events.length === 0
           ? <p className="rounded-xl bg-card p-4 text-sm text-text-secondary">Ничего не нашлось. Попробуйте снять часть фильтров.</p>
-          : <EventList events={events} today={today} />
+          : (
+            <>
+              {/* Тот же сентинел прошлого, что и у ленты: список открывается будущим, а
+                  прошедшее подтягивается прокруткой вверх. Переключатель периода остался —
+                  им спрашивают «покажи только прошедшие», а это другой вопрос. */}
+              {growsBack && <div ref={topSentinelRef} aria-hidden="true" className="h-1" />}
+              {growsBack && !canGrowBack && (
+                <p className="self-center py-2 text-xs text-text-faint">Раньше турниров нет</p>
+              )}
+              <EventList events={events} today={today} />
+            </>
+          )
       )}
     </div>
   );
