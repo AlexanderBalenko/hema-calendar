@@ -34,8 +34,11 @@ test.describe('Календарь', () => {
     await expect(page.getByRole('link', { name: new RegExp(`^${MONTHS[moscow.getUTCMonth()]}`) }))
       .toHaveAttribute('aria-current', 'date');
 
-    // Сегодняшнее число подсвечено ровно одно.
-    await expect(page.locator('.bg-primary.rounded-full')).toHaveCount(1);
+    // Сегодняшнее число подсвечено ровно одно. Ищем ВНУТРИ main: снаружи, в подвале, живёт
+    // переключатель темы, и его выбранная кнопка — такой же акцентный кружок. Селектор без
+    // области видел два совпадения и уронил прогон на правке, которая к сетке месяца не
+    // относится вовсе (08.11.2026). «Подсвечен один день» проверяется там, где дни и есть.
+    await expect(page.locator('main .bg-primary.rounded-full')).toHaveCount(1);
   });
 
   test('полоска месяцев листает календарь', async ({ page }) => {
