@@ -91,7 +91,11 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
           название, остальное есть на странице турнира. Подсказки со списком оружия здесь
           больше нет: по наведению на строку встаёт ховер-карточка с полным составом
           номинаций, и две всплывашки спорили бы. */}
-      <span className={`hidden w-[170px] shrink-0 items-center gap-1 md:flex ${secondary}`}>
+      {/* 96px, а не прежние 170: значки занимают максимум 76px (четыре штуки по 16 плюс
+          промежутки), и сотня пикселей посреди строки стояла пустой, пока организатора резало
+          у каждой четвёртой строки. 96 — это те же четыре значка плюс «+N» для пятого и
+          дальше. Освободившиеся 74px отданы организатору (замечание заказчика 08.11.2026). */}
+      <span className={`hidden w-24 shrink-0 items-center gap-1 md:flex ${secondary}`}>
         {weaponCodes.slice(0, 4).map((code) => <WeaponIcon key={code} code={code} size={16} />)}
         {weaponCodes.length > 4 && <span className="text-[10px] leading-none">+{weaponCodes.length - 4}</span>}
         {/* Номинация без вида оружия (катана, триатлон) пиктограммы не имеет — для таких
@@ -99,7 +103,11 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
         {weaponCodes.length === 0 && <span className="truncate text-xs">{weapons.join(' · ')}</span>}
       </span>
       <span className={`hidden w-[130px] shrink-0 truncate text-xs sm:block ${secondary}`}>{place}</span>
-      <span className={`hidden w-[140px] shrink-0 truncate text-xs lg:block ${secondary}`}>
+      {/* 214px — это 140 прежних плюс 74, отнятые у колонки оружия. Замер на живых данных:
+          обрезанных названий клубов стало 7 из 53 вместо 14. Больше не даём: следующий кусок
+          пришлось бы брать у НАЗВАНИЯ турнира, а оно важнее организатора и само режется у
+          четырёх строк. */}
+      <span className={`hidden w-[214px] shrink-0 truncate text-xs lg:block ${secondary}`}>
         {formatOrganizers(event.organizerName, event.coOrganizers)}
       </span>
     </Link>
