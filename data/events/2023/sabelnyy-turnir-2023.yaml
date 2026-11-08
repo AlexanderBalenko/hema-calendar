@@ -1,0 +1,19 @@
+title: Сабельный турнир
+starts: 2023-12-02
+city: Первоуральск
+organizer: Денис Матяж
+hemagon_url: https://hemagon.com/tournament/tournament-03rpp
+source: hemagon
+source_key: tournament-03rpp
+nominations:
+- weapon: saber
+  beginners: true
+  notes: Сабля, 9-13
+- weapon: saber
+  beginners: true
+  notes: Сабля, 14-17
+- weapon: saber
+  notes: Сабля, 18+
+- weapon: saber
+  gender: female
+  notes: Сабля, woman

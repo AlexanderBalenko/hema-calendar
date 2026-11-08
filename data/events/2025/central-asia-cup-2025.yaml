@@ -1,0 +1,47 @@
+title: Central Asia Cup 2025
+starts: 2025-10-11
+ends: 2025-10-12
+city: Алматы
+organizer: Golden Falcon Org
+url: https://vk.com/centralasiahemacup
+hemagon_url: https://hemagon.com/tournament/central-asia-cup-2025
+description: |-
+  Кубок Центральной Азии - самый большой турнир по HEMA в регионе, который пройдёт в городе Алматы, Казахстан!
+
+  Номинации:
+  - Длинный меч (классические правила)
+  - Английская Гимнастическая сабля (Сабля Хаттона)
+  - Рапира соло (тяжелая)
+
+  We are happy to invite you to the first large HEMA tournament in Central Asia, which will take place on October in Almaty, Kazakhstan.
+
+  The tournament will have "Men. General" and "Women. General" categories. And the following categories:
+  - Longsword: classic
+  - English Gymnastic Sabre (Hutton's saber)
+  - Rapier solo
+source: hemagon
+source_key: central-asia-cup-2025
+nominations:
+- weapon: longsword
+  notes: Длинный меч. Классика. Отборки
+- weapon: longsword
+  notes: Длинный меч. Классика. Basic
+- weapon: longsword
+  notes: Длинный меч. Классика. Advance
+- weapon: longsword
+  gender: female
+  notes: Длинный меч. Классика. Женщины
+- weapon: rapier
+  notes: Рапира Ренессанса
+- weapon: rapier
+  gender: female
+  notes: Рапира Ренессанса. Женщины
+- weapon: saber
+  notes: Английская гимнастическая сабля. Отборки
+- weapon: saber
+  notes: Английская гимнастическая сабля. Basic
+- weapon: saber
+  notes: Английская гимнастическая сабля. Advanced
+- weapon: saber
+  gender: female
+  notes: Английская гимнастическая сабля. Женщины

@@ -1,0 +1,31 @@
+title: Central Asia HEMA Cup 2022
+starts: 2022-09-18
+city: Астана
+organizer: Golden Falcon Org
+hemagon_url: https://hemagon.com/tournament/centralasiahemacup2022
+description: Первый в истории Кубок Центральной Азии по HEMA. 17-18 сентября встретимся в Алматы. Вас
+  ждет ярмарка, лекции от Николая Асламова, семинары от приглашенных экспертов и турнир!
+source: hemagon
+source_key: centralasiahemacup2022
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Longsword. Men
+- weapon: longsword
+  gender: female
+  notes: Longsword. Women
+- weapon: rapier
+  gender: female
+  notes: Renaissance rapier. Women
+- weapon: saber
+  gender: female
+  notes: Military saber. Women
+- weapon: buckler
+  gender: male
+  notes: Sword and buckler. Men
+- weapon: rapier
+  gender: male
+  notes: Renaissance rapier. Men
+- weapon: saber
+  gender: male
+  notes: Military saber. Men
