@@ -1,53 +1,103 @@
 # Пополнение календаря из внешних источников — раз в сутки и по кнопке.
 #
-# Импорт ничего не публикует сам: он правит файлы в `data/` и открывает пул-реквест. Решение
-# «это настоящий турнир, заводим» принимает человек, глядя на дифф, — это и есть модерация,
-# ради которой раньше жили очередь, ключ и админка.
+# Источники делятся по доверию, и обращение с ними разное (решение заказчика 08.11.2026):
+#
+#   * хемагон и таблица организаторов — машинные, за ними стоит человек, которого мы знаем.
+#     Их правки коммитятся ПРЯМО в main, и сайт пересобирается следом сам.
+#   * заявки из формы — публичные: форму может заполнить кто угодно. Они уезжают в ветку
+#     `submissions` и попадают в календарь, только когда вы её вмёрджите.
+#
+# Пул-реквестов больше нет (были до 08.11.2026): модерация заявок осталась, но делается
+# слиянием ветки, а не кнопкой на пул-реквесте.
 #
 # Источники включаются переменными репозитория (Settings → Variables):
 #   GOOGLE_SHEET_ID / GOOGLE_SHEET_GID — таблица организаторов с анонсами;
 #   FORM_SHEET_ID / FORM_SHEET_GID     — ответы формы заявок с сайта.
 # Хемагон источников не требует и работает всегда.
 #
-# Пул-реквест, созданный встроенным токеном, НЕ запускает другие workflow (ограничение
-# GitHub), поэтому проверка данных прогоняется здесь же, а её вывод уезжает в тело
-# пул-реквеста: иначе о замечаниях никто бы не узнал до слияния.
+# Два ограничения GitHub, из-за которых шаги выглядят именно так:
+#   1. Пуш встроенным токеном НЕ запускает другие workflow. Поэтому выкладку Pages приходится
+#      дёргать явно (`gh workflow run`) — иначе данные в main обновились бы, а сайт остался со
+#      вчерашними. По той же причине у job есть право `actions: write`.
+#   2. По той же причине CI не прогоняется и на ветке заявок. Поэтому проверка данных идёт
+#      здесь же, и её вывод остаётся в журнале прогона.
 
 name: Импорт турниров
 
 on:
   schedule:
-    # 04:30 UTC — ночь по Москве: источники в это время свободны, а к утру PR уже ждёт.
+    # 04:30 UTC — ночь по Москве: источники в это время свободны, а к утру всё уже готово.
     - cron: '30 4 * * *'
   workflow_dispatch: {}
 
 permissions:
   contents: write
-  pull-requests: write
+  actions: write
 
 concurrency:
   group: import
   cancel-in-progress: false
 
+env:
+  BOT_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+
 jobs:
   import:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        # pipefail обязателен: без него `python ... | tee` отдаёт код ВЫХОДА TEE, то есть ноль,
+        # и упавший импорт или непройденная проверка выглядели бы успехом. Теперь на проверке
+        # данных висит пуш в main, и молчаливый зелёный тут недопустим.
+        shell: bash -eo pipefail {0}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: pip install pyyaml
 
+      # Источник, который сегодня недоступен, не должен уносить с собой остальные: шаг краснеет,
+      # прогон идёт дальше, а что именно не приехало — видно в журнале.
       - name: Хемагон — прошедшие турниры
+        continue-on-error: true
         run: python scripts/import_hemagon.py | tee -a /tmp/import.log
 
       - name: Таблица организаторов — анонсы
         if: vars.GOOGLE_SHEET_ID != ''
+        continue-on-error: true
         run: |
           python scripts/import_spreadsheet.py \
             --google "${{ vars.GOOGLE_SHEET_ID }}" --gid "${{ vars.GOOGLE_SHEET_GID || '0' }}" \
             | tee -a /tmp/import.log
+
+      # А вот это — ворота в main, и они закрыты наглухо: битые данные уедут в main молча,
+      # а CI покраснеет уже на следующем пуше, когда искать причину будет некому.
+      - name: Проверить машинные источники
+        run: python scripts/validate_data.py | tee -a /tmp/import.log
+
+      - name: Машинные источники — в main
+        id: trusted
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ -z "$(git status --porcelain -- data)" ]; then
+            echo "Хемагон и таблица организаторов нового не принесли."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "$BOT_EMAIL"
+          git add data
+          git commit -m "Импорт турниров $(date +%Y-%m-%d)"
+          git push origin main
+
+          # Выкладка сама не запустится (см. шапку), поэтому зовём её руками. Она прогоняет
+          # полный CI перед сборкой — проверка данных случится ещё раз, уже на том, что в main.
+          gh workflow run pages.yml --ref main
+          echo "В main уехали новые турниры, выкладка сайта запущена."
 
       - name: Заявки с сайта — ответы формы
         if: vars.FORM_SHEET_ID != ''
@@ -56,39 +106,46 @@ jobs:
             --google "${{ vars.FORM_SHEET_ID }}" --gid "${{ vars.FORM_SHEET_GID || '0' }}" \
             --source submission | tee -a /tmp/import.log
 
-      - name: Проверить, что получилось
-        id: check
-        # Проверка не должна рубить прогон: её вывод нужен в пул-реквесте, а решать человеку.
+      # Заявку пишет посторонний человек, и невалидная заявка — нормальное событие, а не поломка
+      # календаря: она лежит в ветке и в main не попадёт. Поэтому замечания не рубят прогон —
+      # их видно в журнале, и человек поправит файл перед слиянием.
+      - name: Проверить заявки
+        if: vars.FORM_SHEET_ID != ''
         continue-on-error: true
         run: python scripts/validate_data.py | tee -a /tmp/import.log
 
-      - name: Открыть пул-реквест
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Заявки — в ветку, на ваш суд
+        if: vars.FORM_SHEET_ID != ''
         run: |
           if [ -z "$(git status --porcelain -- data)" ]; then
-            echo "Источники не принесли ничего нового."
+            echo "Новых заявок нет."
             exit 0
           fi
 
-          branch="import/$(date +%Y-%m-%d)-${{ github.run_number }}"
+          # Ветка пересобирается от main на каждом прогоне: в ней всегда «main плюс всё
+          # непринятое», и вчерашняя непринятая заявка из неё не теряется. Но если в ветку
+          # коммитил человек — правил заявку перед слиянием, — пересборка затёрла бы правку.
+          # Такую ветку не трогаем, а кладём заявки рядом и говорим об этом в журнале.
+          branch=submissions
+          # Refspec выписан полностью не для красоты: `git fetch origin <ветка>` в части версий
+          # git обновляет только FETCH_HEAD, и origin/<ветка> осталась бы вчерашней.
+          git fetch origin "+refs/heads/$branch:refs/remotes/origin/$branch" 2>/dev/null || true
+          if git rev-parse --verify -q "refs/remotes/origin/$branch" >/dev/null; then
+            mine=$(git log "origin/$branch" --not origin/main --format='%ae' \
+                   | grep -vF "$BOT_EMAIL" || true)
+            if [ -n "$mine" ]; then
+              branch="submissions-$(date +%Y-%m-%d)-${{ github.run_number }}"
+              echo "В ветке submissions есть ваши правки — не трогаю её, кладу заявки в «$branch»."
+            fi
+          fi
+
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
+          git config user.email "$BOT_EMAIL"
+          git checkout -B "$branch"
           git add data
-          git commit -m "Импорт турниров $(date +%Y-%m-%d)"
-          git push -u origin "$branch"
+          git commit -m "Заявки из формы $(date +%Y-%m-%d)"
+          git push --force origin "$branch"
 
-          {
-            echo "Автоматический импорт из внешних источников."
-            echo
-            echo '```'
-            cat /tmp/import.log
-            echo '```'
-            echo
-            echo "Смотреть на дифф: что завелось новым файлом, что поправилось в существующих."
-            echo "Проверка данных прогнана здесь же — её вывод выше (пул-реквесты от бота"
-            echo "не запускают CI, это ограничение GitHub)."
-          } > /tmp/pr-body.md
-
-          gh pr create --title "Импорт турниров $(date +%Y-%m-%d)" --body-file /tmp/pr-body.md
+          echo "Заявки ждут вас в ветке «$branch»."
+          echo "Посмотреть дифф: ${{ github.server_url }}/${{ github.repository }}/compare/main...$branch"
+          echo "Принять: git fetch origin && git merge origin/$branch && git push origin main"
