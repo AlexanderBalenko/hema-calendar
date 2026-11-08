@@ -76,7 +76,7 @@ test.describe('Календарь', () => {
 
     // Оружие — мультиселект, как в портале: снимаем «Все» и отмечаем одну саблю.
     await page.getByTitle(/^Оружие/).click();
-    // «Все» есть и в списке периода — берём то, что внутри раскрытого списка оружия.
+    // «Все» есть не только здесь — берём то, что внутри раскрытого списка оружия.
     const weaponPanel = page.locator('div.absolute').filter({ hasText: 'Сабля' }).first();
     await weaponPanel.getByText('Все', { exact: true }).click();
     await weaponPanel.getByText('Сабля', { exact: true }).click();

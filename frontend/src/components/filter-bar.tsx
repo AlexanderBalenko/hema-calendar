@@ -14,7 +14,6 @@ import {
   hasPersonalFilters,
   type BeginnerFilter,
   type CalendarFilters,
-  type Period,
   type ViewerGender,
   type ViewMode,
 } from '@/src/lib/filters';
@@ -46,7 +45,6 @@ export const FILTER_CONTROL_CLASS =
 const ACTIVE_CLASS = 'bg-primary/15 text-primary ring-primary/40';
 const IDLE_CLASS = 'bg-background text-text-secondary ring-border-light hover:text-foreground';
 
-const PERIOD_LABELS: Record<Period, string> = { future: 'Будущие', past: 'Прошедшие', all: 'Все' };
 const VIEW_ICON: Record<ViewMode, typeof Rows3> = { ribbon: Rows3, month: CalendarDays, list: LayoutList };
 const VIEW_LABEL: Record<ViewMode, string> = { ribbon: 'Лента недель', month: 'Месяц', list: 'Список' };
 
@@ -148,17 +146,10 @@ export function FilterBar({
 
       <SearchField value={filters.q} onChange={(q) => apply({ ...filters, q })} />
 
-      {/* Период имеет смысл только у списка: лента и сетка листаются месяцами. */}
-      {filters.view === 'list' && (
-        <Dropdown
-          value={filters.period}
-          onChange={(value) => apply({ ...filters, period: value as Period })}
-          ariaLabel="Период"
-          trigger={<span className="truncate">{PERIOD_LABELS[filters.period]}</span>}
-          options={(['future', 'past', 'all'] as Period[]).map((value) => ({ value, label: PERIOD_LABELS[value] }))}
-          className={`${FILTER_CONTROL_CLASS} ${filters.period !== 'future' ? ACTIVE_CLASS : IDLE_CLASS}`}
-        />
-      )}
+      {/* Переключателя периода здесь больше нет (решение заказчика 08.11.2026): список
+          открывается будущим и подтягивает прошедшее прокруткой вверх, как лента, — спрашивать
+          об этом отдельным контролом стало незачем. Сам параметр `period` остался: он разбирается
+          из адреса, и прежние ссылки на архив (`?view=list&period=past`) работают. */}
 
       {/* Стрелка аккордеона: за ней критерии участника. Точка-индикатор обязательна — без неё
           заданный в свёрнутом состоянии возраст необъяснимо режет выдачу. */}
