@@ -200,12 +200,21 @@ test.describe('Календарь', () => {
     const rows = page.locator('a[href*="/events/"]');
     const onlySuitable = await rows.count();
     expect(onlySuitable).toBeGreaterThan(0);
+    const suitable = new Set(await rows.evaluateAll((els) => els.map((e) => e.getAttribute('href'))));
 
     await page.getByTitle('Показывать неподходящие турниры неактивными').click();
     await expect(page).toHaveURL(/showUnsuitable=1/);
     // Неподходящие не исчезли, а вернулись в список — и каждый говорит, чем не подошёл.
     expect(await rows.count()).toBeGreaterThan(onlySuitable);
-    await expect(page.locator('a[title^="Не подходит:"]').first()).toBeVisible();
+
+    // Причина переехала из подсказки плашки в ховер-карточку (08.11.2026): по наведению не
+    // должны спорить две всплывашки. Наводимся на строку, которой в отфильтрованном списке не
+    // было, — она и есть неподходящая; искать её по классу значило бы привязаться к оформлению.
+    const after = await rows.evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+    const unsuitable = after.find((href) => href && !suitable.has(href));
+    expect(unsuitable).toBeTruthy();
+    await page.locator(`a[href="${unsuitable}"]`).first().hover();
+    await expect(page.getByRole('tooltip')).toContainText('Не подходит:');
   });
 
   test('фильтры переживают перезагрузку: ссылкой можно поделиться', async ({ page }) => {
