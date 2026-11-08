@@ -10,6 +10,7 @@ import {
   type MonthSegment,
   type MonthWeekLayout,
 } from '@/src/lib/month-layout';
+import { formatPlace } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
 
 /**
@@ -122,6 +123,7 @@ function Segment({ segment, today }: { segment: MonthSegment<SelectedEvent>; tod
   const { event } = segment;
   const isPast = event.endsAt < today;
   const width = (segment.endColumn - segment.startColumn + 1) / 7;
+  const place = event.city ?? formatPlace(event.city, event.locationManual);
 
   return (
     <Link
@@ -143,7 +145,16 @@ function Segment({ segment, today }: { segment: MonthSegment<SelectedEvent>; tod
         height: SEGMENT_HEIGHT,
       }}
     >
-      <span className="truncate">{event.title}</span>
+      <span className="min-w-0 flex-1 truncate">{event.title}</span>
+      {/* Город — только на полосах шире одного дня (просьба заказчика 08.11.2026: «чтобы и
+          города было видно»). Замер сетки: однодневная полоса — 126px, и у трёх названий из
+          семи там уже не хватает места; двухдневная — 257px, и после названия остаётся 81–205px,
+          куда город встаёт свободно. На узкой он помещался бы только вместо названия, а название
+          важнее: город всё равно есть в ховер-карточке. Берём сам город, а не место целиком:
+          «Калуга, спортзал на такой-то» в полосе всё равно не прочесть. */}
+      {segment.endColumn > segment.startColumn && place && (
+        <span className="ml-1.5 max-w-[40%] shrink-0 truncate opacity-70">{place}</span>
+      )}
     </Link>
   );
 }
