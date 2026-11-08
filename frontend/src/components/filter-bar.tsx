@@ -368,7 +368,11 @@ function SearchField({ value, onChange }: { value: string; onChange: (value: str
   }, [text, onChange]);
 
   return (
-    <span className={`${FILTER_CONTROL_CLASS} w-48 ${value ? ACTIVE_CLASS : IDLE_CLASS}`}>
+    // Ширина подобрана под плейсхолдер, а не на глаз: при w-48 полю оставалось 156px, а
+    // «Название или организатор» занимает 192px — подпись обрезалась на ЛЮБОМ экране, и ровно
+    // по слогу («Название или орган»). Свободного места в ряду фильтров 126px, так что лишние
+    // 48px ничего не переносят на вторую строку.
+    <span className={`${FILTER_CONTROL_CLASS} w-60 ${value ? ACTIVE_CLASS : IDLE_CLASS}`}>
       <Search className="size-3.5 shrink-0" aria-hidden="true" />
       <input
         type="search"
