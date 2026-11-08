@@ -493,7 +493,11 @@ function ThreadZone({ threads, today }: { threads: ThreadPlacement<GridEvent>[];
               event={event}
               className={[
                 'flex items-center gap-3 overflow-hidden rounded-md rounded-t-none px-2 py-1 text-xs',
-                style === 'normal' ? 'bg-card text-foreground' : BODY_CLASS[style],
+                // Тот же цвет, что у бара: это одно и то же мероприятие, просто показанное
+                // выноской, а не полосой в строке недели. Раньше здесь стоял bg-card — цвет
+                // ПЛАШКИ ДНЯ, — и многодневный турнир менял цвет от недели к неделе: полосой
+                // он был цвета события, выноской — цвета дней (замечание заказчика 08.11.2026).
+                BODY_CLASS[style],
               ].join(' ')}
               style={{
                 // Двухэтажная раскладка как у баров (фидбек: слева название и даты под ним, справа
