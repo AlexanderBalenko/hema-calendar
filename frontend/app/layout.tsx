@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Inter, Playfair_Display } from 'next/font/google';
 
+import { ThemeSwitcher } from '@/src/components/theme-switcher';
 import { BUILT_AT, EVENTS } from '@/src/lib/data';
 import { formatDateRange } from '@/src/lib/month-layout';
 import './globals.css';
@@ -53,24 +54,51 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ru" className={`${inter.variable} ${playfair.variable}`}>
       <body className="flex min-h-screen flex-col bg-background font-sans antialiased">
+        {/* Тема ставится ДО отрисовки содержимого (скрипт блокирует парсер): через useEffect
+            выбравшие светлую видели бы вспышку тёмного на каждом переходе. Скрипт лежит ПЕРВЫМ
+            УЗЛОМ ВНУТРИ body намеренно — ребёнком <html> его переносит в head сам Next, React на
+            гидрации получает несовпадение детей и перерендеривает корень, смывая data-theme
+            (прецедент портала). Значение сверяется с белым списком: в хранилище мог остаться и
+            мусор, и тема портала, которой у календаря нет. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('hema_theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}",
+          }}
+        />
         {/* Шапка повторяет портальную: липкая, высотой 64px, с размытием под полупрозрачным
             фоном и тем же логотипом. */}
         <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
           <div className={`mx-auto flex h-16 ${CONTENT_WIDTH} items-center gap-4 px-4 sm:px-6 lg:px-8`}>
             <Link href="/" aria-label="Календарь HEMA — на главную" className="shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element -- см. BASE_PATH выше */}
-              <img
-                src={`${BASE_PATH}/logo-horizontal.png`}
-                alt="HEMA.RU"
-                width={160}
-                height={32}
-                className="h-8 w-auto object-contain"
-              />
+              {/* site-logo и --logo-url — крючок для светлой темы: там логотип перерисовывается
+                  маской в цвете акцента (globals.css), потому что золото на пергаменте выцветает.
+                  На тёмной теме класс не делает ничего — правило приходит только вместе с ней. */}
+              <span
+                className="site-logo inline-flex"
+                style={{ '--logo-url': `url(${BASE_PATH}/logo-horizontal.png)` } as React.CSSProperties}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element -- см. BASE_PATH выше */}
+                <img
+                  src={`${BASE_PATH}/logo-horizontal.png`}
+                  alt="HEMA.RU"
+                  width={160}
+                  height={32}
+                  className="h-8 w-auto object-contain"
+                />
+              </span>
             </Link>
-            <span className="hidden text-sm text-text-muted sm:inline">Календарь турниров</span>
+            {/* Сдвиг на 8px — на базовую линию слова «HEMA.RU» в логотипе. Картинка выровнена по
+                центру строки, но слово внутри неё прижато к низу: над ним эмблема, которая выше.
+                Из-за этого подписи шли на 8px выше логотипа и строка выглядела неряшливо (замер:
+                база слова 47.4px от верха шапки, база подписей 39). Сдвигаем подписи, а не
+                логотип: от этого весь блок — эмблема плюс строка — остаётся по центру шапки. */}
+            <span className="hidden translate-y-2 text-sm text-text-muted sm:inline">
+              Календарь турниров
+            </span>
             <Link
               href="/submit"
-              className="ml-auto whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:text-foreground"
+              className="ml-auto translate-y-2 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:text-foreground"
             >
               Анонсировать турнир
             </Link>
@@ -93,6 +121,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             >
               исходники и данные
             </a>
+            {/* Переключатель темы — в подвале, как в портале: тема нужна прежде всего тем, кому
+                «темновато», а в шапке календаря он отнимал бы место у фильтров. */}
+            <div className="ml-auto self-center">
+              <ThemeSwitcher />
+            </div>
           </div>
         </footer>
       </body>
