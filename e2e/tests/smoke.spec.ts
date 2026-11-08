@@ -146,6 +146,24 @@ test.describe('Календарь', () => {
     expect(Math.abs((after.top ?? 0) - (probe!.top + 400))).toBeLessThan(200);
   });
 
+  test('лента листается вверх прямо из самого верха, без разбега вниз', async ({ page }) => {
+    // Соседний тест сперва делает шаг ВНИЗ, и потому не ловил эту беду: на самом верху колесо
+    // вверх не рождает события scroll — прокручивать нечего, — а подгрузка прошлого ждала
+    // именно его. Человек открывал календарь, крутил вверх, и не происходило ничего.
+    await page.goto('');
+    await page.waitForLoadState('load');
+    const bars = page.locator('a[href*="/events/"]');
+    const before = await bars.count();
+    expect(before).toBeGreaterThan(0);
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
+
+    await page.mouse.move(400, 300);
+    await page.mouse.wheel(0, -600);
+
+    await expect(page).toHaveURL(/back=\d+/);
+    await expect.poll(() => bars.count()).toBeGreaterThan(before);
+  });
+
   test('подписи баров, доходящих до правого края, стоят на одной вертикали', async ({ page }) => {
     // Бар с аннексированным понедельником физически продлён на ширину хвоста, и его правый
     // текст дважды оказывался не там: сначала уезжал под хвостовую плашку и обрывался, потом

@@ -148,17 +148,38 @@ function Calendar({ params }: { params: RawParams }) {
   const heightBeforeGrow = useRef<number | null>(null);
   // Верхний сентинел в начале ленты виден сразу при загрузке, и без этой задержки лента
   // подгружала бы прошлое сама, до единого движения человека.
-  const [scrolledOnce, setScrolledOnce] = useState(false);
+  //
+  // Ждём ЖЕСТ, а не событие прокрутки. На самом верху страницы колесо вверх события `scroll` не
+  // рождает — прокручивать нечего, — и лента молчала в ответ на единственное движение, которым
+  // прошлое и просят: человек открыл календарь, крутанул вверх, ничего не произошло (замечание
+  // заказчика 08.11.2026). Замер на живой странице: пять щелчков колеса вверх при scrollY = 0
+  // дают 0 событий `scroll` и 1 событие `wheel`.
+  //
+  // Клавиатура — только навигационные клавиши: на этой же странице стоит поле поиска, и от
+  // набора текста лента лезть в прошлое не должна.
+  const [movedOnce, setMovedOnce] = useState(false);
   useEffect(() => {
-    if (scrolledOnce) return;
-    const onScroll = () => setScrolledOnce(true);
-    window.addEventListener('scroll', onScroll, { once: true, passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, [scrolledOnce]);
+    if (movedOnce) return;
+    const arm = () => setMovedOnce(true);
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'PageUp' || event.key === 'Home' || event.key === 'ArrowUp') arm();
+    };
+    const options = { passive: true } as const;
+    window.addEventListener('scroll', arm, options);
+    window.addEventListener('wheel', arm, options);
+    window.addEventListener('touchmove', arm, options);
+    window.addEventListener('keydown', onKey, options);
+    return () => {
+      window.removeEventListener('scroll', arm);
+      window.removeEventListener('wheel', arm);
+      window.removeEventListener('touchmove', arm);
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [movedOnce]);
 
   useEffect(() => {
     const node = topSentinelRef.current;
-    if (!node || !canGrowBack || !scrolledOnce) return;
+    if (!node || !canGrowBack || !movedOnce) return;
     const observer = new IntersectionObserver((entries) => {
       if (!entries[0]?.isIntersecting) return;
       const step = Math.max(filters.back, requestedBack.current) + RIBBON_STEP;
@@ -173,7 +194,7 @@ function Calendar({ params }: { params: RawParams }) {
     observer.observe(node);
     return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- состояние целиком приходит из адреса
-  }, [canGrowBack, prevStart, anchorWeek, params, today, scrolledOnce]);
+  }, [canGrowBack, prevStart, anchorWeek, params, today, movedOnce]);
 
   useLayoutEffect(() => {
     if (heightBeforeGrow.current === null) return;
