@@ -187,22 +187,33 @@ test.describe('Календарь', () => {
     await page.waitForLoadState('load');
     const rows = page.locator('a[href*="/events/"]');
     const before = await rows.count();
-    const probe = await page.evaluate(() => {
+    // Меряем не только верхнюю строку: прыгала как раз НЕ она. Компенсация держала якорь, а
+    // подгруженный турнир садился под ним, и всё ниже уезжало на его высоту — замер на живой
+    // странице: якорь −3px, следующие строки +93px.
+    const probes = await page.evaluate(() => {
       const all = Array.from(document.querySelectorAll('main a[href*="/events/"]'));
-      const node = all.find((row) => row.getBoundingClientRect().top >= 0) ?? all[0];
-      return { href: node.getAttribute('href'), top: Math.round(node.getBoundingClientRect().top) };
+      const visible = all.filter((row) => {
+        const box = row.getBoundingClientRect();
+        return box.top >= 0 && box.bottom <= window.innerHeight;
+      });
+      return [visible[0], visible[1], visible[visible.length - 1]]
+        .filter(Boolean)
+        .map((row) => ({ href: row.getAttribute('href'), top: Math.round(row.getBoundingClientRect().top) }));
     });
+    expect(probes.length).toBeGreaterThan(1);
 
     await page.mouse.move(400, 300);
     await page.mouse.wheel(0, -600);
     await expect.poll(() => rows.count()).toBeGreaterThan(before);
 
-    const moved = await page.evaluate((href) => {
-      const node = document.querySelector(`main a[href="${href}"]`);
-      return node ? Math.round(node.getBoundingClientRect().top) : null;
-    }, probe.href);
-    expect(moved, 'якорная строка осталась на месте').not.toBeNull();
-    expect(Math.abs((moved ?? 0) - probe.top)).toBeLessThanOrEqual(24);
+    const shifts = await page.evaluate((list) => list.map((probe) => {
+      const node = document.querySelector(`main a[href="${probe.href}"]`);
+      return node ? Math.round(node.getBoundingClientRect().top) - probe.top : null;
+    }), probes);
+    for (const shift of shifts) {
+      expect(shift, 'строка, которая была видна, осталась на месте').not.toBeNull();
+      expect(Math.abs(shift ?? 0)).toBeLessThanOrEqual(24);
+    }
   });
 
   test('подписи баров, доходящих до правого края, стоят на одной вертикали', async ({ page }) => {
