@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Inter, Playfair_Display } from 'next/font/google';
 
 import { EventHoverCard } from '@/src/components/event-hover';
+import { Metrika } from '@/src/components/metrika';
 import { ThemeSwitcher } from '@/src/components/theme-switcher';
 import { BUILT_AT, EVENTS } from '@/src/lib/data';
 import { formatDateRange } from '@/src/lib/month-layout';
@@ -67,6 +68,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "try{if(localStorage.getItem('hema_theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}",
           }}
         />
+        {/* Счётчик: без переменной репозитория не грузится вовсе — ни скрипта, ни куки. */}
+        <Metrika />
         {/* Слой ховер-карточки турнира — один на весь сайт: она рисуется порталом в body,
             поэтому где её смонтировать, роли не играет, а дублировать по видам незачем. */}
         <EventHoverCard />
