@@ -17,7 +17,9 @@ from calendar_data import ROOT, event_path, load_events, save_event, titles_look
 # остаётся нетронутым: город, дописанный человеком к турниру, у которого источник места не
 # знает, не должен пропадать на следующем прогоне.
 SOURCE_FIELDS = ["title", "starts", "ends", "city", "place", "organizer", "co_organizers", "url",
-                 "description", "nominations"]
+                 # hemagon_url в списке с 06.11.2026: карточку хемагона теперь называют и форма
+                 # заявки (у ссылок две графы), и сам хемагон — обновление её обязано доносить.
+                 "hemagon_url", "description", "nominations"]
 
 TRANSLIT = {
     "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "e", "ж": "zh", "з": "z",

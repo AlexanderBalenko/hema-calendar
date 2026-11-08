@@ -28,7 +28,8 @@ import urllib.request
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from calendar_data import place_for  # noqa: E402
+from calendar_data import (DEFAULT_MIN_AGE, age_from_text, drop_age, links_for,  # noqa: E402
+                           load_weapons, place_for)
 from import_common import Importer  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -39,6 +40,12 @@ MONTHS_EN = {m: i + 1 for i, m in enumerate(
 
 # Колонки номинаций в графике (вторая строка шапки) -> код оружия календаря.
 XLSX_WEAPON_COLUMNS = {10: "longsword", 11: "saber", 12: "rapier", 13: "rapier", 14: "buckler"}
+
+# Колонка, куда форма складывает заполненные блоки номинаций. Имя — контракт с
+# scripts/google-form/create-form.gs (NOMINATIONS_COLUMN): переименуешь с одной стороны, и
+# номинации перестанут доезжать молча. Свободная колонка «Номинации» остаётся рядом: в ней
+# хвост, который в блоки не влез, и ею же пользуется таблица организаторов.
+BLOCKS_COLUMN = "Номинации (конструктор)"
 
 TEAM_MARKERS = ("ком", "команд")
 BEGINNER_MARKERS = ("нов", "дет", "юнош")
@@ -76,8 +83,94 @@ QUALIFIER_WORDS = {
 
 
 def is_qualifier(fragment: str) -> bool:
-    words = [w for w in re.split(r"[^а-яёa-z0-9]+", fragment.lower()) if w]
-    return bool(words) and all(w in QUALIFIER_WORDS for w in words)
+    """Уточнение к предыдущей номинации, а не своя номинация.
+
+    Возрастная запись тоже уточнение: «сабля, 12-14 лет» — одна номинация с вилкой, а не сабля
+    и загадочная номинация «12-14 лет» рядом. Поэтому возраст из куска снимается, и решает
+    остаток: пусто — значит, был только возраст.
+    """
+    rest = drop_age(fragment)
+    words = [w for w in re.split(r"[^а-яёa-z0-9]+", rest.lower()) if w]
+    if not words:
+        return rest.strip() != fragment.strip()
+    return all(w in QUALIFIER_WORDS for w in words)
+
+
+_WEAPON_CODES: dict[str, str] | None = None
+
+
+def weapon_code(name: str) -> str | None:
+    """Код вида оружия по названию из справочника календаря: конструктор формы присылает
+    названия словами («Меч и баклер»), а в файле живёт код («buckler»)."""
+    global _WEAPON_CODES
+    if _WEAPON_CODES is None:
+        _WEAPON_CODES = {str(w["name"]).strip().lower(): w["code"] for w in load_weapons()}
+    return _WEAPON_CODES.get(str(name or "").strip().lower())
+
+
+def age_number(value) -> int | None:
+    """Число из поля возраста. Заявитель пишет в него что хочет («12», «12 лет», «с 12»), и
+    ломать на этом заявку незачем — берём первое разумное число."""
+    match = re.search(r"\d{1,3}", str(value or ""))
+    if not match:
+        return None
+    age = int(match.group(0))
+    return age if 0 < age < 120 else None
+
+
+def nominations_from_blocks(text) -> list[dict]:
+    """Номинации из конструктора формы: строка на номинацию, поля через «;» в твёрдом порядке —
+    оружие; пол; возраст от; возраст до; особенности (см. create-form.gs, nominationsFromBlocks_).
+
+    Разбор строгий, и это главная причина заводить конструктор: позиции полей известны, пол и
+    возраст приезжают полями, и догадываться из текста («до 3 лет» — это стаж или возраст?)
+    больше не нужно.
+
+    Крайние случаи — без потерь: вид оружия, которого нет в справочнике, уезжает в `text`
+    (номинация останется видна на странице турнира, просто мимо фильтра по оружию); возраст,
+    указанный только сверху, идёт словами в заметку — поле `max_age` без `min_age` календарь
+    запрещает (номинация без нижней границы считается взрослой, и в 18…max не попал бы никто).
+    """
+    result: list[dict] = []
+    for line in str(text or "").splitlines():
+        parts = [part.strip() for part in line.split(";")]
+        if not parts or not parts[0]:
+            continue  # пустой блок формы — не номинация
+
+        code = weapon_code(parts[0])
+        nomination: dict = {"weapon": code} if code else {"text": parts[0][:120]}
+
+        gender = (parts[1] if len(parts) > 1 else "").lower()
+        if gender.startswith(("жен", "девуш")):
+            nomination["gender"] = "female"
+        elif gender.startswith("муж"):
+            nomination["gender"] = "male"
+
+        min_age = age_number(parts[2] if len(parts) > 2 else None)
+        max_age = age_number(parts[3] if len(parts) > 3 else None)
+        if min_age is None and max_age is not None:
+            nomination["notes"] = f"до {max_age} лет"
+        else:
+            set_age(nomination, min_age, max_age)
+
+        features = (parts[4] if len(parts) > 4 else "").lower()
+        if any(marker in features for marker in TEAM_MARKERS):
+            nomination["team"] = True
+        if any(marker in features for marker in BEGINNER_MARKERS):
+            nomination["beginners"] = True
+        result.append(nomination)
+    return result
+
+
+def set_age(nomination: dict, min_age: int | None, max_age: int | None) -> None:
+    """Возрастная вилка в номинацию. Взрослые 18+ умолчание и в файл не пишутся (docs/Data.md
+    §2): номинация без min_age и есть взрослая, и фильтр считает так же."""
+    if min_age is None:
+        return
+    if max_age is not None or min_age != DEFAULT_MIN_AGE:
+        nomination["min_age"] = min_age
+    if max_age is not None:
+        nomination["max_age"] = max_age
 
 
 def nominations_from_text(text: str) -> list[dict]:
@@ -107,6 +200,10 @@ def nominations_from_text(text: str) -> list[dict]:
         if not low:
             continue
 
+        # Возраст — то же правило, что у хемагона и портала: «сабля 12-14 лет», «рапира 18+».
+        # Без слова «лет» и без плюса цифры возрастом не считаются (calendar_data.age_from_text).
+        min_age, max_age = age_from_text(fragment)
+
         code = next((c for marker, c in synonyms if marker in low), None)
         # Сокращения таблицы: «л» — длинный меч (в шапке так и написано: «л, сабля, ком»).
         if code is None and low in ("л", "дм"):
@@ -121,6 +218,8 @@ def nominations_from_text(text: str) -> list[dict]:
             previous = result[-1]
             if gender:
                 previous["gender"] = gender
+            if min_age is not None:
+                set_age(previous, min_age, max_age)
             if any(m in low for m in TEAM_MARKERS):
                 previous["team"] = True
             if any(m in low for m in BEGINNER_MARKERS):
@@ -131,6 +230,7 @@ def nominations_from_text(text: str) -> list[dict]:
         nomination: dict = {"weapon": code} if code else {"text": fragment[:120]}
         if gender:
             nomination["gender"] = gender
+        set_age(nomination, min_age, max_age)
         if any(m in low for m in TEAM_MARKERS):
             nomination["team"] = True
         if any(m in low for m in BEGINNER_MARKERS):
@@ -167,19 +267,34 @@ def read_google(sheet_id: str, gid: str) -> list[dict]:
         title = (row.get("Название") or "").strip()
         if not start or not title:
             continue
+        # Ссылок в заявке две — анонс и карточка хемагона, — но раскладывает их не графа, а
+        # содержимое (calendar_data.links_for): заявитель путает графы в обе стороны. «Ссылка»
+        # без уточнения — графа формы до разделения (06.11.2026): таблица, созданная прежней
+        # версией скрипта, отдаёт ещё её.
+        announce, hemagon, extra_link = links_for(
+            row.get("Ссылка на анонс") or row.get("Ссылка"), row.get("Ссылка на хемагон"))
         item = {
             "title": title,
             "starts": start,
             "ends": parse_date(row.get("Дата завершения")) or start,
             "city": (row.get("Город") or "").strip() or None,
             "organizer": (row.get("Организатор") or "").strip() or None,
-            "url": (row.get("Ссылка") or "").strip() or None,
+            "url": announce,
+            "hemagon_url": hemagon,
             # Адрес из формы в календарь не уезжает: публикуется только город
             # (calendar_data.place_for). В листе заявок он остаётся — редактору он нужен,
             # читателю списка нет.
             "place": place_for(row.get("Адрес"), row.get("Город")),
-            "nominations": nominations_from_text(row.get("Номинации") or ""),
+            # Блоки конструктора и свободный хвост складываются: в блоках — то, что заявитель
+            # выбрал полями, в «Номинациях» — что не влезло (экзотическое оружие, номинации
+            # сверх десяти) и всё содержимое таблицы организаторов, где блоков нет вовсе.
+            "nominations": (nominations_from_blocks(row.get(BLOCKS_COLUMN))
+                            + nominations_from_text(row.get("Номинации") or "")),
         }
+        # Третья ссылка в заявку не влезает: полей два. Запоминаем её служебной пометкой —
+        # main() снимет её перед записью и скажет о ней человеку.
+        if extra_link:
+            item["_extra_link"] = extra_link
         # Пустое поле формы НЕ кладём ключом: повторный прогон затёр бы им список, дописанный
         # руками в пул-реквесте, — и делал бы это молча, на каждом ночном импорте.
         co_organizers = split_organizers(row.get("Со-организаторы"))
@@ -257,7 +372,13 @@ def main() -> None:
         if key in skip:
             print(f"  пропускаю «{row['title']}»: {skip[key]}")
             continue
+        # Служебные пометки разбора в файл не уезжают: там разрешены только поля формата.
+        extra_link = row.pop("_extra_link", None)
         importer.put(row, key)
+        if extra_link:
+            importer.warnings.append(
+                f"«{row['title']}»: ссылка «{extra_link}» в файл не уехала — полей два, анонс и "
+                f"карточка хемагона; выберите нужную на пул-реквесте")
 
     print(importer.report())
     if args.dry_run:

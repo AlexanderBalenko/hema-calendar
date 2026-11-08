@@ -14,7 +14,6 @@ idString хемагона. Поля, которых источник не дал
 import argparse
 import json
 import pathlib
-import re
 import sys
 import time
 import urllib.error
@@ -23,6 +22,7 @@ import urllib.request
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
+from calendar_data import DEFAULT_MIN_AGE, age_from_text, links_for  # noqa: E402
 from import_common import Importer  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -75,12 +75,6 @@ BEGINNER_MARKERS = ("нович", "начина", "beginner", "kids", "дет", 
 # написания они уезжали мужскими. Женские маркеры проверяются ПЕРВЫМИ: в «women» сидит «men».
 FEMALE_MARKERS = ("жен", "women", "woman", "female", "девуш", "girls")
 MALE_MARKERS = ("муж", "men", "male", "boys")
-# Возраст обязан быть НАЗВАН словом «лет»/«года», и цифры не должны быть куском числа
-# побольше. Без этого «1880-1890е гг.» в названии лекции превращалось в номинацию
-# «от 80 до 18» (поймано валидацией 06.11.2026), а «11-12 июля» стало бы детским зачётом.
-# Все настоящие возрастные номинации календаря единицу называют: «Сабля 12-14 лет».
-AGE_RANGE = re.compile(r"(?<!\d)(\d{1,2})\s*[-–—]\s*(\d{1,2})\s*(?:лет|год[аов]?)(?!\w)")
-AGE_PLUS = re.compile(r"(?<!\d)(\d{1,2})\s*\+")
 
 
 def get_json(url: str, attempts: int = 3) -> dict:
@@ -119,14 +113,9 @@ def nominations_of(detail: dict) -> list[dict]:
         # маркеры ищем и в нём, а не только в названии номинации.
         low = f"{title} {weapon_raw}".lower()
 
-        min_age = max_age = None
-        match = AGE_RANGE.search(low)
-        if match:
-            min_age, max_age = int(match.group(1)), int(match.group(2))
-        else:
-            match = AGE_PLUS.search(low)
-            if match:
-                min_age = int(match.group(1))
+        # Возраст — общим правилом (calendar_data.age_from_text): оно требует, чтобы возраст
+        # был назван словом, иначе расписание и годы из названия уезжают возрастной вилкой.
+        min_age, max_age = age_from_text(low)
 
         if any(marker in low for marker in FEMALE_MARKERS):
             gender = "female"
@@ -144,7 +133,9 @@ def nominations_of(detail: dict) -> list[dict]:
             nomination["text"] = weapon_raw or title
         if gender != "any":
             nomination["gender"] = gender
-        if min_age is not None:
+        # 18 в файл не пишем: номинация без min_age и есть взрослая (docs/Data.md §2) — так же
+        # поступает портальный перенос, и файлы от разных источников выглядят одинаково.
+        if min_age is not None and (max_age is not None or min_age != DEFAULT_MIN_AGE):
             nomination["min_age"] = min_age
         if max_age is not None:
             nomination["max_age"] = max_age
@@ -210,6 +201,11 @@ def main() -> None:
 
         author = (detail.get("author") or {}).get("name")
         link = (detail.get("link") or {}).get("url")
+        # Своя карточка — в hemagon_url, а не в url: в поле анонса она подписывалась бы на сайте
+        # «Анонсом у организатора», хотя это не он (docs/Calendar.md §3а). Третье значение
+        # links_for здесь всегда пустое или второй адрес того же хемагона — он выводится из
+        # idString, терять нечего.
+        announce, hemagon_url, _ = links_for(link, HEMAGON_PAGE.format(item["idString"]))
 
         importer.put({
             "title": (item.get("title") or "").strip(),
@@ -220,7 +216,8 @@ def main() -> None:
             "city": city_ru,
             "place": None if city_ru else (city_en or None),
             "organizer": (author or "").strip() or None,
-            "url": link or HEMAGON_PAGE.format(item["idString"]),
+            "url": announce,
+            "hemagon_url": hemagon_url,
             "description": (detail.get("description") or "").strip() or None,
             "nominations": nominations_of(detail),
         }, item["idString"])

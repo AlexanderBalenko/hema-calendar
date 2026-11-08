@@ -22,6 +22,16 @@ DATA = ROOT / "data"
 EVENTS = DATA / "events"
 
 GENDERS = {"any", "male", "female"}
+# Номинация без min_age — взрослая. Так в портале (поле обязательное, значение по умолчанию
+# 18), так же считает фильтр по возрасту, и поэтому 18 в файл не пишется: это умолчание.
+DEFAULT_MIN_AGE = 18
+
+# Возраст обязан быть НАЗВАН словом «лет»/«года» или плюсом, и цифры не должны быть куском
+# числа побольше. Без этого «1880-1890е гг.» в названии лекции превращалось в номинацию «от 80
+# до 18» (поймано валидацией 06.11.2026), а «сб 18:00 - 20:30» — в детский зачёт 0–20.
+# Все настоящие возрастные номинации единицу называют: «Сабля 12-14 лет», «Рапира 15+».
+AGE_RANGE = re.compile(r"(?<!\d)(\d{1,2})\s*[-–—]\s*(\d{1,2})\s*(?:лет|год[аов]?)(?!\w)", re.I)
+AGE_PLUS = re.compile(r"(?<!\d)(\d{1,2})\s*\+")
 SOURCES = {"portal", "hemagon", "spreadsheet", "submission", "manual"}
 
 EVENT_KEYS = {"title", "starts", "ends", "city", "place", "organizer", "co_organizers", "url",
@@ -111,6 +121,61 @@ def place_for(place, city) -> str | None:
     if not text:
         return None
     return None if str(city or "").strip() else text
+
+
+def links_for(announce, hemagon) -> tuple[str | None, str | None, str | None]:
+    """Две ссылки турнира по своим полям: карточка хемагона — в `hemagon_url`, анонс — в `url`.
+
+    Место ссылки решает сама ссылка, а не графа, из которой она приехала: заявитель кладёт
+    карточку хемагона в графу анонса не реже, чем наоборот, а портал годами клал её туда же
+    (292 события из 313). Признак один — «hemagon.» в адресе; на сайте эти две ссылки подписаны
+    по-разному («Анонс у организатора» и «Турнир на Хемагоне»), и перепутанные врут читателю.
+
+    Третьим возвращается ссылка, которой не нашлось поля: две не-хемагоновские ссылки сразу
+    (сайт турнира в графе хемагона) — такое выбрасывать молча нельзя, о ней скажет отчёт
+    импорта, и человек на пул-реквесте решит, какая нужнее.
+    """
+    url = hemagon_url = extra = None
+    for value in (announce, hemagon):
+        value = str(value or "").strip()
+        if not value:
+            continue
+        if "hemagon." in value:
+            if hemagon_url is None:
+                hemagon_url = value
+            elif value != hemagon_url:
+                extra = value
+        elif url is None:
+            url = value
+        elif value != url:
+            extra = value
+    return url, hemagon_url, extra
+
+
+def age_from_text(text) -> tuple[int | None, int | None]:
+    """Возрастная вилка из названия номинации: «12-14 лет» → (12, 14), «15+» → (15, None).
+
+    Разбирается ровно два написания, и это не лень, а замер по живым данным (1625 номинаций с
+    текстом): «N-M лет» — 171 штука, «N+» — 7. А вот «до N лет» разбирать НЕЛЬЗЯ, хотя оно
+    встречается 10 раз: в большинстве это не возраст, а стаж — «меч и баклер новички до 3 лет».
+    Прочитав его возрастом, календарь завёл бы номинацию для трёхлетних. «от N лет» и «U17» в
+    данных не встречаются ни разу.
+
+    Верхняя граница без нижней не возвращается никогда: номинация без min_age считается
+    взрослой, и один max_age задал бы пустой диапазон 18…max (проверка данных это и ловит).
+    """
+    low = str(text or "")
+    match = AGE_RANGE.search(low)
+    if match:
+        return int(match.group(1)), int(match.group(2))
+    match = AGE_PLUS.search(low)
+    return (int(match.group(1)), None) if match else (None, None)
+
+
+def drop_age(text) -> str:
+    """Тот же текст без возрастной записи. Нужен разбору свободного текста: по остатку видно,
+    номинация это или уточнение к предыдущей («сабля, 12-14 лет» — одна номинация, не две)."""
+    return AGE_PLUS.sub(" ", AGE_RANGE.sub(" ", str(text or "")))
 
 
 def _read(path: pathlib.Path):
@@ -268,6 +333,12 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
         hemagon = event.get("hemagon_url")
         if hemagon is not None and "hemagon." not in str(hemagon):
             error(f"{where}: hemagon_url = «{hemagon}» — это не ссылка на хемагон")
+        # Обратное правило (calendar_data.links_for): карточка хемагона в поле анонса
+        # подписывается на сайте «Анонсом у организатора», хотя это не он. Раскладывают ссылки
+        # импорты, а держит правило эта проверка — иначе оно вернётся первым же новым источником.
+        announce = event.get("url")
+        if announce is not None and "hemagon." in str(announce):
+            error(f"{where}: url = «{announce}» — это карточка хемагона, её поле hemagon_url")
 
         source = event.get("source", "manual")
         if source not in SOURCES:
