@@ -9,6 +9,7 @@ import {
   type EventBodyStyle,
 } from '@/src/lib/month-layout';
 import { formatOrganizers, formatPlace, weaponSummary } from '@/src/lib/text';
+import { hoverProps } from './event-hover';
 import { WeaponIcon } from './weapon-icon';
 
 /**
@@ -78,7 +79,8 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
   return (
     <Link
       href={`/events/${event.slug}`}
-      title={event.isSuitable ? undefined : `Не подходит: ${event.unsuitableReason}`}
+      // Ховер-карточка вместо прежней подсказки «не подходит»: в ней и причина, и номинации.
+      {...hoverProps(event)}
       className={`group relative flex min-h-11 items-center gap-2 rounded-md px-2 py-1 transition-colors ${row}`}
     >
       <span className={`w-28 shrink-0 text-right text-xs tabular-nums ${secondary}`}>
@@ -86,11 +88,10 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
       </span>
       <span className="min-w-0 flex-1 truncate text-sm font-medium">{event.title}</span>
       {/* Колонки справа убираются по мере сужения экрана: на телефоне остаются дата и
-          название, остальное есть на странице турнира. */}
-      <span
-        className={`hidden w-[170px] shrink-0 items-center gap-1 md:flex ${secondary}`}
-        title={weapons.join(' · ')}
-      >
+          название, остальное есть на странице турнира. Подсказки со списком оружия здесь
+          больше нет: по наведению на строку встаёт ховер-карточка с полным составом
+          номинаций, и две всплывашки спорили бы. */}
+      <span className={`hidden w-[170px] shrink-0 items-center gap-1 md:flex ${secondary}`}>
         {weaponCodes.slice(0, 4).map((code) => <WeaponIcon key={code} code={code} size={16} />)}
         {weaponCodes.length > 4 && <span className="text-[10px] leading-none">+{weaponCodes.length - 4}</span>}
         {/* Номинация без вида оружия (катана, триатлон) пиктограммы не имеет — для таких

@@ -5,6 +5,7 @@ import { memo, useLayoutEffect, useRef, useState } from 'react';
 
 import type { CalendarEvent } from '@/src/lib/data';
 import { formatOrganizers, formatPlace } from '@/src/lib/text';
+import { hoverProps } from './event-hover';
 import {
   MAX_THREAD_LANES,
   MONTH_LABELS,
@@ -253,9 +254,9 @@ function EventBlock({
   return (
     <Link
       href={`/events/${event.slug}`}
-      // Причина «не подходит» — словами и прямо на плашке: пока ховер-карточки нет, это
-      // единственное место, где человек узнаёт, почему турнир показан неактивным.
-      title={event.isSuitable ? undefined : `Не подходит: ${event.unsuitableReason}`}
+      // Ховер-карточка: название, место, организатор, номинации и причина «не подходит».
+      // Прежняя подсказка плашки (title) убрана — иначе по наведению спорят две всплывашки.
+      {...hoverProps(event)}
       className={`group relative ${className}`}
       style={style}
     >

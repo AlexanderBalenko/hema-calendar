@@ -78,7 +78,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
                 {n.weapon}
                 <span className="text-text-muted">
                   {` · ${GENDER_LABEL[n.gender] ?? n.gender}`}
-                  {n.isTeam && ' · команда'}
+                  {n.isTeam && ' · командная'}
                   {n.isBeginnerFriendly && ' · новички'}
                   {n.minAge != null && ` · от ${n.minAge}`}
                   {n.maxAge != null && ` до ${n.maxAge}`}

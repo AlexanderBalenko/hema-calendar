@@ -3,7 +3,6 @@ import Link from 'next/link';
 import type { SelectedEvent } from '@/src/lib/filters';
 import {
   eventBodyStyle,
-  formatDateRange,
   layoutMonth,
   MONTH_LABELS,
   type EventBodyStyle,
@@ -11,7 +10,7 @@ import {
   type MonthSegment,
   type MonthWeekLayout,
 } from '@/src/lib/month-layout';
-import { formatPlace } from '@/src/lib/text';
+import { hoverProps } from './event-hover';
 
 /**
  * Вид «Месяц»: один месяц на экран, семь равных колонок, полосы-сегменты вместо баров и нитей.
@@ -122,14 +121,14 @@ const BODY_CLASS: Record<EventBodyStyle, string> = {
 function Segment({ segment, today }: { segment: MonthSegment<SelectedEvent>; today: string }) {
   const { event } = segment;
   const isPast = event.endsAt < today;
-  const place = formatPlace(event.city, event.locationManual);
   const width = (segment.endColumn - segment.startColumn + 1) / 7;
-  const reason = event.isSuitable ? '' : ` · не подходит: ${event.unsuitableReason}`;
 
   return (
     <Link
       href={`/events/${event.slug}`}
-      title={`${event.title} · ${formatDateRange(event.startsAt, event.endsAt)}${place ? ` · ${place}` : ''}${reason}`}
+      // Прежняя подсказка (название, даты, место, причина «не подходит») заменена ховер-карточкой:
+      // в ней то же самое плюс номинации, и она не ждёт секунду, как браузерный title.
+      {...hoverProps(event)}
       className={[
         'absolute flex items-center overflow-hidden px-1.5 text-[11px] transition-colors',
         // Обрезанный край — сигнал продолжения: с той стороны полоса остаётся прямоугольной.

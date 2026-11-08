@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Inter, Playfair_Display } from 'next/font/google';
 
+import { EventHoverCard } from '@/src/components/event-hover';
 import { ThemeSwitcher } from '@/src/components/theme-switcher';
 import { BUILT_AT, EVENTS } from '@/src/lib/data';
 import { formatDateRange } from '@/src/lib/month-layout';
@@ -66,6 +67,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "try{if(localStorage.getItem('hema_theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}",
           }}
         />
+        {/* Слой ховер-карточки турнира — один на весь сайт: она рисуется порталом в body,
+            поэтому где её смонтировать, роли не играет, а дублировать по видам незачем. */}
+        <EventHoverCard />
         {/* Шапка повторяет портальную: липкая, высотой 64px, с размытием под полупрозрачным
             фоном и тем же логотипом. */}
         <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md">
