@@ -152,10 +152,23 @@ function Calendar({ params }: { params: RawParams }) {
 
   // --- вверх, в прошлое ----------------------------------------------------------------------
   // Подгрузка сверху добавляет содержимое НАД видимой областью, и браузер уезжает вместе с ним.
-  // Поэтому перед ростом запоминаем высоту страницы, а сразу после отрисовки (до кадра, в
-  // useLayoutEffect) доматываем на разницу: лента под курсором остаётся на месте.
+  // Поэтому перед ростом запоминаем ЯКОРЬ — верхнюю видимую плашку и её место на экране, — а
+  // сразу после отрисовки возвращаем её туда же.
+  //
+  // Якорь, а не прирост высоты страницы: прирост обманывает. Часть подгруженного встаёт НИЖЕ
+  // того, на что человек смотрит, — турнир прошлого с тем же днём начала, что у первой видимой
+  // строки, садится под ней, — и на эту разницу страницу дёргало при каждой подгрузке (замечание
+  // заказчика 08.11.2026 про «лютые перескоки»; замер в списке: 97px мимо из 995).
   const topSentinelRef = useRef<HTMLDivElement>(null);
-  const heightBeforeGrow = useRef<number | null>(null);
+  const scrollAnchor = useRef<{ href: string; top: number } | null>(null);
+
+  /** Верхняя видимая плашка турнира и её место на экране — то, что обязано остаться на месте. */
+  const rememberScrollAnchor = () => {
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('main a[href*="/events/"]'));
+    const node = links.find((link) => link.getBoundingClientRect().top >= 0) ?? links[0];
+    const href = node?.getAttribute('href');
+    scrollAnchor.current = href ? { href, top: node.getBoundingClientRect().top } : null;
+  };
   // Верхний сентинел в начале ленты виден сразу при загрузке, и без этой задержки лента
   // подгружала бы прошлое сама, до единого движения человека.
   //
@@ -204,7 +217,7 @@ function Calendar({ params }: { params: RawParams }) {
       const next = Math.min(Math.max(step, reach), MAX_RIBBON_WEEKS);
       if (next <= requestedBack.current) return;
       requestedBack.current = next;
-      heightBeforeGrow.current = document.documentElement.scrollHeight;
+      rememberScrollAnchor();
       grow({ back: next });
     }, { rootMargin: '600px' });
     observer.observe(node);
@@ -213,10 +226,15 @@ function Calendar({ params }: { params: RawParams }) {
   }, [canGrowBack, prevStart, anchorWeek, params, today, movedOnce]);
 
   useLayoutEffect(() => {
-    if (heightBeforeGrow.current === null) return;
-    const delta = document.documentElement.scrollHeight - heightBeforeGrow.current;
-    heightBeforeGrow.current = null;
-    if (delta > 0) window.scrollBy({ top: delta, behavior: 'instant' as ScrollBehavior });
+    const anchor = scrollAnchor.current;
+    scrollAnchor.current = null;
+    if (!anchor) return;
+    const node = document.querySelector(`main a[href="${anchor.href}"]`);
+    if (!node) return;
+    // Доматываем ровно на то, насколько уехал ЯКОРЬ, и до кадра (useLayoutEffect) — иначе
+    // человек успевает увидеть скачок.
+    const delta = node.getBoundingClientRect().top - anchor.top;
+    if (delta !== 0) window.scrollBy({ top: delta, behavior: 'instant' as ScrollBehavior });
   }, [filters.back]);
 
   return (

@@ -178,6 +178,33 @@ test.describe('Календарь', () => {
     await expect.poll(() => rows.count()).toBeGreaterThan(before);
   });
 
+  test('подтягивая прошлое, список не дёргается под руками', async ({ page }) => {
+    // Компенсация прокрутки раньше считалась по ПРИРОСТУ ВЫСОТЫ страницы и промахивалась:
+    // турнир прошлого с тем же днём начала, что у верхней видимой строки, садится ПОД ней, и
+    // эта часть прироста выше якоря не встаёт. Замер на живой странице: 97px мимо из 995 на
+    // первой же подгрузке, и так на каждой — заказчик назвал это «лютыми перескоками».
+    await page.goto('?view=list');
+    await page.waitForLoadState('load');
+    const rows = page.locator('a[href*="/events/"]');
+    const before = await rows.count();
+    const probe = await page.evaluate(() => {
+      const all = Array.from(document.querySelectorAll('main a[href*="/events/"]'));
+      const node = all.find((row) => row.getBoundingClientRect().top >= 0) ?? all[0];
+      return { href: node.getAttribute('href'), top: Math.round(node.getBoundingClientRect().top) };
+    });
+
+    await page.mouse.move(400, 300);
+    await page.mouse.wheel(0, -600);
+    await expect.poll(() => rows.count()).toBeGreaterThan(before);
+
+    const moved = await page.evaluate((href) => {
+      const node = document.querySelector(`main a[href="${href}"]`);
+      return node ? Math.round(node.getBoundingClientRect().top) : null;
+    }, probe.href);
+    expect(moved, 'якорная строка осталась на месте').not.toBeNull();
+    expect(Math.abs((moved ?? 0) - probe.top)).toBeLessThanOrEqual(24);
+  });
+
   test('подписи баров, доходящих до правого края, стоят на одной вертикали', async ({ page }) => {
     // Бар с аннексированным понедельником физически продлён на ширину хвоста, и его правый
     // текст дважды оказывался не там: сначала уезжал под хвостовую плашку и обрывался, потом
