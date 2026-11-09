@@ -1,18 +1,11 @@
 title: Black&White Fest
 starts: 2026-04-18
 ends: 2026-04-19
+type: festival
 city: Ярославль
 organizer: Белый Отряд (Яр)
 source: portal
 source_key: black-white-fest-2026
-nominations:
-- weapon: longsword
-  gender: male
-  notes: Фестиваль
-- weapon: longsword
-  gender: female
-  notes: Фестиваль
-- weapon: saber
-  gender: male
-- weapon: saber
-  gender: female
+weapons:
+- longsword
+- saber

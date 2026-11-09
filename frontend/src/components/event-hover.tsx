@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 
 import type { CalendarEvent } from '@/src/lib/data';
 import { formatOrganizers, formatPlace } from '@/src/lib/text';
+import { EventKindIcon, kindWord } from './event-kind';
 
 /**
  * Карточка турнира по наведению (просьба заказчика 08.11.2026): название, город, организатор и
@@ -93,11 +94,14 @@ function Card({ event, rect }: Shown) {
   const noms = event.nominations ?? [];
   const visible = noms.slice(0, LIMIT);
   const rest = noms.length - visible.length;
+  const declared = event.weapons ?? [];
+  const subtitle = [kindWord(event.kind), event.online ? 'онлайн' : null].filter(Boolean).join(', ');
 
   // Высота считается, а не измеряется: карточку надо поставить до первой отрисовки, иначе она
   // мигнёт внизу и перепрыгнет наверх. Строки здесь одинаковой высоты, и прикидка точна.
   const lines = visible.length + (rest > 0 ? 1 : 0);
-  const height = 58 + (noms.length > 0 ? 26 + lines * 18 : 0) + (event.unsuitableReason ? 18 : 0);
+  const height = 58 + (noms.length > 0 ? 26 + lines * 18 : 0)
+    + (declared.length > 0 ? 26 + 18 : 0) + (event.unsuitableReason ? 18 : 0);
   const left = Math.min(Math.max(GAP, rect.left), window.innerWidth - WIDTH - GAP);
   const below = rect.bottom + GAP;
   const top = below + height > window.innerHeight - GAP
@@ -112,13 +116,32 @@ function Card({ event, rect }: Shown) {
       style={{ left, top, width: WIDTH }}
       role="tooltip"
     >
-      <div className="text-sm font-medium leading-snug text-foreground">{event.title}</div>
-      {place && <div className="mt-0.5 text-text-muted">{place}</div>}
+      <div className="flex items-start gap-1.5 text-sm font-medium leading-snug text-foreground">
+        <EventKindIcon kind={event.kind} className="mt-1 size-3 shrink-0 text-primary" />
+        <span className="min-w-0">{event.title}</span>
+      </div>
+      {/* Тип стоит в строке места, а не своей: «лагерь · Алтайский край» — одна строка вместо
+          двух, и читается как ответ на вопрос «что и где». У онлайна места нет, и строка
+          становится «лекция · онлайн». */}
+      {(place || subtitle) && (
+        <div className="mt-0.5 text-text-muted">{[subtitle, place].filter(Boolean).join(' · ')}</div>
+      )}
       {organizers && <div className="text-text-muted">{organizers}</div>}
       {/* Причина «не подходит» переехала сюда из подсказки плашки: по наведению не должны
           спорить две всплывашки. */}
       {event.unsuitableReason && (
         <div className="mt-1 text-text-faint">Не подходит: {event.unsuitableReason}</div>
+      )}
+
+      {/* Дисциплины не-турнира: у феста или лагеря зачётов нет, и это единственное, что о его
+          оружии известно. Одной строкой — списков у них по две-три позиции. */}
+      {declared.length > 0 && (
+        <div className="mt-2 border-t border-border pt-2">
+          <div className="mb-1 text-[11px] text-text-faint">Дисциплины</div>
+          <div className="leading-snug text-foreground">
+            {declared.map((weapon) => weapon.name).join(' · ')}
+          </div>
+        </div>
       )}
 
       {noms.length > 0 && (

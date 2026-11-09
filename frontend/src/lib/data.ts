@@ -21,11 +21,26 @@ export type Nomination = {
   notes?: string | null;
 };
 
+/**
+ * Тип мероприятия живёт в `kinds.ts` — в YAML поле называется `type`, на проводе `kind`, как у
+ * портального `EventKindIcon`. Реэкспорт, чтобы у читателя модели всё было под рукой.
+ */
+export { KIND_LABEL, KIND_ORDER, type EventKind } from './kinds.ts';
+import type { EventKind } from './kinds.ts';
+
 export type CalendarEvent = {
   slug: string;
   title: string;
   startsAt: string;
   endsAt: string;
+  kind: EventKind;
+  /**
+   * Дисциплины, заявленные списком. Бывают только у не-турниров: оружие турнира несут его
+   * номинации, и второго источника правды у него нет (см. `docs/EventTypes.md` §3.2).
+   */
+  weapons?: { name: string; code: string }[];
+  /** Онлайн-событие: места у него нет вовсе, и фильтр по региону оно проходит любой. */
+  online?: boolean;
   city: string | null;
   macroRegion: string | null;
   countryCode: string | null;
@@ -44,6 +59,8 @@ export type Directories = {
   weapons: { id: number; name: string; code: string }[];
   cities: { id: number; name: string; macroRegion: string; countryCode: string }[];
   macroRegions: string[];
+  /** Типы, которые реально встречаются в календаре. Один тип — фильтр не рисуется. */
+  kinds: EventKind[];
 };
 
 type CalendarFile = { events: CalendarEvent[]; directories: Directories; builtAt: string };

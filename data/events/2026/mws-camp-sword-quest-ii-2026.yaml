@@ -1,14 +1,10 @@
 title: 'MwS Camp: "Sword Quest II"'
 starts: 2026-04-30
 ends: 2026-05-03
+type: camp
 place: Калужская область
 organizer: Men with Swords
 source: portal
 source_key: mws-camp-sword-quest-ii-2026
-nominations:
-- weapon: longsword
-  gender: male
-  notes: Лагерь
-- weapon: longsword
-  gender: female
-  notes: Лагерь
+weapons:
+- longsword

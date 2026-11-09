@@ -10,6 +10,7 @@ import {
 } from '@/src/lib/month-layout';
 import { formatOrganizers, formatPlace, weaponSummary } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
+import { EventKindIcon, kindWord } from './event-kind';
 import { WeaponIcon } from './weapon-icon';
 
 /**
@@ -70,7 +71,13 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
   const weapons = weaponSummary(event.nominations);
   // Пиктограммы — по порядку номинаций, без повторов: подряд идущие зачёты одного вида оружия
   // (личный и командный) не должны съесть все четыре места.
-  const weaponCodes = [...new Set(event.nominations.map((n) => n.weaponCode).filter((c): c is string => !!c))];
+  // Дисциплины не-турнира идут сюда наравне с номинационными: для феста без турнира внутри
+  // этот список — единственное, что о его оружии известно, и без него колонка стояла бы пустой
+  // как раз у тех событий, ради которых типы и заводились.
+  const weaponCodes = [...new Set([
+    ...event.nominations.map((n) => n.weaponCode).filter((c): c is string => !!c),
+    ...(event.weapons ?? []).map((w) => w.code),
+  ])];
 
   const style = eventBodyStyle(event.isSuitable, isPast);
   const row = BODY_CLASS[style];
@@ -86,7 +93,13 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
       <span className={`w-28 shrink-0 text-right text-xs tabular-nums ${secondary}`}>
         {formatDateRange(event.startsAt, event.endsAt)}
       </span>
-      <span className="min-w-0 flex-1 truncate text-sm font-medium">{event.title}</span>
+      <span className="flex min-w-0 flex-1 items-center gap-1.5">
+        <EventKindIcon kind={event.kind} />
+        <span className="truncate text-sm font-medium">{event.title}</span>
+        {kindWord(event.kind) && (
+          <span className={`shrink-0 text-xs ${secondary}`}>· {kindWord(event.kind)}</span>
+        )}
+      </span>
       {/* Колонки справа убираются по мере сужения экрана: на телефоне остаются дата и
           название, остальное есть на странице турнира. Подсказки со списком оружия здесь
           больше нет: по наведению на строку встаёт ховер-карточка с полным составом

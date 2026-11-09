@@ -19,7 +19,8 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from calendar_data import ROOT, load_cities, load_events, load_weapons, validate  # noqa: E402
+from calendar_data import (DEFAULT_TYPE, ROOT, TYPE_ORDER, load_cities, load_events,  # noqa: E402
+                           load_weapons, validate)
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -64,6 +65,13 @@ def main() -> None:
                 "notes": nomination.get("notes"),
             })
 
+        # Дисциплины, заявленные списком: только у не-турниров (у турнира их несут номинации).
+        declared = []
+        for code in event.get("weapons") or []:
+            weapon = weapon_by_code.get(code)
+            if weapon:
+                declared.append({"name": weapon["name"], "code": code})
+
         out_events.append({
             # Слаг и есть опознаватель: отдельного id в файлах нет и не нужно.
             "id": event["slug"],
@@ -72,7 +80,10 @@ def main() -> None:
             "startsAt": iso(event["starts"]),
             "endsAt": iso(event.get("ends", event["starts"])),
             "city": city["name"] if city else None,
-            "macroRegion": city["region"] if city else None,
+            # Макрорегион у события с городом выводится из справочника, у события с обобщённым
+            # местом («Алтайский край», «Калужская область») берётся из поля region: из строки
+            # его не вывести. Тот же приём, что у портального MacroRegionOverride.
+            "macroRegion": city["region"] if city else event.get("region"),
             "countryCode": city.get("country", "RU") if city else None,
             "locationManual": event.get("place"),
             "organizerName": event.get("organizer"),
@@ -84,13 +95,29 @@ def main() -> None:
             "externalUrl": event.get("url"),
             "hemagonUrl": event.get("hemagon_url"),
             "description": event.get("description"),
+            # Тип на проводе называется kind, а в файле type: так же, как place → locationManual
+            # и organizer → organizerName. Имя взято у портального EventKindIcon, чтобы
+            # одинаковое называлось одинаково в обоих проектах.
+            "kind": event.get("type", DEFAULT_TYPE),
+            # Дисциплины не-турнира. Пустой список не пишем вовсе — он есть у 97% событий и в
+            # указателе весил бы больше, чем значит.
+            **({"weapons": declared} if declared else {}),
+            **({"online": True} if event.get("online") else {}),
             "nominations": nominations,
         })
 
     # Справочники для фильтров: только то, что реально встречается в календаре. Список из 195
     # городов, где турниров не было никогда, фильтру не нужен — он его только раздувает.
     used_cities = {e["city"] for e in out_events if e["city"]}
-    used_codes = {n["weaponCode"] for e in out_events for n in e["nominations"] if n["weaponCode"]}
+
+    def weapon_codes_of(event: dict) -> set[str]:
+        """Оружие события — объединение номинаций и заявленных дисциплин. Ровно то же правило
+        считает отбор на фронте (`filters.ts`): у турнира второе слагаемое пустое по модели, у
+        феста без номинаций — первое."""
+        codes = {n["weaponCode"] for n in event["nominations"] if n["weaponCode"]}
+        return codes | {w["code"] for w in event.get("weapons") or []}
+
+    used_codes = {code for e in out_events for code in weapon_codes_of(e)}
 
     # Порядок видов оружия в фильтре — по распространённости, а не по алфавиту: длинный меч,
     # сабля и рапира есть в сотнях турниров, кинжал и мессер — в единицах, и прокручивать до
@@ -103,7 +130,7 @@ def main() -> None:
     # одинаковым числом турниров менялись бы местами от сборки к сборке.
     events_with_weapon: dict[str, int] = {}
     for event in out_events:
-        for code in {n["weaponCode"] for n in event["nominations"] if n["weaponCode"]}:
+        for code in weapon_codes_of(event):
             events_with_weapon[code] = events_with_weapon.get(code, 0) + 1
     by_popularity = sorted(
         (w for w in weapons if w["code"] in used_codes),
@@ -116,7 +143,13 @@ def main() -> None:
         "cities": [{"id": i, "name": c["name"], "macroRegion": c["region"],
                     "countryCode": c.get("country", "RU")}
                    for i, c in enumerate(cities, 1) if c["name"] in used_cities],
-        "macroRegions": sorted({c["region"] for c in cities if c["name"] in used_cities}),
+        # Считаем по событиям, а не по городам: регион бывает и у события без города
+        # (лагерь на загородной базе), и такой регион обязан быть в фильтре.
+        "macroRegions": sorted({e["macroRegion"] for e in out_events if e["macroRegion"]}),
+        # Типы — только встречающиеся, и в осмысленном порядке, а не по алфавиту. Пока в
+        # календаре одни турниры, список из одного значения: фильтр с единственным вариантом
+        # ничего не отбирает, и фронт его не рисует вовсе.
+        "kinds": [kind for kind in TYPE_ORDER if kind in {e["kind"] for e in out_events}],
     }
 
     built_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
@@ -142,7 +175,7 @@ def main() -> None:
                                for n in event["nominations"]]
         index_events.append(slim)
 
-    print(f"турниров {len(out_events)}, городов в фильтре {len(directories['cities'])}, "
+    print(f"событий {len(out_events)}, городов в фильтре {len(directories['cities'])}, "
           f"видов оружия {len(directories['weapons'])}")
     write("calendar.json", {"events": index_events, "directories": directories, "builtAt": built_at})
     write("events.json", {"events": out_events, "builtAt": built_at})

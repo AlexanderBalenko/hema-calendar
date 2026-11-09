@@ -34,8 +34,27 @@ AGE_RANGE = re.compile(r"(?<!\d)(\d{1,2})\s*[-–—]\s*(\d{1,2})\s*(?:лет|г
 AGE_PLUS = re.compile(r"(?<!\d)(\d{1,2})\s*\+")
 SOURCES = {"portal", "hemagon", "spreadsheet", "submission", "manual"}
 
-EVENT_KEYS = {"title", "starts", "ends", "city", "place", "organizer", "co_organizers", "url",
-              "hemagon_url", "description", "source", "source_key", "nominations"}
+# Типы мероприятий — подмножество EventType портала, которое вообще может оказаться в календаре.
+# Хозяйственных форматов (уборка, экзамен) здесь нет и быть не может: в портале им разрешена
+# единственная аудитория «своим», а календарь требует «Сообществу». Открытые тренировки и дни
+# открытых дверей не пускает сам портал (решение заказчика 09.11.2026): у клуба с недельным
+# ритмом они дали бы полсотни записей в год.
+TYPE_ORDER = ["tournament", "festival", "camp", "seminar", "lecture", "other"]
+TYPES = set(TYPE_ORDER)
+# Отсутствие поля означает «турнир». Умолчание в файл не пишется — тот же приём, что у min_age
+# номинации: строка type: tournament появилась бы в четырёх сотнях файлов и ничего бы не
+# сообщила. Цена: тип турнира не виден в файле глазами.
+DEFAULT_TYPE = "tournament"
+# Номинация — это ЗАЧЁТ. У феста и лагеря он законен (турнир внутри феста), у лекции и семинара
+# зачётов не бывает вовсе.
+TYPES_WITH_NOMINATIONS = {"tournament", "festival", "camp"}
+# Онлайн бывает у того, чему не нужна площадка. Лагерь или турнир онлайн — абсурд, но данные о
+# нём сохраняем (предупреждение, не ошибка): молчать о странном нельзя, а терять его — тем более.
+TYPES_ONLINE = {"seminar", "lecture", "other"}
+
+EVENT_KEYS = {"title", "starts", "ends", "type", "city", "place", "region", "online",
+              "organizer", "co_organizers", "url", "hemagon_url", "description",
+              "source", "source_key", "weapons", "nominations"}
 NOMINATION_KEYS = {"weapon", "text", "gender", "min_age", "max_age", "team", "beginners", "notes"}
 
 # Слова, которые в названии турнира ничего не различают: по ним два разных турнира выглядели бы
@@ -50,8 +69,9 @@ class DataError(Exception):
 
 # Порядок полей в файле: сначала то, что человек читает первым. Задаётся здесь, чтобы файлы
 # от импорта и от руки выглядели одинаково — иначе дифф пул-реквеста полон перестановок.
-FIELD_ORDER = ["title", "starts", "ends", "city", "place", "organizer", "co_organizers", "url",
-               "hemagon_url", "description", "source", "source_key", "nominations"]
+FIELD_ORDER = ["title", "starts", "ends", "type", "city", "place", "region", "online",
+               "organizer", "co_organizers", "url", "hemagon_url", "description",
+               "source", "source_key", "weapons", "nominations"]
 NOMINATION_ORDER = ["weapon", "text", "gender", "min_age", "max_age", "team", "beginners", "notes"]
 
 
@@ -275,6 +295,9 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
     """
     problems: list[tuple[str, str]] = []
     city_names = {c["name"].lower() for c in cities}
+    # Макрорегионы не отдельный справочник: это множество значений, которые уже проставлены
+    # городам. Заводить второй список значило бы держать два места, которые разойдутся.
+    region_names = {c["region"] for c in cities}
     weapon_codes = {w["code"] for w in weapons}
     seen_source_keys: dict[tuple[str, str], str] = {}
     by_day: dict[str, list[dict]] = {}
@@ -294,6 +317,22 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
         title = str(event.get("title") or "").strip()
         if len(title) < 3:
             error(f"{where}: название обязательно")
+
+        kind = event.get("type", DEFAULT_TYPE)
+        if kind not in TYPES:
+            error(f"{where}: type «{kind}» — ожидается одно из {sorted(TYPES)}")
+            kind = DEFAULT_TYPE
+        if event.get("type") == DEFAULT_TYPE:
+            # Не придирка к стилю: умолчание, записанное явно, назавтра разойдётся с умолчанием
+            # в коде, и файл начнёт утверждать то, чего не имел в виду.
+            warn(f"{where}: type: {DEFAULT_TYPE} — это умолчание, строка лишняя")
+
+        online = event.get("online")
+        if online is not None and not isinstance(online, bool):
+            error(f"{where}: online = «{online}» — ожидается true или false")
+            online = bool(online)
+        if online and kind not in TYPES_ONLINE:
+            warn(f"{where}: online у типа «{kind}» — так не бывает; данные оставлены как есть")
 
         try:
             starts = _as_date(event.get("starts"), where, "starts")
@@ -315,10 +354,27 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
             # Правило place_for выше: при известном городе адреса в данных нет вовсе.
             error(f"{where}: при заполненном city поле place не нужно — календарь показывает "
                   f"только город (сейчас place: «{event['place']}»)")
-        if not city and not event.get("place"):
+        if not city and not event.get("place") and not online:
             # Предупреждение, а не ошибка: так приезжают старые турниры, у которых источник не
             # дал города. Выдумывать место нельзя, прятать турнир — тоже.
             warn(f"{where}: нет ни city, ни place — источник не дал места")
+
+        region = event.get("region")
+        if region is not None and region not in region_names:
+            error(f"{where}: region «{region}» — ожидается один из {sorted(region_names)}")
+        if region and city:
+            # Регион выводится из города справочником. Второй источник того же значения
+            # разойдётся с первым на первой же правке — ровно тот дефект, из-за которого в
+            # портале дисциплины турнира берутся из номинаций, а не отдельным списком.
+            error(f"{where}: при заполненном city поле region не нужно — регион берётся из "
+                  f"справочника городов")
+        if online and (city or event.get("place") or region):
+            error(f"{where}: online: true и место одновременно — онлайн-событие не в городе")
+        if not city and not online and event.get("place") and not region:
+            # Не ошибка: так лежат события, приехавшие до того, как перенос научился забирать
+            # макрорегион. Но молчать нельзя — без региона событие выпадает из фильтра по
+            # регионам для всех, кто его хоть раз тронул.
+            warn(f"{where}: место без region — событие не пройдёт фильтр по региону")
 
         # Со-организаторы: турнир часто делают два клуба вместе, и второй обязан быть назван —
         # иначе его работу припишут первому. Главный остаётся в organizer: он отвечает за турнир
@@ -360,7 +416,34 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
                 error(f"{where}: такой же source_key уже у {seen_source_keys[pair]}")
             seen_source_keys[pair] = where
 
-        for index, nomination in enumerate(event.get("nominations") or [], 1):
+        nominations = event.get("nominations") or []
+        declared = event.get("weapons")
+        if declared is not None:
+            if not isinstance(declared, list) or not all(isinstance(code, str) for code in declared):
+                error(f"{where}: weapons — список кодов оружия")
+                declared = []
+            else:
+                for code in declared:
+                    if code not in weapon_codes:
+                        error(f"{where}: оружия «{code}» нет в data/weapons.yaml")
+                if len(set(declared)) != len(declared):
+                    error(f"{where}: в weapons повторяется один и тот же код")
+            if kind == DEFAULT_TYPE:
+                # Дисциплины турнира несут его номинации — так и в портале
+                # (EventsService.ResolveWeaponIds), и по той же причине: иначе появится второй
+                # источник правды, и первый же турнир, где список разойдётся с номинациями,
+                # покажет в фильтре не то, что в карточке.
+                error(f"{where}: weapons у турнира не бывает — оружие турнира задают номинации")
+        if nominations and kind not in TYPES_WITH_NOMINATIONS:
+            error(f"{where}: номинации у типа «{kind}» — это зачёты, их там не бывает; "
+                  f"дисциплины пишутся в weapons")
+        if nominations and kind != DEFAULT_TYPE and not declared:
+            # Форма ошибки Fencing Fest 2026: турнир внутри заявлен, а программа — нет, и фест
+            # выглядит мероприятием по одному клинку.
+            warn(f"{where}: у типа «{kind}» есть номинации, но пустой weapons — заявлен турнир "
+                 f"внутри, а программа мероприятия нет")
+
+        for index, nomination in enumerate(nominations, 1):
             at = f"{where}: номинация {index}"
             if not isinstance(nomination, dict):
                 error(f"{at}: ожидался набор полей")

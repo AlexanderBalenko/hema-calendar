@@ -279,7 +279,7 @@ test.describe('Календарь', () => {
     expect(onlySuitable).toBeGreaterThan(0);
     const suitable = new Set(await rows.evaluateAll((els) => els.map((e) => e.getAttribute('href'))));
 
-    await page.getByTitle('Показывать неподходящие турниры неактивными').click();
+    await page.getByTitle('Показывать неподходящие неактивными').click();
     await expect(page).toHaveURL(/showUnsuitable=1/);
     // Неподходящие не исчезли, а вернулись в список — и каждый говорит, чем не подошёл.
     expect(await rows.count()).toBeGreaterThan(onlySuitable);
@@ -292,6 +292,31 @@ test.describe('Календарь', () => {
     expect(unsuitable).toBeTruthy();
     await page.locator(`a[href="${unsuitable}"]`).first().hover();
     await expect(page.getByRole('tooltip')).toContainText('Не подходит:');
+  });
+
+  test('тип отбирает выдачу и подписан на карточке, у турнира подписи нет', async ({ page }) => {
+    // Пара сценариев обязательна: «фильтр по лагерям оставил лагеря» ничего не доказывает, пока
+    // не видно, что без фильтра список шире, а турниры в него не попали.
+    await page.goto('?view=list&period=all');
+    const rows = page.locator('a[href*="/events/"]');
+    const all = await rows.count();
+    expect(all).toBeGreaterThan(0);
+
+    await page.goto('?view=list&period=all&kinds=camp,festival');
+    const picked = await rows.count();
+    expect(picked).toBeGreaterThan(0);
+    expect(picked).toBeLessThan(all);
+
+    // Каждая оставшаяся строка подписана своим типом — и ни одна не подписана турниром.
+    const words = await rows.evaluateAll((els) => els.map((e) => e.textContent ?? ''));
+    expect(words.every((text) => /· (фестиваль|лагерь)/.test(text))).toBe(true);
+    expect(words.some((text) => /· турнир/.test(text))).toBe(false);
+
+    // А у турнира подписи нет вовсе: 403 строки со словом «турнир» были бы шумом.
+    await page.goto('?view=list&period=all&kinds=tournament');
+    const tournaments = await rows.evaluateAll((els) => els.map((e) => e.textContent ?? ''));
+    expect(tournaments.length).toBeGreaterThan(0);
+    expect(tournaments.some((text) => /· турнир/.test(text))).toBe(false);
   });
 
   test('фильтры переживают перезагрузку: ссылкой можно поделиться', async ({ page }) => {
@@ -326,7 +351,7 @@ test.describe('Календарь', () => {
 test.describe('Подача турнира', () => {
   test('страница объясняет оба пути: форму и правку данных', async ({ page }) => {
     await page.goto('submit/');
-    await expect(page.getByRole('heading', { name: 'Анонсировать турнир' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Анонсировать мероприятие' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'data/events' })).toBeVisible();
     // Регистрация не нужна — это обещание страницы, и оно должно на ней быть.
     await expect(page.getByText(/Регистрация не нужна/)).toBeVisible();

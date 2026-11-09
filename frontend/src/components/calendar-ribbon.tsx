@@ -6,6 +6,7 @@ import { memo, useLayoutEffect, useRef, useState } from 'react';
 import type { CalendarEvent } from '@/src/lib/data';
 import { formatOrganizers, formatPlace } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
+import { EventKindIcon, KindSuffix, kindWord } from './event-kind';
 import {
   MAX_THREAD_LANES,
   MONTH_LABELS,
@@ -268,13 +269,22 @@ function EventBlock({
 }
 
 
-/** Однострочная подпись — для полос лагерей (там двухэтажность не нужна). */
+/**
+ * Однострочная подпись — для полос лагерей (там двухэтажность не нужна). Тип встаёт в эту же
+ * строку между названием и местом: второй строки у полосы нет вовсе, а полоса — это
+ * представление именно лагерей и фестивалей (баром или нитью длинное событие быть не может),
+ * то есть место, где тип нужен чаще всего. Слово не прячется на узком экране вместе с местом:
+ * ради него всё и затевалось.
+ */
 function EventLabel({ event, style }: { event: GridEvent; style: EventBodyStyle }) {
+  const word = kindWord(event.kind);
   return (
     <span className="flex w-full min-w-0 items-center gap-1 overflow-hidden">
+      <EventKindIcon kind={event.kind} />
       <span className={`truncate font-medium ${style === 'past' ? 'text-calendar-pastText' : 'text-foreground'}`}>
         {event.title}
       </span>
+      {word && <span className={`shrink-0 ${SECONDARY_TEXT_CLASS[style]}`}>· {word}</span>}
       <span className={`hidden items-center gap-1 truncate sm:flex ${SECONDARY_TEXT_CLASS[style]}`}>
         · {formatPlace(event.city, event.locationManual)}
       </span>
@@ -324,6 +334,7 @@ function BarContent({ event }: { event: GridEvent }) {
   return (
     <span className="flex w-full min-w-0 items-center gap-1.5 overflow-hidden">
       <span className="flex min-w-0 flex-1 items-start gap-1">
+        <EventKindIcon kind={event.kind} className="mt-0.5 size-3 shrink-0 text-primary" />
         <span className="flex min-w-0 flex-col leading-tight">
           <span
             ref={titleRef}
@@ -333,7 +344,14 @@ function BarContent({ event }: { event: GridEvent }) {
           >
             {event.title}
           </span>
-          {singleLine && <span className={`truncate text-[10px] ${SECONDARY_TEXT_CLASS[style]}`}>{eventDayRange(event)}</span>}
+          {/* Название в две строки — строки даты нет, и типу встать некуда; остаётся иконка.
+              Потеря не обидная: здесь уже пропадает дата, а она важнее типа. */}
+          {singleLine && (
+            <span className={`truncate text-[10px] ${SECONDARY_TEXT_CLASS[style]}`}>
+              {eventDayRange(event)}
+              <KindSuffix kind={event.kind} />
+            </span>
+          )}
         </span>
       </span>
 
@@ -438,11 +456,16 @@ function ThreadCardContent({ event }: { event: GridEvent }) {
     <span className="flex min-w-0 flex-1 items-center gap-3">
       <span className="flex min-w-0 flex-col leading-tight">
         <span className="flex min-w-0 items-center gap-1">
+          <EventKindIcon kind={event.kind} />
           <span className={`truncate font-medium ${style === 'past' ? 'text-calendar-pastText' : 'text-foreground'}`}>
             {event.title}
           </span>
         </span>
-        <span className={`truncate text-[11px] ${SECONDARY_TEXT_CLASS[style]}`}>{eventDayRange(event)}</span>
+        {/* У нити дата есть всегда — тип встаёт сюда без оговорок. */}
+        <span className={`truncate text-[11px] ${SECONDARY_TEXT_CLASS[style]}`}>
+          {eventDayRange(event)}
+          <KindSuffix kind={event.kind} />
+        </span>
       </span>
 
       <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">

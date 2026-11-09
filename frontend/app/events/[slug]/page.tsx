@@ -6,6 +6,7 @@ import type { CalendarEvent } from '@/src/lib/data';
 import { formatDateRange } from '@/src/lib/month-layout';
 import { formatOrganizers, formatPlace } from '@/src/lib/text';
 import { BackToCalendar } from '@/src/components/back-to-calendar';
+import { EventKindIcon, kindWord } from '@/src/components/event-kind';
 
 /**
  * Страница турнира — статическая: на сборке их получается по одной на каждый турнир календаря.
@@ -52,9 +53,14 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
       <BackToCalendar />
 
       <header className="flex flex-col gap-1">
-        <h1 className="font-display text-2xl text-foreground">{event.title}</h1>
+        <h1 className="flex items-start gap-2 font-display text-2xl text-foreground">
+          <EventKindIcon kind={event.kind} className="mt-2 size-4 shrink-0 text-primary" />
+          <span>{event.title}</span>
+        </h1>
         <p className="text-sm text-text-secondary">
           {formatDateRange(event.startsAt, event.endsAt, true)}
+          {kindWord(event.kind) && ` · ${kindWord(event.kind)}`}
+          {event.online && ' · онлайн'}
           {place && ` · ${place}`}
           {event.macroRegion && <span className="text-text-muted"> · {event.macroRegion}</span>}
         </p>
@@ -67,6 +73,17 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
 
       {event.description && (
         <p className="whitespace-pre-line rounded-xl bg-card p-4 text-sm text-text-secondary">{event.description}</p>
+      )}
+
+      {/* Дисциплины — у не-турниров: зачётов у них нет, и список оружия единственное, что
+          говорит, чем там занимаются. У турнира это поле пустое по модели. */}
+      {(event.weapons?.length ?? 0) > 0 && (
+        <section className="rounded-xl bg-card p-4">
+          <h2 className="mb-2 text-sm text-text-muted">Дисциплины</h2>
+          <p className="text-sm text-foreground">
+            {event.weapons!.map((weapon) => weapon.name).join(' · ')}
+          </p>
+        </section>
       )}
 
       {event.nominations.length > 0 && (

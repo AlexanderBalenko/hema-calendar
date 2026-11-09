@@ -4,10 +4,10 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   CalendarClock, CalendarDays, ChevronDown, Eye, EyeOff, LayoutList, MapPin, Rows3, Search, Sprout,
-  Swords, UsersRound,
+  Swords, Tag, UsersRound,
 } from 'lucide-react';
 
-import type { Directories } from '@/src/lib/data';
+import { KIND_LABEL, type Directories } from '@/src/lib/data';
 import {
   filtersToSearch,
   hasActiveFilters,
@@ -71,8 +71,11 @@ export function FilterBar({
   const allWeapons = directories.weapons.map((w) => w.code);
   const allRegions = directories.macroRegions;
   // null значит «все»: пока выбор не сделан, фильтр ничего не отсекает и в адрес не пишется.
+  const allKinds = directories.kinds ?? [];
+
   const selectedWeapons = filters.weapons ?? allWeapons;
   const selectedRegions = filters.regions ?? allRegions;
+  const selectedKinds = filters.kinds ?? allKinds;
 
   return (
     <div
@@ -171,12 +174,37 @@ export function FilterBar({
         )}
       </button>
 
+      {/* Тип стоит ПОСЛЕ «Подходит мне» и потому переносится во второй ряд (решение заказчика
+          09.11.2026 по макету). Первым в ряду он по смыслу правильнее — «что это вообще»
+          спрашивают раньше, чем «каким оружием», — но сжал бы поле поиска с 534 до 398 px, а
+          во втором ряду до иконок видов место всё равно пустует. Пока в календаре один тип,
+          контрола нет вовсе: фильтр с единственным вариантом ничего не отбирает. */}
+      {allKinds.length > 1 && (
+        <MultiDropdown
+          label="Тип"
+          icon={<Tag className="size-3.5 shrink-0" aria-hidden="true" />}
+          options={allKinds.map((kind) => ({ value: kind, label: KIND_LABEL[kind] }))}
+          value={selectedKinds}
+          onChange={(values) => apply({ ...filters, kinds: values.length === allKinds.length ? null : values })}
+          // Своя подпись, а не общая «все»: рядом с «Подходит мне» голое «все» ничего не
+          // сообщает, а в первом ряду слово «тип» подсказывает иконка-ярлык вместе с соседями.
+          renderValue={({ selected, all }) => (
+            <span className="truncate">
+              {all ? 'Тип: всё'
+                : selected.length === 0 ? 'Тип: ничего'
+                : selected.length <= 2 ? selected.map((option) => option.label).join(', ')
+                : `тип: ${selected.length} из ${allKinds.length}`}
+            </span>
+          )}
+        />
+      )}
+
       {hasActiveFilters(filters) && (
         <button
           type="button"
           onClick={() => apply({
             ...filters,
-            weapons: null, regions: null, city: null, team: false, beginner: 'all', q: '',
+            kinds: null, weapons: null, regions: null, city: null, team: false, beginner: 'all', q: '',
             age: null, gender: null, mixed: true,
           })}
           className="px-2 text-xs text-text-muted hover:text-primary"
@@ -193,8 +221,8 @@ export function FilterBar({
           type="button"
           aria-pressed={filters.showUnsuitable}
           onClick={() => apply({ ...filters, showUnsuitable: !filters.showUnsuitable })}
-          title={filters.showUnsuitable ? 'Скрывать неподходящие турниры' : 'Показывать неподходящие турниры неактивными'}
-          aria-label={filters.showUnsuitable ? 'Скрывать неподходящие турниры' : 'Показывать неподходящие турниры неактивными'}
+          title={filters.showUnsuitable ? 'Скрывать неподходящие' : 'Показывать неподходящие неактивными'}
+          aria-label={filters.showUnsuitable ? 'Скрывать неподходящие' : 'Показывать неподходящие неактивными'}
           className={`mr-1 flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
             filters.showUnsuitable ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
           }`}

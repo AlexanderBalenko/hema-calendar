@@ -36,7 +36,7 @@ def main() -> int:
     errors = [text for level, text in problems if level == "error"]
     warnings = [text for level, text in problems if level == "warning"]
 
-    print(f"турниров {len(events)}, городов {len(cities)}, видов оружия {len(weapons)}")
+    print(f"событий {len(events)}, городов {len(cities)}, видов оружия {len(weapons)}")
     for text in errors:
         print(f"  [ошибка] {text}")
     for text in warnings:

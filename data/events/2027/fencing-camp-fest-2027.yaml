@@ -1,24 +1,13 @@
 title: Fencing Camp & Fest
 starts: 2027-01-03
 ends: 2027-01-07
+type: camp
 city: Новосибирск
 organizer: Золотой Сокол (Нск)
 source: portal
 source_key: fencing-camp-fest-2027
-nominations:
-- weapon: longsword
-  gender: male
-- weapon: longsword
-  gender: female
-- weapon: saber
-  gender: male
-- weapon: saber
-  gender: female
-- weapon: rapier
-  gender: male
-- weapon: rapier
-  gender: female
-- weapon: buckler
-  gender: male
-- weapon: buckler
-  gender: female
+weapons:
+- longsword
+- saber
+- rapier
+- buckler

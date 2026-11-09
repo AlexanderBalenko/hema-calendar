@@ -7,8 +7,8 @@ import type { Metadata } from 'next';
  * обычная правка данных, которую видно в истории.
  */
 export const metadata: Metadata = {
-  title: 'Анонсировать турнир',
-  description: 'Как добавить турнир в календарь HEMA: форма заявки или правка файла в репозитории.',
+  title: 'Анонсировать мероприятие',
+  description: 'Как добавить мероприятие в календарь HEMA: форма заявки или правка файла в репозитории.',
 };
 
 const FORM_URL = process.env.NEXT_PUBLIC_SUBMIT_FORM_URL ?? '';
@@ -17,7 +17,7 @@ const REPO_URL = 'https://github.com/AlexanderBalenko/hema-calendar';
 export default function SubmitPage() {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h1 className="font-display text-xl text-foreground">Анонсировать турнир</h1>
+      <h1 className="font-display text-xl text-foreground">Анонсировать мероприятие</h1>
       <p className="text-sm text-text-secondary">
         Регистрация не нужна. Заявку посмотрит человек — поэтому оставьте контакт, без него
         уточнить детали будет негде.
@@ -34,7 +34,7 @@ export default function SubmitPage() {
         </a>
       ) : (
         <p className="rounded-xl bg-card p-4 text-sm text-text-secondary">
-          Форма заявки ещё не подключена. Пока турнир можно добавить правкой данных в
+          Форма заявки ещё не подключена. Пока мероприятие можно добавить правкой данных в
           репозитории — см. ниже — или написать организаторам календаря через{' '}
           <a href={`${REPO_URL}/issues/new`} target="_blank" rel="noreferrer noopener" className="text-primary hover:underline">
             issue на GitHub

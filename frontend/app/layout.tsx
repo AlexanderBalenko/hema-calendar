@@ -48,8 +48,8 @@ const BASE_PATH = process.env.PAGES_BASE_PATH ?? '';
 const CONTENT_WIDTH = 'max-w-[61rem]';
 
 export const metadata: Metadata = {
-  title: 'Календарь турниров HEMA',
-  description: 'Турниры по историческому фехтованию: прошедшие и будущие, с фильтрами по оружию, региону и датам.',
+  title: 'Календарь мероприятий HEMA',
+  description: 'Турниры, фестивали, лагеря и семинары по историческому фехтованию: прошедшие и будущие, с фильтрами по типу, оружию, региону и датам.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -109,13 +109,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 не разъедется по ширинам. Сдвигаем подписи, а не логотип: так весь блок — эмблема
                 плюс строка — остаётся по центру шапки. */}
             <span className="hidden translate-y-[7px] text-sm text-text-muted sm:inline">
-              Календарь турниров
+              Календарь мероприятий
             </span>
             <Link
               href="/submit"
               className="ml-auto translate-y-[7px] whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-text-secondary transition-colors hover:text-foreground"
             >
-              Анонсировать турнир
+              Анонсировать мероприятие
             </Link>
           </div>
         </header>
@@ -126,7 +126,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className={`mx-auto flex ${CONTENT_WIDTH} flex-wrap items-baseline gap-x-4 gap-y-1 px-4 py-5 text-xs text-text-faint sm:px-6 lg:px-8`}>
             {/* Свежесть данных видно сразу: календарь собирается из файлов репозитория, и
                 «когда он последний раз обновлялся» — честный и важный для читателя факт. */}
-            <span>{EVENTS.length} турниров, данные от {formatDateRange(BUILT_AT, BUILT_AT, true)}</span>
+            <span>{EVENTS.length} мероприятий, данные от {formatDateRange(BUILT_AT, BUILT_AT, true)}</span>
             <a href="https://hema.ru" className="hover:text-primary">hema.ru</a>
             <a
               href="https://github.com/AlexanderBalenko/hema-calendar"

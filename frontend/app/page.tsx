@@ -241,7 +241,7 @@ function Calendar({ params }: { params: RawParams }) {
     <div className="flex flex-col gap-4">
       {/* Заголовок есть, но не нарисован: навигация по месяцам — полоска, как в портале, а
           заголовок нужен поисковику и читалке экрана. */}
-      <h1 className="sr-only">Календарь турниров HEMA</h1>
+      <h1 className="sr-only">Календарь мероприятий HEMA</h1>
 
       {/* Фильтры, полоска месяцев и шапка дней — один липкий слой, как в портале: двумя
           независимыми sticky они наезжают друг на друга, потому что высота строки фильтров
@@ -258,7 +258,7 @@ function Calendar({ params }: { params: RawParams }) {
               чтобы край ленты не выглядел оборванным. */}
           <div ref={topSentinelRef} aria-hidden="true" className="h-1" />
           {!canGrowBack && weeks.length > 0 && (
-            <p className="self-center py-2 text-xs text-text-faint">Раньше турниров нет</p>
+            <p className="self-center py-2 text-xs text-text-faint">Раньше ничего нет</p>
           )}
           <CalendarGrid weeks={weeks} currentWeek={startOfWeek(today)} today={today} />
           {/* Лента растёт прокруткой, а не кнопкой (решение заказчика 06.11.2026): сентинел
@@ -268,7 +268,7 @@ function Calendar({ params }: { params: RawParams }) {
               человек упирался бы в пустоту без способа заглянуть дальше. */}
           <div ref={sentinelRef} aria-hidden="true" className="h-1" />
           {!canGrow && weeks.length > 0 && (
-            <p className="self-center py-2 text-xs text-text-faint">Дальше турниров нет</p>
+            <p className="self-center py-2 text-xs text-text-faint">Дальше ничего нет</p>
           )}
         </>
       )}
@@ -278,7 +278,7 @@ function Calendar({ params }: { params: RawParams }) {
           <MonthGrid year={year} month={month} events={events} today={today} />
           {events.length === 0 && (
             <p className="text-sm text-text-muted">
-              В этом месяце турниров нет{filters.weapons || filters.regions || filters.city || filters.q
+              В этом месяце ничего нет{filters.weapons || filters.regions || filters.city || filters.q
                 ? ' — по выбранным фильтрам'
                 : ''}.
             </p>
@@ -296,7 +296,7 @@ function Calendar({ params }: { params: RawParams }) {
                   им спрашивают «покажи только прошедшие», а это другой вопрос. */}
               {growsBack && <div ref={topSentinelRef} aria-hidden="true" className="h-1" />}
               {growsBack && !canGrowBack && (
-                <p className="self-center py-2 text-xs text-text-faint">Раньше турниров нет</p>
+                <p className="self-center py-2 text-xs text-text-faint">Раньше ничего нет</p>
               )}
               <EventList events={events} today={today} />
             </>

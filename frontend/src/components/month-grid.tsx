@@ -12,6 +12,7 @@ import {
 } from '@/src/lib/month-layout';
 import { formatPlace } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
+import { EventKindIcon } from './event-kind';
 
 /**
  * Вид «Месяц»: один месяц на экран, семь равных колонок, полосы-сегменты вместо баров и нитей.
@@ -145,6 +146,9 @@ function Segment({ segment, today }: { segment: MonthSegment<SelectedEvent>; tod
         height: SEGMENT_HEIGHT,
       }}
     >
+      {/* В сетке только иконка: полоса однодневного события — 126px, и слову там не встать.
+          Полностью тип виден в ховер-карточке и на странице события. */}
+      <EventKindIcon kind={event.kind} className="mr-1 size-3 shrink-0" />
       <span className="min-w-0 flex-1 truncate">{event.title}</span>
       {/* Город — только на полосах шире одного дня (просьба заказчика 08.11.2026: «чтобы и
           города было видно»). Замер сетки: однодневная полоса — 126px, и у трёх названий из

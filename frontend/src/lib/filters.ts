@@ -9,6 +9,7 @@
  * юнит-тестами.
  */
 import type { CalendarEvent, Nomination } from './data.ts';
+import { KIND_LABEL } from './kinds.ts';
 import { addDays, monthGridBounds, parseDate } from './month-layout.ts';
 
 /** Виды календаря: лента недель (как на портале — главный), сетка месяца, плотный список. */
@@ -24,6 +25,12 @@ export type CalendarFilters = {
   /** 'YYYY-MM' — показываемый месяц (для вида «месяц»). */
   month: string;
   period: Period;
+  /**
+   * Типы мероприятий, та же тройка состояний. Отдельный фильтр, а не вкладка: искать, куда
+   * поехать выступать, и искать, чему поучиться, — разные задачи, и показывать их вперемешку
+   * без возможности разделить значит не решить ни одну.
+   */
+  kinds: string[] | null;
   /**
    * Коды оружия: null — «все» (фильтр ничего не отсекает), пустой список — «ничего не
    * выбрано» (как в портале: сняв галочку «Все», человек видит пустой календарь, а не весь).
@@ -133,6 +140,7 @@ export function parseFilters(params: RawParams, today: string): CalendarFilters 
     view: first(params.view) === 'list' ? 'list' : first(params.view) === 'month' ? 'month' : DEFAULT_VIEW,
     month: monthKey(year, month),
     period: periodRaw === 'past' || periodRaw === 'all' ? periodRaw : DEFAULT_PERIOD,
+    kinds: list(params.kinds),
     weapons: list(params.weapons),
     regions: list(params.regions),
     city: first(params.city).trim() || null,
@@ -185,6 +193,7 @@ export function filtersToSearch(filters: CalendarFilters, today: string): string
   // замораживать посетителя в том месяце, когда её составили.
   if (filters.view !== 'list' && filters.month !== monthKey(now.year, now.month)) params.set('month', filters.month);
   if (filters.view === 'list' && filters.period !== DEFAULT_PERIOD) params.set('period', filters.period);
+  if (filters.kinds) params.set('kinds', filters.kinds.join(',') || 'none');
   if (filters.weapons) params.set('weapons', filters.weapons.join(',') || 'none');
   if (filters.regions) params.set('regions', filters.regions.join(',') || 'none');
   if (filters.city) params.set('city', filters.city);
@@ -211,8 +220,8 @@ export function filtersToSearch(filters: CalendarFilters, today: string): string
 
 /** Есть ли хоть один фильтр по существу (вид, месяц, период и глазик фильтрами не считаются). */
 export function hasActiveFilters(filters: CalendarFilters): boolean {
-  return filters.weapons !== null || filters.regions !== null || filters.city !== null
-    || filters.team || filters.beginner !== 'all' || filters.q.length > 0
+  return filters.kinds !== null || filters.weapons !== null || filters.regions !== null
+    || filters.city !== null || filters.team || filters.beginner !== 'all' || filters.q.length > 0
     || hasPersonalFilters(filters);
 }
 
@@ -282,19 +291,47 @@ const unfit = (reason: string): Suitability => ({ suitable: false, reason });
  * «нет номинаций вашего пола» осмысленно ровно про те номинации, что прошли фильтр оружия.
  */
 export function evaluateSuitability(event: CalendarEvent, filters: CalendarFilters): Suitability {
+  // Тип — свойство самого события, как и регион: проверяется до номинационных критериев и
+  // действует на событие без номинаций тоже.
+  if (filters.kinds) {
+    if (filters.kinds.length === 0) return unfit('тип не выбран');
+    if (!filters.kinds.includes(event.kind)) return unfit(`не тот тип: ${KIND_LABEL[event.kind]}`);
+  }
+
   // Регион — свойство турнира, а не номинации, поэтому проверяется до всего остального и
   // действует даже на турнир без номинаций.
   if (filters.regions) {
     if (filters.regions.length === 0) return unfit('регион не выбран');
-    if (!event.macroRegion) return unfit('у турнира не указан регион');
-    if (!filters.regions.includes(event.macroRegion)) return unfit(`не ваш регион: ${event.macroRegion}`);
+    // Онлайн проходит ЛЮБОЙ фильтр по региону: он равно доступен откуда угодно. Это то же
+    // правило, что у события без заявленного оружия ниже, — «не привязано» значит «подходит
+    // всем», а не «не подходит никому».
+    if (!event.online) {
+      if (!event.macroRegion) return unfit('не указан регион');
+      if (!filters.regions.includes(event.macroRegion)) return unfit(`не ваш регион: ${event.macroRegion}`);
+    }
   }
 
-  // Турнир без номинаций (лекция, лагерь без сетки, анонс без программы) проходит ВСЕ
+  // Дисциплины, заявленные списком. Оружие события — объединение этого списка и номинаций
+  // (`docs/EventTypes.md` §4): у турнира список пуст по модели и проверка его не касается, а у
+  // феста или лагеря без турнира внутри номинаций нет, и список — единственное, что о его
+  // оружии известно. Без этой проверки вышло бы наоборот: чем лучше заполнен фест, тем хуже он
+  // фильтруется — ведь номинаций у него нет, и он проскакивал бы любой фильтр по оружию.
+  const declared = event.weapons ?? [];
+  if (filters.weapons && declared.length > 0) {
+    const chosen = filters.weapons;
+    const inNominations = event.nominations.some(
+      (n) => n.weaponCode !== null && chosen.includes(n.weaponCode));
+    if (!declared.some((w) => chosen.includes(w.code)) && !inNominations) {
+      return unfit('нет выбранного оружия');
+    }
+  }
+
+  // Событие без номинаций (лекция, лагерь без программы, анонс без сетки) проходит ВСЕ
   // номинационные критерии — и оружие, и личные, и тумблеры. Так в портале: прятать по оружию
   // то, у чего оружия не заявлено вовсе, значит вычёркивать такие события из календаря для всех,
   // кто хоть раз тронул фильтр. (Словесная спека §3.5 утверждает обратное — расхождение в её
-  // пользу считаю опечаткой: код портала и его тесты говорят это.)
+  // пользу считаю опечаткой: код портала и его тесты говорят это.) Заявленный список оружия
+  // этой поблажки больше не получает: его проверили выше.
   if (event.nominations.length === 0) return SUITABLE;
 
   const weapons = filters.weapons;

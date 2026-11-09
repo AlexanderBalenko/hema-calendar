@@ -21,6 +21,7 @@ describe('разбор адреса', () => {
       view: 'ribbon',
       month: '2026-11',
       period: 'future',
+      kinds: null,
       weapons: null,
       regions: null,
       city: null,
@@ -166,6 +167,7 @@ describe('сборка адреса', () => {
       view: 'list',
       month: '2027-03',
       period: 'all',
+      kinds: ['camp'],
       weapons: ['saber'],
       regions: ['ЦФО'],
       city: 'Казань',
@@ -225,6 +227,7 @@ describe('видимый отрезок', () => {
 const event = (over: Partial<CalendarEvent> & { slug: string; startsAt: string }): CalendarEvent => ({
   title: over.slug,
   endsAt: over.startsAt,
+  kind: 'tournament',
   city: null,
   macroRegion: null,
   countryCode: 'RU',
@@ -452,8 +455,62 @@ describe('отбор турниров', () => {
     assert.equal(reason(saberOnly, { team: true }), 'нет командной номинации');
     assert.equal(reason(saberOnly, { regions: ['Урал'] }), 'не ваш регион: Центр');
     assert.equal(reason({ macroRegion: null, nominations: [nomination()] }, { regions: ['Урал'] }),
-      'у турнира не указан регион', 'молча прятать турнир без региона нельзя — человек должен видеть, почему');
+      'не указан регион', 'молча прятать событие без региона нельзя — человек должен видеть, почему');
     assert.equal(reason(saberOnly, { regions: [] }), 'регион не выбран');
+  });
+
+  it('оружие считается объединением номинаций и заявленных дисциплин', () => {
+    // Фест без турнира внутри: номинаций нет, и список дисциплин — единственное, что о его
+    // оружии известно. Пара проверок обязательна: без второй первая ничего не доказывает —
+    // событие проходило бы фильтр и при полностью сломанном правиле.
+    const fest = {
+      slug: 'фест', startsAt: '2027-05-01', kind: 'camp' as const,
+      weapons: [{ name: 'Сабля', code: 'saber' }, { name: 'Рапира', code: 'rapier' }],
+    };
+    const pick = (f: Partial<CalendarFilters>) =>
+      selectEvents([event(fest)], { ...base, view: 'list', period: 'all', ...f }, TODAY).length;
+
+    assert.equal(pick({ weapons: ['saber'] }), 1, 'сабля заявлена — фест в выдаче');
+    assert.equal(pick({ weapons: ['longsword'] }), 0, 'длинного меча в программе нет — фест уходит');
+    assert.equal(pick({ weapons: null }), 1, 'фильтр снят — фест на месте');
+
+    // Фест с турниром внутри: оружие турнира подходит так же, как заявленное в программе.
+    const withInner = { ...fest, nominations: [nomination({ weaponCode: 'longsword' })] };
+    assert.equal(
+      selectEvents([event(withInner)], { ...base, view: 'list', period: 'all', weapons: ['longsword'] }, TODAY).length,
+      1, 'оружие турнира внутри феста тоже считается');
+  });
+
+  it('событие без заявленного оружия проходит любой фильтр по оружию', () => {
+    // Правило портала: прятать по оружию то, у чего оружия не заявлено вовсе, значит
+    // вычёркивать лекции и анонсы без программы для всех, кто хоть раз тронул фильтр.
+    const bare = event({ slug: 'лекция', startsAt: '2027-05-01', kind: 'lecture' });
+    assert.equal(
+      selectEvents([bare], { ...base, view: 'list', period: 'all', weapons: ['longsword'] }, TODAY).length,
+      1);
+  });
+
+  it('онлайн проходит любой фильтр по региону, офлайн без региона — нет', () => {
+    const online = event({ slug: 'онлайн', startsAt: '2027-05-01', kind: 'lecture', online: true });
+    const offline = event({ slug: 'офлайн', startsAt: '2027-05-01', kind: 'lecture' });
+    const pick = (item: CalendarEvent) =>
+      selectEvents([item], { ...base, view: 'list', period: 'all', regions: ['Урал'] }, TODAY).length;
+
+    assert.equal(pick(online), 1, 'онлайн равно доступен откуда угодно');
+    assert.equal(pick(offline), 0, 'а офлайн без региона в фильтр по региону не попадает');
+  });
+
+  it('фильтр по типу отбирает и отсекает', () => {
+    const items = [
+      event({ slug: 'турнир', startsAt: '2027-05-01' }),
+      event({ slug: 'лагерь', startsAt: '2027-05-02', kind: 'camp' }),
+    ];
+    const picked = (kinds: string[] | null) =>
+      selectEvents(items, { ...base, view: 'list', period: 'all', kinds }, TODAY).map((e) => e.slug);
+
+    assert.deepEqual(picked(['camp']), ['лагерь']);
+    assert.deepEqual(picked(null), ['турнир', 'лагерь'], 'фильтр снят — видно всё');
+    assert.deepEqual(picked([]), [], 'снято всё — пусто, как у оружия и региона');
   });
 
   it('поиск идёт по названию и организатору, без учёта регистра и ё', () => {

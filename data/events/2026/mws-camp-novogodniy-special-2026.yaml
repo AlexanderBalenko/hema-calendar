@@ -1,14 +1,10 @@
 title: 'MwS Camp: «Новогодний Special»'
 starts: 2026-01-08
 ends: 2026-01-11
+type: camp
 place: Калужская область
 organizer: Men with Swords
 source: portal
 source_key: mws-camp-novogodniy-special-2026
-nominations:
-- weapon: longsword
-  gender: male
-  notes: Лагерь
-- weapon: longsword
-  gender: female
-  notes: Лагерь
+weapons:
+- longsword
