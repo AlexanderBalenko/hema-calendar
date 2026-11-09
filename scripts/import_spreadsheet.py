@@ -156,7 +156,8 @@ def age_number(value) -> int | None:
 
 def nominations_from_blocks(text) -> list[dict]:
     """Номинации из конструктора формы: строка на номинацию, поля через «;» в твёрдом порядке —
-    оружие; пол; возраст от; возраст до; особенности (см. create-form.gs, nominationsFromBlocks_).
+    оружие; пол; возраст от; возраст до; особенности; рулсет или название (см. create-form.gs,
+    nominationsFromBlocks_).
 
     Разбор строгий, и это главная причина заводить конструктор: позиции полей известны, пол и
     возраст приезжают полями, и догадываться из текста («до 3 лет» — это стаж или возраст?)
@@ -166,6 +167,11 @@ def nominations_from_blocks(text) -> list[dict]:
     (номинация останется видна на странице турнира, просто мимо фильтра по оружию); возраст,
     указанный только сверху, идёт словами в заметку — поле `max_age` без `min_age` календарь
     запрещает (номинация без нижней границы считается взрослой, и в 18…max не попал бы никто).
+
+    Рулсет отдельного поля в модели не получил (решение заказчика 09.11.2026): у номинации уже
+    есть `notes`, и источники кладут туда ровно такие подписи — «Длинный меч: кодекс
+    Валлерштайна A». Заводить рядом второе поле того же смысла значило бы развести одно и то же
+    по двум местам и заставить страницу выбирать между ними.
     """
     result: list[dict] = []
     for line in str(text or "").splitlines():
@@ -182,10 +188,11 @@ def nominations_from_blocks(text) -> list[dict]:
         elif gender.startswith("муж"):
             nomination["gender"] = "male"
 
+        notes: list[str] = []
         min_age = age_number(parts[2] if len(parts) > 2 else None)
         max_age = age_number(parts[3] if len(parts) > 3 else None)
         if min_age is None and max_age is not None:
-            nomination["notes"] = f"до {max_age} лет"
+            notes.append(f"до {max_age} лет")
         else:
             set_age(nomination, min_age, max_age)
 
@@ -194,6 +201,14 @@ def nominations_from_blocks(text) -> list[dict]:
             nomination["team"] = True
         if any(marker in features for marker in BEGINNER_MARKERS):
             nomination["beginners"] = True
+
+        # Рулсет идёт в заметку ПЕРВЫМ: это подпись номинации, которую читает человек, а
+        # «до N лет» — техническая приписка разбора возраста, и ей место следом.
+        ruleset = (parts[5] if len(parts) > 5 else "").strip()
+        if ruleset:
+            notes.insert(0, ruleset[:120])
+        if notes:
+            nomination["notes"] = ". ".join(notes)
         result.append(nomination)
     return result
 

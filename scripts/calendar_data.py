@@ -56,6 +56,9 @@ EVENT_KEYS = {"title", "starts", "ends", "type", "city", "place", "region", "onl
               "organizer", "co_organizers", "url", "hemagon_url", "description",
               "source", "source_key", "weapons", "nominations"}
 NOMINATION_KEYS = {"weapon", "text", "gender", "min_age", "max_age", "team", "beginners", "notes"}
+# Поля, по которым номинации считаются ОДНОЙ И ТОЙ ЖЕ. Всё, кроме `notes`: заметка и есть то
+# единственное, чем организатор разводит два одинаковых зачёта — чаще всего рулсетом.
+NOMINATION_SAME = ("weapon", "text", "gender", "min_age", "max_age", "team", "beginners")
 
 # Слова, которые в названии турнира ничего не различают: по ним два разных турнира выглядели бы
 # одинаковыми. Перенесено из серверной защиты от дублей вместе с правилом.
@@ -73,6 +76,24 @@ FIELD_ORDER = ["title", "starts", "ends", "type", "city", "place", "region", "on
                "organizer", "co_organizers", "url", "hemagon_url", "description",
                "source", "source_key", "weapons", "nominations"]
 NOMINATION_ORDER = ["weapon", "text", "gender", "min_age", "max_age", "team", "beginners", "notes"]
+
+
+def _nomination_label(key: tuple) -> str:
+    """Номинация словами — для предупреждения о неразличимых. Перечислить надо ИМЕННО то, чем
+    они совпали: иначе у турнира с мужским и женским баклером выходят два предупреждения,
+    одинаковых до буквы, и сообщение само страдает тем, о чём предупреждает."""
+    weapon, text, gender, low, high, team, beginners = key
+    parts = [str(weapon or text or "без оружия"),
+             {"male": "мужчины", "female": "женщины"}.get(gender or "any", "общая")]
+    if low is not None and high is not None:
+        parts.append(f"{low}–{high} лет")
+    elif low is not None:
+        parts.append(f"{low}+")
+    if team:
+        parts.append("командная")
+    if beginners:
+        parts.append("новички")
+    return ", ".join(parts)
 
 
 def _ordered(item: dict, order: list[str]) -> dict:
@@ -473,6 +494,26 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
                       f"и с max_age = {high} в неё не попадает никто; укажите нижнюю границу")
             if isinstance(low, int) and isinstance(high, int) and high < low:
                 error(f"{at}: max_age {high} меньше min_age {low}")
+
+        # Неразличимые номинации: совпало всё, а подписи нет. Решение заказчика 09.11.2026 —
+        # предупреждать, а не запрещать: законный повтор бывает (личный и командный зачёты в
+        # разные дни). Замер на момент правила: таких строк в календаре 14 на пять событий, и в
+        # каждом случае СОСЕДНИЕ номинации уже различаются именно рулсетом («кодекс Валлерштайна
+        # A» против «Федершверт: фехтшуле A» у Кубка Золотого Сокола), а пустой осталась одна.
+        # То есть поле используют по назначению, просто забывают заполнить последнюю строку.
+        same: dict[tuple, list[str]] = {}
+        for nomination in nominations:
+            if not isinstance(nomination, dict):
+                continue
+            key = tuple(nomination.get(field) for field in NOMINATION_SAME)
+            same.setdefault(key, []).append(str(nomination.get("notes") or "").strip())
+        for key, labels in same.items():
+            if len(labels) < 2:
+                continue
+            if all(labels) and len(set(labels)) == len(labels):
+                continue  # подписи есть и все разные — номинации различимы
+            warn(f"{where}: неразличимых номинаций «{_nomination_label(key)}» — {len(labels)}; "
+                 f"укажите рулсет или название, иначе читатель видит одинаковые строки")
 
     # Дубли между источниками: тот же день, то же место, похожее название. Два разных турнира
     # в один день в одном городе бывают (личный и командный зачёты), поэтому одной даты мало —
