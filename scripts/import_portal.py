@@ -27,8 +27,8 @@ import re
 import subprocess
 import sys
 
-from calendar_data import (EVENTS, ROOT, event_files, load_events, place_for, save_event,
-                           titles_look_alike)
+from calendar_data import (DEFAULT_TYPE, EVENTS, ROOT, event_files, load_events, place_for,
+                           save_event, titles_look_alike)
 
 # Выгрузка одним запросом: событие со всем, что календарь умеет показать. Поля вроде правил,
 # цен и постера в портале заполнены у единиц событий (проверено 06.11.2026: регистрация у 3,
@@ -47,6 +47,15 @@ select coalesce(json_agg(x order by x.starts, x.slug), '[]'::json)::text from (
        from event_co_organizers co join clubs c2 on c2."Id" = co."ClubId"
       where co."EventId" = e."Id")             as co_organizers,
     nullif(btrim(coalesce(e."Description", '')), '')                       as description,
+    e."Type"                                   as type,
+    e."IsOnline"                               as online,
+    e."MacroRegionOverride"                    as region,
+    -- Дисциплины события (event_weapons). У турнира портал держит в них копию оружия номинаций
+    -- (EventsService.ResolveWeaponIds), поэтому в файл они уедут только у не-турниров: иначе в
+    -- календаре появился бы второй источник правды о том же.
+    (select json_agg(w."Code" order by w."Code")
+       from event_weapons ew join weapons w on w."Id" = ew."WeaponId"
+      where ew."EventId" = e."Id")             as weapons,
     nullif(btrim(coalesce(e."ExternalUrl", '')), '')                       as url,
     nullif(btrim(coalesce(e."HemagonUrl", '')), '')                        as hemagon_url,
     (select json_agg(json_build_object(
@@ -71,6 +80,20 @@ select coalesce(json_agg(x order by x.starts, x.slug), '[]'::json)::text from (
 # Пол номинации в портале: Male = 0, Female = 1, Mixed = 2 (NominationGender.cs). «Общий» зачёт
 # портал хранит двумя строками — мужской и женский, а не одной смешанной.
 GENDER = {0: "male", 1: "female", 2: "any"}
+
+# Типы события (EventType.cs). В общий календарь портал пускает не всё: хозяйственные форматы
+# (экзамен, уборка) отсекает карта аудиторий, открытые тренировки и дни открытых дверей —
+# отдельный запрет. Чего нет в этой карте, то в календаре и не появится; неизвестное значение
+# станет «другим» и будет видно в проверке данных.
+TYPE = {0: "other", 1: "lecture", 2: "seminar", 6: "tournament", 7: "festival", 10: "camp"}
+
+# Макрорегионы (MacroRegion.cs). Берём ЧИСЛО, а не подпись портала: подписи у нас и у него
+# разошлись бы на первой же правке — портал отдаёт «зарубежье» со строчной, справочник
+# календаря знает «Зарубежье», и на строковом сравнении регион молча перестал бы совпадать.
+REGION = {
+    1: "Центр", 2: "Север европейской части", 3: "Юг европейской части", 4: "Урал",
+    5: "Сибирь", 6: "Дальний Восток", 7: "Зарубежье", 8: "Поволжье",
+}
 
 # Пометки в заметке номинации — наследство разметки портала: «hemagon: Длинный меч "открытый" -
 # Мужчины» (1462 номинации), «VK: …», «исходный текст: …». Приставка говорит, ОТКУДА строка, и
@@ -138,13 +161,30 @@ def event_of(raw: dict) -> dict:
     item = {"title": (raw["title"] or "").strip(), "starts": dt.date.fromisoformat(raw["starts"])}
     if raw.get("ends") and raw["ends"] != raw["starts"]:
         item["ends"] = dt.date.fromisoformat(raw["ends"])
-    if raw.get("city"):
+
+    # Умолчание в файл не пишется — см. calendar_data.DEFAULT_TYPE.
+    kind = TYPE.get(raw.get("type"), "other")
+    if kind != DEFAULT_TYPE:
+        item["type"] = kind
+
+    # Перенос НОРМАЛИЗУЕТ, а не падает: ошибка на портальных данных остановила бы обновление
+    # календаря целиком (проверка стоит гейтом перед пушем в main). Поэтому противоречивых
+    # сочетаний он не производит вовсе — у онлайна не пишет места, при городе не пишет региона,
+    # у турнира не пишет дисциплин.
+    online = bool(raw.get("online"))
+    if online:
+        item["online"] = True
+    elif raw.get("city"):
         item["city"] = raw["city"]
-    # Площадку берём, только пока город неизвестен (calendar_data.place_for): адрес с улицей
-    # и домом в календарь не уезжает.
-    place = place_for(raw.get("place"), raw.get("city"))
-    if place:
-        item["place"] = place
+    else:
+        # Площадку берём, только пока город неизвестен (calendar_data.place_for): адрес с улицей
+        # и домом в календарь не уезжает.
+        place = place_for(raw.get("place"), raw.get("city"))
+        if place:
+            item["place"] = place
+        region = REGION.get(raw.get("region"))
+        if region:
+            item["region"] = region
     if raw.get("organizer"):
         item["organizer"] = raw["organizer"].strip()
     if raw.get("co_organizers"):
@@ -155,6 +195,9 @@ def event_of(raw: dict) -> dict:
         item["hemagon_url"] = raw["hemagon_url"]
     if raw.get("description"):
         item["description"] = raw["description"]
+    # Дисциплины — только у не-турниров: у турнира их несёт номинация, и список был бы копией.
+    if kind != DEFAULT_TYPE and raw.get("weapons"):
+        item["weapons"] = list(raw["weapons"])
     nominations = [n for n in (nomination_of(x) for x in (raw.get("nominations") or [])) if n]
     if nominations:
         item["nominations"] = nominations

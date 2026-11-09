@@ -28,8 +28,8 @@ import urllib.request
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
-from calendar_data import (DEFAULT_MIN_AGE, age_from_text, drop_age, links_for,  # noqa: E402
-                           load_weapons, place_for)
+from calendar_data import (DEFAULT_MIN_AGE, DEFAULT_TYPE, age_from_text, drop_age,  # noqa: E402
+                           links_for, load_weapons, place_for)
 from import_common import Importer  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -46,6 +46,18 @@ XLSX_WEAPON_COLUMNS = {10: "longsword", 11: "saber", 12: "rapier", 13: "rapier",
 # номинации перестанут доезжать молча. Свободная колонка «Номинации» остаётся рядом: в ней
 # хвост, который в блоки не влез, и ею же пользуется таблица организаторов.
 BLOCKS_COLUMN = "Номинации (конструктор)"
+
+# Тип мероприятия из формы: заявитель отвечает словами, в файле живёт код. Отсутствие колонки
+# или пустой ответ — турнир: так отвечают ответы, собранные до того, как в форме появился этот
+# вопрос, и таблицы организаторов, где графы типа нет вовсе.
+KIND_BY_ANSWER = {
+    "турнир": "tournament",
+    "фестиваль": "festival",
+    "лагерь": "camp",
+    "семинар": "seminar",
+    "лекция": "lecture",
+    "другое": "other",
+}
 
 TEAM_MARKERS = ("ком", "команд")
 BEGINNER_MARKERS = ("нов", "дет", "юнош")
@@ -106,6 +118,30 @@ def weapon_code(name: str) -> str | None:
     if _WEAPON_CODES is None:
         _WEAPON_CODES = {str(w["name"]).strip().lower(): w["code"] for w in load_weapons()}
     return _WEAPON_CODES.get(str(name or "").strip().lower())
+
+
+def kind_of(answer) -> str:
+    """Тип мероприятия по ответу формы. Неизвестный ответ — «другое», а не падение: заявку
+    пишет посторонний человек, и выбор из выпадающего списка мог поменяться в самой форме."""
+    text = str(answer or "").strip().lower()
+    if not text:
+        return DEFAULT_TYPE
+    for word, code in KIND_BY_ANSWER.items():
+        if word in text:
+            return code
+    return "other"
+
+
+def weapons_from_answer(answer) -> list[str]:
+    """Дисциплины из ответа-флажков: «Длинный меч, Сабля» → ['longsword', 'saber']. Чего нет в
+    справочнике — пропускаем молча: заявитель пишет туда что угодно, а место для свободного
+    текста у него есть отдельно."""
+    codes = []
+    for part in str(answer or "").split(","):
+        code = weapon_code(part)
+        if code and code not in codes:
+            codes.append(code)
+    return codes
 
 
 def age_number(value) -> int | None:
@@ -273,6 +309,7 @@ def read_google(sheet_id: str, gid: str) -> list[dict]:
         # версией скрипта, отдаёт ещё её.
         announce, hemagon, extra_link = links_for(
             row.get("Ссылка на анонс") or row.get("Ссылка"), row.get("Ссылка на хемагон"))
+        kind = kind_of(row.get("Тип мероприятия"))
         item = {
             "title": title,
             "starts": start,
@@ -291,6 +328,28 @@ def read_google(sheet_id: str, gid: str) -> list[dict]:
             "nominations": (nominations_from_blocks(row.get(BLOCKS_COLUMN))
                             + nominations_from_text(row.get("Номинации") or "")),
         }
+        # Тип, описание и дисциплины кладутся ключом, только когда они есть: пустой ответ не
+        # должен затирать то, что дописали руками в ветке заявок. Умолчание («турнир») в файл
+        # не пишется вовсе — см. calendar_data.DEFAULT_TYPE.
+        if kind != DEFAULT_TYPE:
+            item["type"] = kind
+            # Онлайн-мероприятие в календаре живёт без места: ни города, ни адреса, ни региона.
+            # Поэтому флаг не просто записывается — он их и снимает.
+            if "онлайн" in str(row.get("Формат") or "").strip().lower():
+                item["online"] = True
+                item["city"] = None
+                item["place"] = None
+            # Дисциплины спрашиваются только в ветках не-турниров: у турнира оружие несут
+            # номинации, и второй список был бы копией, которая с ними разойдётся.
+            weapons = weapons_from_answer(row.get("Оружие"))
+            if weapons:
+                item["weapons"] = weapons
+        # Описание — единственное место, где у заявки бывают цены, расписание и условия:
+        # отдельных полей под них в календаре нет и не будет (решение заказчика 09.11.2026).
+        description = (row.get("Описание") or "").strip()
+        if description:
+            item["description"] = description
+
         # Третья ссылка в заявку не влезает: полей два. Запоминаем её служебной пометкой —
         # main() снимет её перед записью и скажет о ней человеку.
         if extra_link:

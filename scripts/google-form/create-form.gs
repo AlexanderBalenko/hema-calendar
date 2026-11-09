@@ -76,6 +76,34 @@ function branchTitle_(next) {
 /** Последняя страница: сюда уводит «нет, это всё», и её видит каждый заявитель. */
 const FINAL_PAGE = 'Напоследок';
 
+/**
+ * Развилка по типу мероприятия (решение заказчика 09.11.2026). Форма одна на все типы, а не
+ * три отдельные: заявитель и так видит только свою ветку, а три формы — это три адреса, три
+ * таблицы ответов, шесть переменных репозитория и выбор на сайте, в котором можно ошибиться и
+ * начать заново. Цена одной формы — нейтральные формулировки общего блока: Google не умеет
+ * менять текст вопроса в зависимости от ветки.
+ */
+const KIND_QUESTION = 'Тип мероприятия';
+const PROGRAM_PAGE = 'Программа';
+const INNER_TOURNAMENT = 'Внутри есть турнир?';
+const FIRST_NOMINATION_PAGE = 'Номинация 1';
+const KIND_CHOICES = ['Турнир', 'Фестиваль', 'Лагерь', 'Семинар', 'Лекция', 'Другое'];
+const FORMAT_CHOICES = ['Офлайн', 'Онлайн'];
+const INNER_CHOICES = ['Да, есть', 'Нет'];
+
+/** Куда уходит каждый ответ о типе: турнир — сразу к номинациям, остальные — на «Программу». */
+const KIND_BRANCH = {
+  'Турнир': FIRST_NOMINATION_PAGE,
+  'Фестиваль': PROGRAM_PAGE,
+  'Лагерь': PROGRAM_PAGE,
+  'Семинар': PROGRAM_PAGE,
+  'Лекция': PROGRAM_PAGE,
+  'Другое': PROGRAM_PAGE,
+};
+
+/** С «Программы»: турнир внутри — в цепочку номинаций, нет — сразу в конец. */
+const INNER_BRANCH = {'Да, есть': FIRST_NOMINATION_PAGE, 'Нет': FINAL_PAGE};
+
 /** Колонка, в которую триггер складывает заполненные блоки. Её читает импорт календаря. */
 const NOMINATIONS_COLUMN = 'Номинации (конструктор)';
 
@@ -94,10 +122,10 @@ function items_() {
   const items = [
     {
       title: 'Название', type: 'text', required: true,
-      help: 'Как турнир называется для участников.',
+      help: 'Как мероприятие называется для участников.',
     },
     {title: 'Дата начала', type: 'date', required: true},
-    {title: 'Дата завершения', type: 'date', help: 'Только если турнир идёт больше одного дня.'},
+    {title: 'Дата завершения', type: 'date', help: 'Только если мероприятие идёт больше одного дня.'},
     {
       title: 'Город', type: 'text',
       help: 'Один город, как он называется обычно: Казань, Санкт-Петербург.',
@@ -105,7 +133,7 @@ function items_() {
     {
       title: 'Адрес', type: 'text',
       help: 'Площадка и адрес, если они уже известны. В календаре не показывается — там только '
-        + 'город; адрес нужен редактору, чтобы не перепутать турниры одного дня.',
+        + 'город; адрес нужен редактору, чтобы не перепутать события одного дня.',
     },
     {
       title: 'Организатор', type: 'text',
@@ -113,7 +141,7 @@ function items_() {
     },
     {
       title: 'Со-организаторы', type: 'text',
-      help: 'Если турнир делают вместе несколько клубов — перечислите остальных через запятую. '
+      help: 'Если мероприятие делают вместе несколько клубов — перечислите остальных через запятую. '
         + 'Календарь покажет их рядом с главным.',
     },
     {
@@ -121,14 +149,50 @@ function items_() {
       // читателю почти ничего не даёт. Но анонса на момент заявки может ещё не быть, и отсечь
       // такую заявку дороже, чем принять её и дождаться ссылки.
       title: 'Ссылка на анонс', type: 'text',
-      help: 'Пост в соцсетях, сайт турнира или страница регистрации — то, где вы рассказываете '
-        + 'про турнир. В календаре это ссылка «Анонс у организатора».',
+      help: 'Пост в соцсетях, сайт мероприятия или страница регистрации — то, где вы рассказываете '
+        + 'про него. В календаре это ссылка «Анонс у организатора».',
     },
     {
       title: 'Ссылка на хемагон', type: 'text',
       help: 'Карточка турнира на hemagon.com, если вы её уже завели: там сетка, номинации и '
         + 'участники. Это отдельная от анонса ссылка — в календаре она так и подписана, «Турнир '
-        + 'на Хемагоне». Нет карточки — оставьте пустым.',
+        + 'на Хемагоне». Нет карточки или это не турнир — оставьте пустым.',
+    },
+    {
+      title: 'Описание', type: 'paragraph',
+      help: 'Что будет на мероприятии: программа, расписание, условия участия, стоимость. '
+        + 'Отдельных полей под цены в календаре нет намеренно — всё это живёт здесь, текстом, и '
+        + 'показывается на странице мероприятия как есть.',
+    },
+    {
+      // Ветвящий вопрос стоит ПОСЛЕДНИМ на первой странице: Google применяет правило перехода
+      // того вопроса, который на странице последний.
+      title: KIND_QUESTION, type: 'radio', choices: KIND_CHOICES, required: true,
+      branchTo: KIND_BRANCH,
+      help: 'От ответа зависит, о чём спросим дальше. Турнир — спросим номинации; всё '
+        + 'остальное — дисциплины и формат.',
+    },
+    {
+      type: 'page', title: PROGRAM_PAGE,
+      help: 'Пара вопросов про то, чем на мероприятии занимаются. Номинаций мы тут не '
+        + 'спрашиваем: зачёты бывают у турнира, а у фестиваля, лагеря и семинара — дисциплины.',
+    },
+    {
+      title: 'Оружие', type: 'checkbox', choices: WEAPONS,
+      help: 'Всё, чем занимаются на мероприятии. Ничего не выбрали — календарь будет считать, '
+        + 'что оружие не заявлено, и покажет мероприятие при любом фильтре по оружию.',
+    },
+    {
+      title: 'Формат', type: 'radio', choices: FORMAT_CHOICES,
+      help: 'Онлайн-мероприятие в календаре живёт без города и попадает в любой фильтр по '
+        + 'региону: оно равно доступно откуда угодно.',
+    },
+    {
+      // Последний вопрос страницы — он и решает переход.
+      title: INNER_TOURNAMENT, type: 'radio', choices: INNER_CHOICES, required: true,
+      branchTo: INNER_BRANCH, collapsed: true,
+      help: 'Внутри фестиваля или лагеря нередко проводят турнир. Ответите «да» — спросим его '
+        + 'номинации так же, как у обычного турнира.',
     },
   ];
 
@@ -211,6 +275,10 @@ const PUBLIC_COLUMNS = [
   'Со-организаторы',
   'Ссылка на анонс',
   'Ссылка на хемагон',
+  'Описание',
+  KIND_QUESTION,
+  'Оружие',
+  'Формат',
   NOMINATIONS_COLUMN,
   'Номинации',
 ];
@@ -262,21 +330,36 @@ function findFile_(title) {
   return null;
 }
 
+const FORM_TITLE = 'Календарь HEMA — заявка на мероприятие';
+/** Как форма называлась до типов мероприятий. Нужно, чтобы НАЙТИ её, а не завести вторую. */
+const FORM_TITLE_WAS = 'Календарь HEMA — заявка на турнир';
+
+const FORM_DESCRIPTION =
+  'Мероприятие попадёт в календарь hema.ru после проверки человеком. Оставьте контакт — без '
+  + 'него уточнить детали будет негде. Контакт виден только модератору и в календарь не попадает.';
+const FORM_CONFIRMATION =
+  'Заявка отправлена. Мероприятие появится в календаре после проверки — обычно в течение суток.';
+
 function createForm_() {
-  const title = 'Календарь HEMA — заявка на турнир';
-  const existing = findFile_(title);
+  const existing = findFile_(FORM_TITLE) || findFile_(FORM_TITLE_WAS);
   let form;
   if (existing) {
     form = FormApp.openById(existing.getId());
     Logger.log('Форма уже есть, беру её.');
+    if (form.getTitle() !== FORM_TITLE) {
+      // Переименование, а НЕ новая форма: адрес (`SUBMIT_FORM_URL` в переменных репозитория) и
+      // накопленные ответы обязаны пережить переход на мероприятия. Заодно обновляем свои же
+      // тексты — на этом прогоне они впервые расходятся со смыслом формы.
+      form.setTitle(FORM_TITLE);
+      form.setDescription(FORM_DESCRIPTION);
+      form.setConfirmationMessage(FORM_CONFIRMATION);
+      Logger.log('Форма переименована: «' + FORM_TITLE_WAS + '» → «' + FORM_TITLE + '».');
+    }
   } else {
-    form = FormApp.create(title);
-    form.setDescription(
-      'Турнир попадёт в календарь hema.ru после проверки человеком. Оставьте контакт — без него '
-      + 'уточнить детали будет негде. Контакт виден только модератору и в календарь не попадает.');
+    form = FormApp.create(FORM_TITLE);
+    form.setDescription(FORM_DESCRIPTION);
     form.setCollectEmail(false);
-    form.setConfirmationMessage(
-      'Заявка отправлена. Турнир появится в календаре после проверки — обычно в течение суток.');
+    form.setConfirmationMessage(FORM_CONFIRMATION);
     Logger.log('Форма создана.');
   }
 
@@ -398,23 +481,51 @@ function syncChoices_(item, question) {
  */
 function wireBranches_(form) {
   const items = form.getItems();
-  const finalPage = items.filter((item) => item.getType() === FormApp.ItemType.PAGE_BREAK
-    && item.getTitle() === FINAL_PAGE)[0];
-  if (!finalPage) {
+  const pages = {};
+  items.filter((item) => item.getType() === FormApp.ItemType.PAGE_BREAK)
+    .forEach((item) => {pages[item.getTitle()] = item.asPageBreakItem();});
+
+  const page = pages[FINAL_PAGE];
+  if (!page) {
     Logger.log('ВНИМАНИЕ: страницы «' + FINAL_PAGE + '» нет — развилки не настроены.');
     return;
   }
-  const page = finalPage.asPageBreakItem();
+
+  const radio = (title) => {
+    const found = items.filter((item) => item.getTitle() === title
+      && item.getType() === FormApp.ItemType.MULTIPLE_CHOICE)[0];
+    return found ? found.asMultipleChoiceItem() : null;
+  };
 
   ITEMS.filter((question) => question.branch).forEach((question) => {
-    const found = items.filter((item) => item.getTitle() === question.title
-      && item.getType() === FormApp.ItemType.MULTIPLE_CHOICE)[0];
-    if (!found) return;
-    const choice = found.asMultipleChoiceItem();
+    const choice = radio(question.title);
+    if (!choice) return;
     choice.setChoices([
       choice.createChoice(question.choices[0], FormApp.PageNavigationType.CONTINUE),
       choice.createChoice(question.choices[1], page),
     ]);
+  });
+
+  // Развилки, у которых у каждого ответа СВОЯ страница: тип мероприятия и турнир внутри
+  // фестиваля. Отличаются от предыдущих тем, что цель названа именем страницы, а не «дальше
+  // или в конец»: вариантов больше двух, и ведут они в разные места.
+  ITEMS.filter((question) => question.branchTo).forEach((question) => {
+    const choice = radio(question.title);
+    if (!choice) return;
+    const missing = [];
+    const built = question.choices.map((text) => {
+      const target = pages[question.branchTo[text]];
+      if (target) return choice.createChoice(text, target);
+      missing.push(question.branchTo[text]);
+      // Без страницы ответ просто ведёт дальше по форме: лучше лишняя страница у заявителя,
+      // чем упавший на полпути setup.
+      return choice.createChoice(text, FormApp.PageNavigationType.CONTINUE);
+    });
+    if (missing.length) {
+      Logger.log('ВНИМАНИЕ: нет страниц «' + missing.join('», «') + '» — часть переходов '
+        + 'вопроса «' + question.title + '» не настроена.');
+    }
+    choice.setChoices(built);
   });
 }
 
