@@ -11,3 +11,20 @@ weapons:
 - saber
 - rapier
 - buckler
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female
+- weapon: rapier
+  gender: male
+- weapon: rapier
+  gender: female
+- weapon: buckler
+  gender: male
+- weapon: buckler
+  gender: female
