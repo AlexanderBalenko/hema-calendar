@@ -46,7 +46,7 @@ CITY_EN_TO_RU = {
     "Sverdlovsky City District": "Асбест", "Sverdlovskiy District": "Екатеринбург",
     "Tbilisi": "Тбилиси", "Tyumen": "Тюмень", "Vladivostok": "Владивосток", "Vologda": "Вологда",
     "Voronezh": "Воронеж", "Yaroslavl": "Ярославль", "Yekaterinburg": "Екатеринбург",
-    "Pervouralsk": "Первоуральск",
+    "Pervouralsk": "Первоуральск", "Kaluga": "Калуга",
     # «Kazbekovsky District» (Дагестан) намеренно НЕ переведён: какой это населённый пункт,
     # по данным хемагона не понять, а выдумывать город — хуже, чем оставить место строкой.
 }
