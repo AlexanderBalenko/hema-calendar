@@ -75,7 +75,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
         <p className="whitespace-pre-line rounded-xl bg-card p-4 text-sm text-text-secondary">{event.description}</p>
       )}
 
-      {/* Дисциплины — у не-турниров: зачётов у них нет, и список оружия единственное, что
+      {/* Дисциплины — у не-турниров: номинаций у них нет, и список оружия единственное, что
           говорит, чем там занимаются. У турнира это поле пустое по модели. */}
       {(event.weapons?.length ?? 0) > 0 && (
         <section className="rounded-xl bg-card p-4">

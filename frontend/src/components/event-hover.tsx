@@ -133,7 +133,7 @@ function Card({ event, rect }: Shown) {
         <div className="mt-1 text-text-faint">Не подходит: {event.unsuitableReason}</div>
       )}
 
-      {/* Дисциплины не-турнира: у феста или лагеря зачётов нет, и это единственное, что о его
+      {/* Дисциплины не-турнира: у феста или лагеря номинаций нет, и это единственное, что о его
           оружии известно. Одной строкой — списков у них по две-три позиции. */}
       {declared.length > 0 && (
         <div className="mt-2 border-t border-border pt-2">

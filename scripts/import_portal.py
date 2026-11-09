@@ -77,7 +77,7 @@ select coalesce(json_agg(x order by x.starts, x.slug), '[]'::json)::text from (
 ) x;
 """
 
-# Пол номинации в портале: Male = 0, Female = 1, Mixed = 2 (NominationGender.cs). «Общий» зачёт
+# Пол номинации в портале: Male = 0, Female = 1, Mixed = 2 (NominationGender.cs). «Общую» номинацию
 # портал хранит двумя строками — мужской и женский, а не одной смешанной.
 GENDER = {0: "male", 1: "female", 2: "any"}
 

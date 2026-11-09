@@ -55,7 +55,7 @@ export type CalendarFilters = {
   gender: ViewerGender | null;
   /**
    * Считать ли смешанные номинации подходящими. Единственный тумблер, включённый по умолчанию:
-   * для одних смешанный зачёт — шанс побиться с сильными, для других он просто опасен.
+   * для одних смешанная номинация — шанс побиться с сильными, для других она просто опасна.
    */
   mixed: boolean;
   /**
@@ -339,7 +339,7 @@ export function evaluateSuitability(event: CalendarEvent, filters: CalendarFilte
     weapons === null || (n.weaponCode !== null && weapons.includes(n.weaponCode));
   const matchesAge = (n: Nomination) => filters.age === null
     || (filters.age >= (n.minAge ?? DEFAULT_MIN_AGE) && (n.maxAge === null || filters.age <= n.maxAge));
-  // Тумблер «смешанные» — часть проверки пола: кто не хочет биться в смешанном зачёте, тому
+  // Тумблер «смешанные» — часть проверки пола: кто не хочет биться в смешанной номинации, тому
   // смешанная номинация не подходит ровно так же, как мужская — женщине. Работает и когда пол не
   // указан: это выбор фильтра, а не свойство человека.
   const matchesGender = (n: Nomination) => (filters.mixed || n.gender !== 'Any')
