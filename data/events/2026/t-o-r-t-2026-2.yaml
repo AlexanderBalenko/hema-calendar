@@ -26,13 +26,13 @@ nominations:
 - weapon: rapier
   gender: male
   notes: Рапира Ренессанса Мужчины
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   notes: Шпага Мужчины
 - weapon: rapier
   gender: female
   notes: Рапира Ренессанса Женщины
-- weapon: rapier
+- weapon: sport-epee
   gender: female
   notes: Шпага Женщины
 - weapon: saber
@@ -53,13 +53,13 @@ nominations:
   max_age: 17
   beginners: true
   notes: Сабля Девушки (15-17 лет)
-- weapon: rapier
+- weapon: sport-epee
   gender: female
   min_age: 15
   max_age: 17
   beginners: true
   notes: Шпага Девушки (15-17 лет)
-- weapon: rapier
+- weapon: sport-epee
   min_age: 12
   max_age: 14
   beginners: true

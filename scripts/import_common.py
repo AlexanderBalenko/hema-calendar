@@ -33,10 +33,14 @@ def card_key(url: str | None) -> str:
 # одинаково — «рапира» (в одной стоит «и дага», в другой «соло»). Общее у всех трёх одно:
 # организатор называет дагу СЛОВАМИ в подписи номинации. По словам и разбираем.
 DAGGER_WORDS = re.compile(r"даг|кинжал|dagger", re.I)
+# Детская спортивная шпага прячется под рапирой так же: у хемагона вид называется «Rapier - Kids»
+# (проверено по его API на девяти турнирах HEMA Kids — вид у всех один), а шпага названа только
+# в заголовке номинации: «Шпага 9-11 лет». Портал чинится тем же правилом (его docs/slices/Events.md §3).
+EPEE_WORDS = re.compile(r"шпаг|epee|épée", re.I)
 
 
 def refine_rapier(code: str | None, *texts: str | None) -> str | None:
-    """`rapier` → `rapier-dagger`, если организатор назвал дагу в подписи номинации.
+    """`rapier` → `rapier-dagger` или `sport-epee`, если организатор назвал дисциплину словами.
 
     Правило намеренно одностороннее: оно УТОЧНЯЕТ рапиру, но никогда не переводит обратно и не
     трогает другие виды. Где организатор про дагу не сказал, остаётся `rapier` — мы не
@@ -48,7 +52,12 @@ def refine_rapier(code: str | None, *texts: str | None) -> str | None:
     """
     if code != "rapier":
         return code
-    return "rapier-dagger" if any(DAGGER_WORDS.search(t or "") for t in texts) else code
+    joined = " ".join(t or "" for t in texts)
+    if DAGGER_WORDS.search(joined):
+        return "rapier-dagger"
+    if EPEE_WORDS.search(joined):
+        return "sport-epee"
+    return code
 
 
 TRANSLIT = {
