@@ -14,15 +14,15 @@ nominations:
 - weapon: saber
   gender: male
   notes: Сабля - Базовая
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и Дага - Базовая
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и Дага - Продвинутая
 - weapon: saber
   gender: female
   notes: Сабля - Женская
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира и Дага - Женская

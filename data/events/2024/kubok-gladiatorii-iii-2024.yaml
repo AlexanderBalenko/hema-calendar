@@ -35,7 +35,7 @@ nominations:
 - weapon: saber
   gender: male
   notes: Военная сабля
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага
 - weapon: buckler
@@ -50,7 +50,7 @@ nominations:
 - weapon: saber
   gender: female
   notes: Военная сабля (Женская)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира и дага (Женская)
 - weapon: longsword

@@ -22,18 +22,21 @@
 - code: rapier
   name: Рапира
   order: 7
+- code: rapier-dagger
+  name: Рапира и дага
+  order: 8
 - code: saber
   name: Сабля
-  order: 8
+  order: 9
 - code: sidesword
   name: Сайдсворд
-  order: 9
+  order: 10
 - code: sport-foil
   name: Спортивная рапира
-  order: 10
+  order: 11
 - code: sport-saber
   name: Спортивная сабля
-  order: 11
+  order: 12
 - code: sport-epee
   name: Спортивная шпага
-  order: 12
+  order: 13

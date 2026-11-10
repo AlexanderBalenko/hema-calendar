@@ -11,9 +11,9 @@ description: Дорогие друзья, клуб Totentanz объявляет 
 source: portal
 source_key: totent-nzer-rapira-i-kinzhal-2025
 nominations:
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и кинжал (Мужчины)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира и кинжал (Женщины)

@@ -87,9 +87,9 @@ nominations:
 - weapon: longsword
   gender: female
   notes: Кензюцу (Женщины)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира Ренессанса с дагой (Мужчины)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира Ренессанса с дагой (Женщины)

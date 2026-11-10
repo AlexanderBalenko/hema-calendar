@@ -33,9 +33,9 @@ nominations:
 - text: Mixed
   notes: '26 Апреля, 12:00 - Некрылов А. "Меч и баклер: стойка, перемещения и базовое построение атаки
     с использованием баклера"'
-- weapon: rapier
+- weapon: rapier-dagger
   notes: 'Фехтшуле: рапира и дага (Общая)'
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: 'Фехтшуле: рапира и дага (Женская)'
 - weapon: saber

@@ -17,7 +17,7 @@ nominations:
 - weapon: spear
   gender: male
   notes: Копье (общее)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага (общие)
 - weapon: longsword

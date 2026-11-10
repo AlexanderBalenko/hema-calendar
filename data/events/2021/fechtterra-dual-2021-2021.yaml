@@ -15,6 +15,6 @@ nominations:
 - weapon: buckler
   gender: female
   notes: Меч и баклер (женщины)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и кинжал (общая)

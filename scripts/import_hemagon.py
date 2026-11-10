@@ -23,7 +23,7 @@ import urllib.request
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 from calendar_data import DEFAULT_MIN_AGE, age_from_text, links_for  # noqa: E402
-from import_common import Importer  # noqa: E402
+from import_common import Importer, refine_rapier  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -60,7 +60,7 @@ CITY_EN_TO_RU = {
 # отдельное «оружие». Разбор — в weapon_of(): сначала целиком, потом голова до « - », потом голова
 # до «&» («longsword & rondel» — это длинный меч с рондельным кинжалом, а не отдельный вид).
 WEAPON_EN_TO_CODE = {
-    "longsword": "longsword", "rapier": "rapier", "rapier & dagger": "rapier",
+    "longsword": "longsword", "rapier": "rapier", "rapier & dagger": "rapier-dagger",
     "smallsword": "rapier", "saber": "saber", "sabre": "saber", "messer": "messer",
     "montante": "montante", "sidesword": "sidesword", "spear": "spear", "dagger": "dagger",
     "dussack": "dussack", "dussak": "dussack",
@@ -112,6 +112,10 @@ def nominations_of(detail: dict) -> list[dict]:
         # Категория (women / kids / team / advanced) живёт в том же названии оружия, поэтому
         # маркеры ищем и в нём, а не только в названии номинации.
         low = f"{title} {weapon_raw}".lower()
+        # Рапира с дагой приезжает двумя способами: видом «Rapier & Dagger» (его ловит словарь
+        # выше) и видом «Rapier» при русском названии номинации «РАПИРА И ДАГА» — второе
+        # распознаётся только по словам, и только здесь, когда оба текста уже под рукой.
+        code = refine_rapier(code, low)
 
         # Возраст — общим правилом (calendar_data.age_from_text): оно требует, чтобы возраст
         # был назван словом, иначе расписание и годы из названия уезжают возрастной вилкой.

@@ -9,7 +9,7 @@ description: 'Турнир по рапире от Freifechter Gilde в Санк�
 source: portal
 source_key: fechtterra-rapier-2024-2024
 nominations:
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Rapier and Dagger (W)
 - weapon: rapier
@@ -20,9 +20,9 @@ nominations:
   gender: female
   team: true
   notes: Rapier Teams (W)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Rapier and Dagger Advanced (M)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Rapier and Dagger Basic (M)

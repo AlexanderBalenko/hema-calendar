@@ -29,7 +29,7 @@ nominations:
   gender: male
   team: true
   notes: 'Длинный меч: Команды'
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага
 - weapon: buckler

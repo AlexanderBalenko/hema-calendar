@@ -10,7 +10,7 @@ nominations:
 - weapon: saber
   gender: male
   notes: ВОЕННАЯ САБЛЯ - мужчины
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: РАПИРА И ДАГА - мужчины
 - weapon: longsword
@@ -22,7 +22,7 @@ nominations:
 - weapon: saber
   gender: female
   notes: ВОЕННАЯ САБЛЯ - женщины
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: РАПИРА И ДАГА - женщины
 - weapon: longsword

@@ -35,12 +35,12 @@ nominations:
 - weapon: rapier
   gender: female
   notes: Рапира ренессанса. Женская
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира дага. Advanced
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира дага. Basic
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира дага. Женская

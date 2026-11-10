@@ -25,13 +25,13 @@ nominations:
 - weapon: longsword
   gender: female
   notes: Длинный меч. Woman
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага. Advanced
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага. Basic
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира и дага. Woman
 - weapon: saber

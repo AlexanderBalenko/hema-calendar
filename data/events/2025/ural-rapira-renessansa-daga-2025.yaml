@@ -6,9 +6,9 @@ hemagon_url: https://hemagon.com/tournament/ural-rapira-renessansa-daga
 source: portal
 source_key: ural-rapira-renessansa-daga-2025
 nominations:
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира ренессанса с дагой (мужчины)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира ренессанса с дагой (женщины)

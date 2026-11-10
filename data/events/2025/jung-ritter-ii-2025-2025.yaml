@@ -39,11 +39,11 @@ nominations:
   gender: female
   beginners: true
   notes: 'Военная сабля: Женщины'
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   beginners: true
   notes: 'Рапира и дага: Мужчины'
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   beginners: true
   notes: 'Рапира и дага: Женщины'

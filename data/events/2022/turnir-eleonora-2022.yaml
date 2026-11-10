@@ -17,7 +17,7 @@ nominations:
 - weapon: longsword
   gender: female
   notes: Длинный меч (Женская номинация)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага
 - weapon: saber

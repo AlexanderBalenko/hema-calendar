@@ -23,10 +23,10 @@ nominations:
 - weapon: saber
   gender: male
   notes: Военная сабля (общая)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира и дага (женщины)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   team: true
   notes: Рапира-дага (командная)
@@ -37,6 +37,6 @@ nominations:
 - weapon: rapier
   gender: male
   notes: Рапира Ренессанса (общая)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага (общая)

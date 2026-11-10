@@ -19,7 +19,7 @@ nominations:
 - weapon: longsword
   gender: male
   notes: NL Длинный меч, смешанный
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: NL Рапира и дага, смешанная
 - weapon: saber

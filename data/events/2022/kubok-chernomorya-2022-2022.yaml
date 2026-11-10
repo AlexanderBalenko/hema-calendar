@@ -11,7 +11,7 @@ description: |-
 source: portal
 source_key: kubok-chernomorya-2022-2022
 nominations:
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и кинжал
 - weapon: saber

@@ -25,7 +25,7 @@ nominations:
 - weapon: rapier
   gender: male
   notes: Рапира соло (Общая)
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага (Общая)
 - weapon: saber

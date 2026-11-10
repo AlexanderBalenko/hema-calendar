@@ -8,14 +8,25 @@ import { Swords } from 'lucide-react';
  * (мессер, копьё, спортивные) своих иконок там берут из справочника, куда админ загружает SVG;
  * у календаря справочника нет, и для них честная заглушка — скрещённые клинки.
  */
-const WITH_ICON = new Set(['longsword', 'saber', 'rapier', 'buckler']);
+// Код -> файл силуэта. Не множество, а соответствие: рапира с дагой — отдельная дисциплина,
+// но отдельного силуэта у неё нет (файлы те же четыре, что в портале), и честнее показать
+// рапиру, чем скрещённые клинки-заглушку рядом с соседней строкой «Рапира».
+const ICON_FILE: Record<string, string> = {
+  longsword: 'longsword',
+  saber: 'saber',
+  rapier: 'rapier',
+  'rapier-dagger': 'rapier',
+  buckler: 'buckler',
+};
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
 export function WeaponIcon({ code, size = 18, className }: { code: string; size?: number; className?: string }) {
   const wrapper = `inline-flex shrink-0 items-center justify-center text-primary ${className ?? ''}`;
 
-  if (!WITH_ICON.has(code)) {
+  const icon = ICON_FILE[code];
+
+  if (!icon) {
     return (
       <span className={wrapper} style={{ width: size, height: size }} aria-hidden>
         <Swords style={{ width: size * 0.8, height: size * 0.8 }} />
@@ -30,8 +41,8 @@ export function WeaponIcon({ code, size = 18, className }: { code: string; size?
           width: size,
           height: size,
           backgroundColor: 'currentColor',
-          WebkitMaskImage: `url(${BASE_PATH}/weapon-icon-${code}.png)`,
-          maskImage: `url(${BASE_PATH}/weapon-icon-${code}.png)`,
+          WebkitMaskImage: `url(${BASE_PATH}/weapon-icon-${icon}.png)`,
+          maskImage: `url(${BASE_PATH}/weapon-icon-${icon}.png)`,
           WebkitMaskSize: 'contain',
           maskSize: 'contain',
           WebkitMaskRepeat: 'no-repeat',

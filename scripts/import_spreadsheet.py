@@ -30,7 +30,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 from calendar_data import (DEFAULT_MIN_AGE, DEFAULT_TYPE, age_from_text, drop_age,  # noqa: E402
                            links_for, load_weapons, place_for)
-from import_common import Importer  # noqa: E402
+from import_common import Importer, refine_rapier  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -179,7 +179,9 @@ def nominations_from_blocks(text) -> list[dict]:
         if not parts or not parts[0]:
             continue  # пустой блок формы — не номинация
 
-        code = weapon_code(parts[0])
+        # «Рапира и дага» теперь есть в справочнике и разберётся именем. Уточнение по всей
+        # строке блока нужно для тех, кто назвал вид «Рапира», а дагу написал в особенностях.
+        code = refine_rapier(weapon_code(parts[0]), line)
         nomination: dict = {"weapon": code} if code else {"text": parts[0][:120]}
 
         gender = (parts[1] if len(parts) > 1 else "").lower()
@@ -240,13 +242,19 @@ def nominations_from_text(text: str) -> list[dict]:
     # «Меч и баклер» — одно оружие, но разделитель « и » рвал его пополам и заводил номинацию
     # «меч». Склеиваем до разбора.
     guarded = re.sub(r"меч\s+и\s+баклер", "меч-и-баклер", text, flags=re.IGNORECASE)
+    # То же самое рвало «рапиру и дагу» — и хуже: обломок «дага» попадал в синоним кинжала, и
+    # вместо одной номинации выходили две, вторая несуществующая. Здесь склейка не словом, а
+    # подменой пробелов: написаний у даги много («и дага», «с кинжалом»), и переписывать их
+    # одним каноном значило бы править текст организатора. Подмена снимается сразу ниже.
+    guarded = re.sub(r"(рапир\w*)(\s+)(и|с)(\s+)(даг\w*|кинжал\w*)",
+                     lambda m: f"{m[1]}\x01{m[3]}\x01{m[5]}", guarded, flags=re.IGNORECASE)
 
     result: list[dict] = []
     # Перевод строки — такой же разделитель, как запятая: в таблицах три номинации часто
     # написаны в одной ячейке столбиком («Федершверт мужчины 18+⏎Рапира ренессанса 15+»), и
     # без этого они приезжали одной номинацией с трёхстрочной заметкой.
     for part in re.split(r"[;,/\n]| и ", guarded):
-        fragment = part.strip().replace("меч-и-баклер", "меч и баклер")
+        fragment = part.strip().replace("меч-и-баклер", "меч и баклер").replace("\x01", " ")
         low = fragment.lower()
         if not low:
             continue
@@ -259,6 +267,9 @@ def nominations_from_text(text: str) -> list[dict]:
         # Сокращения таблицы: «л» — длинный меч (в шапке так и написано: «л, сабля, ком»).
         if code is None and low in ("л", "дм"):
             code = "longsword"
+        # Синоним «рапир» срабатывает раньше «дага» и отдаёт рапиру — уточняем по всему
+        # куску. Одиночная «дага» остаётся кинжалом: уточнение трогает только рапиру.
+        code = refine_rapier(code, low)
         # Пол пишут отдельной буквой («сабля Ж», «дага М.»), поэтому сравниваем слова
         # целиком: подстрока «м» нашлась бы в любом «мече», а «ж» — в «кинжале».
         words = [w for w in re.split(r"[^а-яёa-z0-9]+", low) if w]
@@ -393,7 +404,11 @@ def read_xlsx(path: str) -> list[dict]:
             if mark in (None, ""):
                 continue
             low = str(mark).strip().lower()
-            nomination: dict = {"weapon": code}
+            # Рапира с дагой: в графике ДВЕ колонки подписаны одинаково — «рапира», и отличает
+            # их только текст в клетке («и дага» против «соло»). Поэтому код уточняем по
+            # клетке, а не по номеру колонки: половина клеток дагиной колонки помечена просто
+            # плюсом, и приписывать им дагу по месту было бы догадкой за организатора.
+            nomination: dict = {"weapon": refine_rapier(code, low)}
             if any(m in low for m in TEAM_MARKERS):
                 nomination["team"] = True
             if any(m in low for m in BEGINNER_MARKERS):

@@ -16,18 +16,18 @@ description: |-
 source: portal
 source_key: spada-nera-torneo-2026
 nominations:
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира с дагой, женщины. Advanced
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира с дагой, женщины. Basic
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира с дагой, мужчины. Advanced
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира с дагой, мужчины. Intermediate
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира с дагой, мужчины. Basic

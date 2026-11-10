@@ -28,10 +28,10 @@ nominations:
 - weapon: longsword
   gender: female
   notes: Длинный меч
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира и дага, личный зачет
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   team: true
   notes: Рапира и дага, командный зачет

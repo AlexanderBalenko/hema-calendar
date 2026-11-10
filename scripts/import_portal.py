@@ -29,6 +29,7 @@ import sys
 
 from calendar_data import (DEFAULT_TYPE, EVENTS, ROOT, event_files, load_events, place_for,
                            save_event, titles_look_alike)
+from import_common import refine_rapier  # noqa: E402
 
 # Выгрузка одним запросом: событие со всем, что календарь умеет показать. Поля вроде правил,
 # цен и постера в портале заполнены у единиц событий (проверено 06.11.2026: регистрация у 3,
@@ -140,6 +141,11 @@ def nomination_of(raw: dict) -> dict | None:
     out_notes = clean_note(raw.get("notes"))
     if out_notes:
         out["notes"] = out_notes
+    # Рапира с дагой: справочник портала её не знает, но организатор называет её в подписи.
+    # Уточняем код ПОСЛЕ заметки и по обоим текстам — служебную приставку `clean_note` срезает,
+    # а слово «дага» может стоять и до неё. Проекция от этого не расходится с портальной:
+    # правило живёт здесь, в самой проекции, а не правкой файлов поверх неё (docs/Calendar.md §3а).
+    out["weapon"] = refine_rapier(out["weapon"], out_notes, raw.get("notes"))
     return out
 
 

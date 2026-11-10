@@ -39,7 +39,7 @@ nominations:
 - weapon: rapier
   gender: male
   notes: Рапира Ренессанса. Basic
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира с кинжалом. Advanced
 - weapon: saber

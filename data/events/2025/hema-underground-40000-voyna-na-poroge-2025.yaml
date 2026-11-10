@@ -26,10 +26,10 @@ nominations:
 - weapon: saber
   gender: female
   notes: Военная сабля. Женщины
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира с кинжалом. Мужчины
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира с кинжалом. Женщины
 - weapon: longsword

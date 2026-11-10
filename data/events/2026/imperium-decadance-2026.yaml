@@ -28,10 +28,10 @@ nominations:
 - weapon: longsword
   gender: female
   notes: Длинный меч, Advance
-- weapon: rapier
+- weapon: rapier-dagger
   gender: male
   notes: Рапира и дага
-- weapon: rapier
+- weapon: rapier-dagger
   gender: female
   notes: Рапира и дага
 - weapon: buckler
