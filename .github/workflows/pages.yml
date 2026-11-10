@@ -69,6 +69,10 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
           NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.origin }}${{ steps.pages.outputs.base_path }}
           NEXT_PUBLIC_SUBMIT_FORM_URL: ${{ vars.SUBMIT_FORM_URL }}
+          # Форма «сообщить о неточности». Значение берётся из лога setup() целиком, вместе с
+          # хвостом ?usp=pp_url&entry.NNN=__EVENT__ — метку подставляет страница мероприятия.
+          # Переменной нет — ссылки на странице не будет вовсе, как и у формы заявки.
+          NEXT_PUBLIC_REPORT_FORM_URL: ${{ vars.REPORT_FORM_URL }}
           # Счётчик Яндекс.Метрики. Переменной нет — счётчик не собирается в страницу вовсе,
           # ни скрипта, ни куки; так он и выключается.
           NEXT_PUBLIC_METRIKA_ID: ${{ vars.METRIKA_ID }}

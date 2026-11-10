@@ -20,6 +20,22 @@ const EVENTS = (full as unknown as { events: CalendarEvent[] }).events;
 
 const GENDER_LABEL: Record<string, string> = { Any: 'общая', Male: 'мужская', Female: 'женская' };
 
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://alexanderbalenko.github.io/hema-calendar';
+
+/**
+ * Форма «сообщить о неточности». Приезжает из переменной репозитория УЖЕ с подставленным
+ * вопросом о мероприятии (scripts/google-form/create-form.gs, REPORT_FORM_URL) — остаётся
+ * заменить метку. Номер вопроса Google-формы здесь не зашит намеренно: он меняется при
+ * пересоздании формы, и зашитый однажды перестал бы работать молча.
+ */
+const REPORT_FORM_URL = process.env.NEXT_PUBLIC_REPORT_FORM_URL ?? '';
+const REPORT_PLACEHOLDER = '__EVENT__';
+
+function reportUrl(title: string, slug: string): string {
+  return REPORT_FORM_URL.replace(
+    REPORT_PLACEHOLDER, encodeURIComponent(`${title} — ${SITE}/events/${slug}/`));
+}
+
 function find(slug: string): CalendarEvent | undefined {
   return EVENTS.find((event) => event.slug === slug);
 }
@@ -123,6 +139,24 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
             </a>
           )}
         </div>
+      )}
+
+      {/* Сообщение о неточности — про КАЛЕНДАРЬ, а ссылки выше — про сам турнир. Поэтому
+          отдельной строкой за волосяной линией, а не четвёртой ссылкой в том ряду: иначе
+          «посмотреть сетку» и «пожаловаться нам» читаются как одно и то же. */}
+      {REPORT_FORM_URL && (
+        <p className="border-t border-border pt-3 text-xs text-text-faint">
+          Нашли неточность?{' '}
+          <a
+            href={reportUrl(event.title, event.slug)}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="text-primary hover:underline"
+          >
+            Сообщите
+          </a>
+          {' '}— поправим.
+        </p>
       )}
 
       {/* Результатов здесь нет и не будет: календарь их не хранит (docs/Calendar.md §2). */}

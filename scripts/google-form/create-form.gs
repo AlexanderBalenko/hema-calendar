@@ -299,6 +299,91 @@ const PUBLIC_COLUMNS = [
  */
 const RENAMED = {'Ссылка': 'Ссылка на анонс'};
 
+/* -------------------------------------------------------------------------------------------
+ * Вторая форма: сообщение о неточности в уже заведённом мероприятии.
+ *
+ * Отдельная форма, а не развилка в первой, по двум причинам. Первая: развилка на входе — лишний
+ * клик КАЖДОМУ, кто пришёл анонсировать мероприятие, ради тех, кто пришёл пожаловаться, а
+ * анонсов на порядок больше. Вторая: ответы у них разной природы — заявка превращается скриптом
+ * в файл мероприятия, а сообщение о неточности читает человек; в одной таблице импорту пришлось
+ * бы отличать одно от другого.
+ * ------------------------------------------------------------------------------------------- */
+
+const REPORT_FORM_TITLE = 'Календарь HEMA — сообщить о неточности';
+const REPORT_SHEET_TITLE = 'Календарь HEMA — неточности (ответы)';
+
+const REPORT_FORM_DESCRIPTION =
+  'Нашли ошибку в карточке мероприятия — дату, город, организатора, номинацию? Напишите, и '
+  + 'человек поправит. Контакт по желанию: он виден только модератору и в календарь не попадает.';
+const REPORT_FORM_CONFIRMATION =
+  'Спасибо. Сообщение ушло человеку — он посмотрит и поправит данные.';
+
+/** Вопрос, который подставляет ссылка со страницы мероприятия. */
+const REPORT_EVENT_QUESTION = 'Мероприятие';
+
+/**
+ * Метка, которую календарь меняет на название и адрес конкретного мероприятия. Значение в
+ * ссылку подставляет САМ Google (toPrefilledUrl), поэтому номер вопроса (entry.NNN) нигде не
+ * зашит: он меняется при пересоздании формы, и зашитый однажды молча перестал бы работать.
+ */
+const REPORT_PLACEHOLDER = '__EVENT__';
+
+const REPORT_ITEMS = [
+  {title: REPORT_EVENT_QUESTION, type: 'text', required: true,
+   help: 'Подставляется само, если вы пришли со страницы мероприятия.'},
+  {title: 'Что не так', type: 'paragraph', required: true,
+   help: 'Своими словами: что в карточке неверно.'},
+  {title: 'Как должно быть', type: 'paragraph',
+   help: 'Если знаете правильное значение — напишите его здесь.'},
+  {title: 'Контакт', type: 'text',
+   help: 'Необязательно. Нужен, только если случай спорный и придётся уточнять.'}
+];
+
+function createReportForm_() {
+  const existing = findFile_(REPORT_FORM_TITLE);
+  let form;
+  if (existing) {
+    form = FormApp.openById(existing.getId());
+    Logger.log('Форма неточностей уже есть, беру её.');
+  } else {
+    form = FormApp.create(REPORT_FORM_TITLE);
+    form.setDescription(REPORT_FORM_DESCRIPTION);
+    form.setCollectEmail(false);
+    form.setConfirmationMessage(REPORT_FORM_CONFIRMATION);
+    Logger.log('Форма неточностей создана.');
+  }
+
+  const have = {};
+  form.getItems().forEach(function (item) { have[item.getTitle()] = true; });
+  REPORT_ITEMS.forEach(function (question) {
+    if (have[question.title]) return;
+    const item = question.type === 'paragraph' ? form.addParagraphTextItem() : form.addTextItem();
+    item.setTitle(question.title);
+    if (question.help) item.setHelpText(question.help);
+    item.setRequired(!!question.required);
+    Logger.log('Добавлено в форму неточностей: «' + question.title + '».');
+  });
+  return form;
+}
+
+/**
+ * Адрес формы с УЖЕ подставленным мероприятием. В переменную репозитория уезжает именно эта
+ * строка, а не чистый адрес формы: календарь меняет в ней метку на конкретное мероприятие.
+ */
+function reportPrefilledUrl_(form) {
+  const asked = form.getItems(FormApp.ItemType.TEXT).filter(function (item) {
+    return item.getTitle() === REPORT_EVENT_QUESTION;
+  });
+  if (!asked.length) {
+    Logger.log('ВНИМАНИЕ: в форме неточностей нет вопроса «' + REPORT_EVENT_QUESTION
+      + '» — ссылка уедет без подстановки мероприятия.');
+    return form.getPublishedUrl();
+  }
+  return form.createResponse()
+    .withItemResponse(asked[0].asTextItem().createResponse(REPORT_PLACEHOLDER))
+    .toPrefilledUrl();
+}
+
 /** Запустите эту функцию. Повторный запуск ничего не портит: он находит уже созданное. */
 function setup() {
   checkColumns_();
@@ -307,13 +392,20 @@ function setup() {
   const publicSheet = createPublicSheet_();
   installTrigger_(form, publicSheet);
 
+  // Форма неточностей идёт тем же прогоном: отдельная функция означала бы, что про неё забудут.
+  const reportForm = createReportForm_();
+  const reportResponses = linkResponseSheet_(reportForm, REPORT_SHEET_TITLE);
+
   const gid = publicSheet.getSheets()[0].getSheetId();
   Logger.log('ГОТОВО. Ниже — то, что нужно календарю.');
   Logger.log('SUBMIT_FORM_URL = ' + form.getPublishedUrl());
+  Logger.log('REPORT_FORM_URL = ' + reportPrefilledUrl_(reportForm));
   Logger.log('FORM_SHEET_ID   = ' + publicSheet.getId());
   Logger.log('FORM_SHEET_GID  = ' + gid);
   Logger.log('Приватные ответы с контактами: ' + responses.getUrl());
+  Logger.log('Сообщения о неточностях: ' + reportResponses.getUrl());
   Logger.log('Редактировать форму: ' + form.getEditUrl());
+  Logger.log('Редактировать форму неточностей: ' + reportForm.getEditUrl());
 }
 
 /** Публичный вопрос без колонки — молча потерянный ответ. Лучше сказать об этом сразу. */
@@ -539,7 +631,7 @@ function wireBranches_(form) {
   });
 }
 
-function linkResponseSheet_(form) {
+function linkResponseSheet_(form, sheetTitle) {
   // У формы без таблицы ответов getDestinationId() не возвращает пустоту — он БРОСАЕТ
   // исключение «у этой формы нет адреса для отправки ответов». Поэтому «таблица уже
   // привязана?» проверяется через try, а не условием: на первом же запуске setup падал тут.
@@ -551,7 +643,7 @@ function linkResponseSheet_(form) {
   }
   if (existingId) return SpreadsheetApp.openById(existingId);
 
-  const sheet = SpreadsheetApp.create('Календарь HEMA — заявки (ответы)');
+  const sheet = SpreadsheetApp.create(sheetTitle || 'Календарь HEMA — заявки (ответы)');
   form.setDestination(FormApp.DestinationType.SPREADSHEET, sheet.getId());
   Logger.log('Приватная таблица ответов создана.');
   return sheet;
