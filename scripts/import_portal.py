@@ -309,15 +309,27 @@ def main() -> int:
             save_event(path, item)
 
     keep = {p.resolve() for p in written}
-    extra = [p for p in event_files() if p.resolve() not in keep]
+    # Уборка распространяется ТОЛЬКО на проекцию портала. Перенос — зеркало, но зеркалит он одну
+    # полку, а не весь шкаф: рядом лежат файлы хемагона, графика и заведённые руками, и портал
+    # про них не знает ничего. Прежняя уборка сносила всё, чего в портале нет, — 29 файлов за
+    # прогон, включая единственный manual, — и из-за этого перенос пришлось запретить целиком
+    # (docs/Calendar.md §3б). Теперь чужие файлы не удаляются, а перечисляются.
+    source_of = {(ROOT / event["_path"]).resolve(): (event.get("source") or "manual")
+                 for event in load_events()}
+    orphans = [p for p in event_files() if p.resolve() not in keep]
+    extra = [p for p in orphans if source_of.get(p.resolve()) == "portal"]
+    foreign = [p for p in orphans if source_of.get(p.resolve()) != "portal"]
     print(f"записано файлов: {len(written)}")
     print("досыпано из прежних файлов: " + ", ".join(f"{k} {v}" for k, v in filled.items()))
     print(f"со ссылкой на хемагон: {sum(1 for i in items if i.get('hemagon_url'))}, "
           f"с анонсом: {sum(1 for i in items if i.get('url'))}, "
           f"с описанием: {sum(1 for i in items if i.get('description'))}")
-    print(f"лишних файлов (в портале таких турниров нет): {len(extra)}")
+    print(f"снимаю с публикации (source: portal, а в портале турнира больше нет): {len(extra)}")
     for path in sorted(extra):
         print(f"  - {path.relative_to(ROOT)}")
+    print(f"чужие файлы, которых в портале нет и которые перенос НЕ трогает: {len(foreign)}")
+    for path in sorted(foreign):
+        print(f"  = {path.relative_to(ROOT)} ({source_of.get(path.resolve())})")
     if not args.dry_run:
         for path in extra:
             path.unlink()

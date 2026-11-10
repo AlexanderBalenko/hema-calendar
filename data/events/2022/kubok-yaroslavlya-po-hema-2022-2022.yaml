@@ -43,7 +43,7 @@ nominations:
   min_age: 15
   max_age: 17
   notes: 'День 2. HEMA Kids. 15-17. Сабля. Девушки: личное первенство'
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11

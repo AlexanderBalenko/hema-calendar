@@ -11,7 +11,7 @@ description: |-
 source: portal
 source_key: kubok-vostoka-hema-kids-2022-2022
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11
@@ -21,7 +21,7 @@ nominations:
   min_age: 9
   max_age: 11
   notes: Спортивная сабля (9-11 лет)
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14

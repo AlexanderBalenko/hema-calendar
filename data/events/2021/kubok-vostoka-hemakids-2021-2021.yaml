@@ -10,12 +10,12 @@ description: 'Приглашаем вас на Кубок Востока HEMAkid
 source: portal
 source_key: kubok-vostoka-hemakids-2021-2021
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11
   notes: Спортивная шпага (9-11 лет)
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14

@@ -8,7 +8,7 @@ description: Отборочный этап турнира HEMA Kids 2022
 source: portal
 source_key: kubok-zapada-hema-kids-2022-2022
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11

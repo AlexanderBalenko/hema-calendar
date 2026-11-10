@@ -14,12 +14,12 @@ description: |-
 source: portal
 source_key: sila-zverya-2023
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 6
   max_age: 8
   notes: Шпага 6-8 лет
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11

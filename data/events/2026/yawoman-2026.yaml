@@ -5,10 +5,10 @@ organizer: ЯАвтор
 source: portal
 source_key: yawoman-2026
 nominations:
-- weapon: longsword
+- weapon: sport-epee
   gender: male
   notes: Спортивная шпага
-- weapon: longsword
+- weapon: sport-epee
   gender: female
   notes: Спортивная шпага
 - weapon: rapier

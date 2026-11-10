@@ -9,3 +9,14 @@ source_key: black-white-fest-2026
 weapons:
 - longsword
 - saber
+nominations:
+- weapon: longsword
+  gender: male
+  notes: Фестиваль
+- weapon: longsword
+  gender: female
+  notes: Фестиваль
+- weapon: saber
+  gender: male
+- weapon: saber
+  gender: female

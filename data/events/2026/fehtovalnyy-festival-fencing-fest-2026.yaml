@@ -6,3 +6,10 @@ city: Челябинск
 organizer: Золотой Сокол (Чел)
 source: portal
 source_key: fehtovalnyy-festival-fencing-fest-2026
+weapons:
+- longsword
+nominations:
+- weapon: longsword
+  gender: male
+- weapon: longsword
+  gender: female

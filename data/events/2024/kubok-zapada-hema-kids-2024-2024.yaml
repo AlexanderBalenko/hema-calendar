@@ -9,12 +9,12 @@ description: |-
 source: portal
 source_key: kubok-zapada-hema-kids-2024-2024
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11
   notes: Шпага 9-11 лет
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14

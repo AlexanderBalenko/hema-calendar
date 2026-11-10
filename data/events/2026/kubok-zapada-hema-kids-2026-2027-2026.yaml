@@ -6,30 +6,30 @@ hemagon_url: https://hemagon.com/tournament/kubok-zapada-hema-kids-2026-2027
 source: portal
 source_key: kubok-zapada-hema-kids-2026-2027-2026
 nominations:
-- weapon: longsword
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11
   notes: Шпага 9-11 лет
-- weapon: longsword
+- weapon: sport-epee
   gender: female
   min_age: 9
   max_age: 11
   notes: Шпага 9-11 лет
-- weapon: longsword
+- weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14
   notes: Шпага 12-14 лет
-- weapon: longsword
+- weapon: sport-epee
   gender: female
   min_age: 12
   max_age: 14
   notes: Шпага 12-14 лет
-- weapon: longsword
+- weapon: sport-epee
   gender: male
   notes: 'Шпага 15-17. Юноши; hemagon: Шпага 15-17. Девушки'
-- weapon: longsword
+- weapon: sport-epee
   gender: female
   notes: 'Шпага 15-17. Юноши; hemagon: Шпага 15-17. Девушки'
 - weapon: saber

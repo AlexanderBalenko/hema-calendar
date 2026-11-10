@@ -8,12 +8,12 @@ hemagon_url: https://hemagon.com/tournament/IKids-2024
 source: portal
 source_key: yakids-2024-2024
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 8
   max_age: 11
   notes: Шпага, 8-11 лет
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14

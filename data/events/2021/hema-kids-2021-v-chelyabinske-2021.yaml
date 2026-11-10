@@ -9,12 +9,12 @@ description: |-
 source: portal
 source_key: hema-kids-2021-v-chelyabinske-2021
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11
   notes: Спортивная шпага 9-11 лет
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14

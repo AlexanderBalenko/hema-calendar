@@ -14,12 +14,12 @@ description: |-
 source: portal
 source_key: hema-panda-2026-2026
 nominations:
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 9
   max_age: 11
   notes: Шпага 9-11 лет
-- weapon: rapier
+- weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14
