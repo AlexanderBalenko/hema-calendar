@@ -11,10 +11,10 @@ nominations:
   gender: male
 - weapon: saber
   gender: female
-- weapon: buckler
+- weapon: longsword
   gender: male
   notes: 'меч; исходный текст: меч - баклер.'
-- weapon: buckler
+- weapon: longsword
   gender: female
   notes: 'меч; исходный текст: меч - баклер.'
 - weapon: rapier

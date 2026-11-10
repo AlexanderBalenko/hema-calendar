@@ -24,10 +24,10 @@ description: |-
 source: portal
 source_key: eleonora-2026
 nominations:
-- weapon: sport-epee
+- weapon: longsword
   gender: male
   notes: Спортивная шпага
-- weapon: sport-epee
+- weapon: longsword
   gender: female
   notes: Спортивная шпага
 - weapon: saber

@@ -6,10 +6,10 @@ organizer: Гладиатория
 source: portal
 source_key: kazhdyy-den-ritter-sport-2027
 nominations:
-- weapon: sport-epee
+- weapon: longsword
   gender: male
   notes: 'штыковой бой; исходный текст: шпага'
-- weapon: sport-epee
+- weapon: longsword
   gender: female
   notes: 'штыковой бой; исходный текст: шпага'
 - weapon: saber
