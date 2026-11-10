@@ -27,3 +27,5 @@ nominations:
 - weapon: buckler
   gender: female
   team: true
+- weapon: rapier-dagger
+  team: true
