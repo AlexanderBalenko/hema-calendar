@@ -129,6 +129,15 @@ function Calendar({ params }: { params: RawParams }) {
   const grow = (patch: Partial<CalendarFilters>) =>
     router.replace(`${pathname}${filtersToSearch({ ...filters, ...patch }, today)}`, { scroll: false });
 
+  // Новая точка отсчёта — новая лента, и счётчики «сколько недель уже просили» начинают с нуля:
+  // они относились к ПРЕЖНЕЙ ленте. Без сброса свежая лента первым же шагом дотягивалась до
+  // прежнего края — замер 10.11.2026: полистав 2027-й, выбираем в полоске декабрь 2027, и лента
+  // мгновенно подтягивает 56 недель прошлого и увозит экран в февраль вместо декабря, куда ткнули.
+  useEffect(() => {
+    requestedWeeks.current = 0;
+    requestedBack.current = 0;
+  }, [filters.month]);
+
   const sentinelRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const node = sentinelRef.current;
@@ -150,9 +159,28 @@ function Calendar({ params }: { params: RawParams }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- состояние целиком приходит из адреса
   }, [canGrow, nextStart, anchorWeek, params, today]);
 
+  // Липкий слой (фильтры, полоска месяцев, шапка дней) накрывает верх ленты, и всё, что про
+  // «подо что уехало» и «куда поставить», считается от его НИЗА, а не от верха экрана.
+  const stickyRef = useRef<HTMLDivElement>(null);
+  /**
+   * Низ липкого слоя в ПРИЛИПШЕМ положении: его собственный `top` из стилей плюс высота.
+   *
+   * Не текущий `getBoundingClientRect().bottom` — тот врёт дважды. На самом верху страницы слой
+   * ещё не прилип и стоит на 25px ниже. А сразу после программной прокрутки браузер пересчитывает
+   * липкое положение не в том же такте: замер 10.11.2026 — синхронный промер после `scrollBy`
+   * отдавал низ на 17px ниже настоящего, и перенос к месяцу не доезжал ровно на эту разницу
+   * (под шапкой оставался хвост предыдущей недели, а полоска называла предыдущий месяц).
+   * Высота слоя от прокрутки не зависит, поэтому так расчёт устойчив.
+   */
+  const headerBottom = () => {
+    const node = stickyRef.current;
+    if (!node) return 0;
+    return parseFloat(getComputedStyle(node).top || '0') + node.getBoundingClientRect().height;
+  };
+
   // --- вверх, в прошлое ----------------------------------------------------------------------
   // Подгрузка сверху добавляет содержимое НАД видимой областью, и браузер уезжает вместе с ним.
-  // Поэтому перед ростом запоминаем ЯКОРЬ — верхнюю видимую плашку и её место на экране, — а
+  // Поэтому перед ростом запоминаем ЯКОРЬ — верхнюю видимую строку и её место на экране, — а
   // сразу после отрисовки возвращаем её туда же.
   //
   // Якорь, а не прирост высоты страницы: прирост обманывает. Часть подгруженного встаёт НИЖЕ
@@ -160,14 +188,29 @@ function Calendar({ params }: { params: RawParams }) {
   // строки, садится под ней, — и на эту разницу страницу дёргало при каждой подгрузке (замечание
   // заказчика 08.11.2026 про «лютые перескоки»; замер в списке: 97px мимо из 995).
   const topSentinelRef = useRef<HTMLDivElement>(null);
-  const scrollAnchor = useRef<{ href: string; top: number } | null>(null);
+  const scrollAnchor = useRef<{ key: string; top: number } | null>(null);
 
-  /** Верхняя видимая плашка турнира и её место на экране — то, что обязано остаться на месте. */
+  /**
+   * Верхняя видимая строка и её место на экране — то, что обязано остаться на месте.
+   *
+   * Строка НЕДЕЛИ, а не только плашка турнира: в пустом куске календаря плашек на экране может
+   * не быть вовсе, и тогда якоря не находилось, компенсация молча не срабатывала, а лента
+   * прыгала на всю высоту подгруженного. Замер 10.11.2026: выбрал в полоске сентябрь 2027 —
+   * месяц почти пустой, — и экран тут же уехал в июль. В списке недель нет, там якорем
+   * по-прежнему строка турнира; порядок в выборке документный, поэтому в ленте первой находится
+   * неделя, а внутри неё — плашка, если неделя уже наполовину уехала под шапку.
+   *
+   * Место запоминаем ОТНОСИТЕЛЬНО НИЗА ЛИПКОГО СЛОЯ (`headerBottom`), а не верха экрана: слой
+   * тоже умеет переезжать, и, померив от верха экрана, мы возвращали строку на прежнее место —
+   * а шапка к тому времени поднималась, и из-под неё выглядывал остаток предыдущей недели.
+   * Этого хватало, чтобы полоска назвала предыдущий месяц: выбрали сентябрь — она пишет «Август».
+   */
   const rememberScrollAnchor = () => {
-    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('main a[href*="/events/"]'));
-    const node = links.find((link) => link.getBoundingClientRect().top >= 0) ?? links[0];
-    const href = node?.getAttribute('href');
-    scrollAnchor.current = href ? { href, top: node.getBoundingClientRect().top } : null;
+    const rows = Array.from(
+      document.querySelectorAll<HTMLElement>('main [data-month], main a[href*="/events/"]'));
+    const node = rows.find((row) => row.getBoundingClientRect().top >= 0) ?? rows[0];
+    const key = node?.id ? `#${node.id}` : node?.getAttribute('href');
+    scrollAnchor.current = key ? { key, top: node.getBoundingClientRect().top - headerBottom() } : null;
   };
   // Верхний сентинел в начале ленты виден сразу при загрузке, и без этой задержки лента
   // подгружала бы прошлое сама, до единого движения человека.
@@ -229,13 +272,119 @@ function Calendar({ params }: { params: RawParams }) {
     const anchor = scrollAnchor.current;
     scrollAnchor.current = null;
     if (!anchor) return;
-    const node = document.querySelector(`main a[href="${anchor.href}"]`);
+    const node = anchor.key.startsWith('#')
+      ? document.getElementById(anchor.key.slice(1))
+      : document.querySelector(`main a[href="${anchor.key}"]`);
     if (!node) return;
     // Доматываем ровно на то, насколько уехал ЯКОРЬ, и до кадра (useLayoutEffect) — иначе
     // человек успевает увидеть скачок.
-    const delta = node.getBoundingClientRect().top - anchor.top;
+    const delta = node.getBoundingClientRect().top - (headerBottom() + anchor.top);
     if (delta !== 0) window.scrollBy({ top: delta, behavior: 'instant' as ScrollBehavior });
   }, [filters.back]);
+
+  // --- полоска месяцев и лента: связь в обе стороны (решение заказчика 10.11.2026) -------------
+  //
+  // Лента длинная и листается прокруткой, а полоска показывала месяц ИЗ АДРЕСА — точку, с которой
+  // лента начата. Человек уезжал прокруткой в март, а полоска продолжала подсвечивать ноябрь и
+  // считать турниры прошлого года: главный навигатор календаря врал о том, где человек стоит.
+  //
+  // Теперь подсвеченный месяц и год — те, что на экране. Адрес при этом НЕ переписывается: от
+  // месяца в адресе отмеряны оба края загруженного окна (`back` недель назад, `weeks` вперёд), и
+  // сдвиг точки отсчёта на ходу либо обрезал бы уже загруженное, либо двигал бы ленту под руками.
+  // Адрес — откуда лента начата, полоска — где человек сейчас.
+  const [visibleMonth, setVisibleMonth] = useState<string | null>(null);
+  /** Подсказка для поиска: прокрутка идёт шагами, и соседняя неделя почти всегда та же или рядом. */
+  const probe = useRef(0);
+  /** Месяц, до которого надо доехать, когда ленте пришлось начаться заново (см. `scrollToMonth`). */
+  const pendingPick = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!isRibbon) {
+      setVisibleMonth(null);
+      return;
+    }
+    const read = () => {
+      const weekNodes = document.querySelectorAll<HTMLElement>('main [data-month]');
+      if (!stickyRef.current || weekNodes.length === 0) return;
+      // Видимый месяц — у первой недели, которая ещё не уехала под липкий слой. Высота слоя
+      // меряется, а не задана числом: строка фильтров переносится по словам, и на узком экране
+      // слой вдвое выше, чем на широком.
+      const limit = headerBottom();
+      let i = Math.min(Math.max(probe.current, 0), weekNodes.length - 1);
+      while (i < weekNodes.length - 1 && weekNodes[i].getBoundingClientRect().bottom <= limit) i += 1;
+      while (i > 0 && weekNodes[i - 1].getBoundingClientRect().bottom > limit) i -= 1;
+      probe.current = i;
+      const key = weekNodes[i].dataset.month;
+      if (key) setVisibleMonth(key);
+    };
+    // Читаем прямо в обработчике, без requestAnimationFrame. Кадр — ненадёжный таймер:
+    // браузер придерживает его, когда страница не на переднем плане, и подсветка начинает
+    // отставать от прокрутки на секунды (замер во встроенной панели просмотра: один кадр за
+    // 500 мс при `visibilityState === 'visible'`). Чтение дешёвое — подсказка `probe` держит
+    // его в двух-трёх промерах, а раскладка на прокрутке и так свежая.
+    read();
+    // Лента перерисовалась — самое время доехать до месяца, выбранного в полоске, если ради него
+    // ей пришлось начаться заново (`scrollToMonth`). Разметка уже новая: месяц в ней есть.
+    const pending = pendingPick.current;
+    pendingPick.current = null;
+    if (pending && jumpToMonth(pending)) read();
+
+    window.addEventListener('scroll', read, { passive: true });
+    window.addEventListener('resize', read);
+    return () => {
+      window.removeEventListener('scroll', read);
+      window.removeEventListener('resize', read);
+    };
+    // weeks — чтобы перечитать после подгрузки: недель в разметке стало больше.
+  }, [isRibbon, weeks]);
+
+  /** Поставить месяц под шапку, если он есть в разметке и его туда вообще можно поднять. */
+  const jumpToMonth = (key: string) => {
+    const node = document.querySelector<HTMLElement>(`main [data-month="${key}"]`);
+    if (!node || !stickyRef.current) return false;
+    // Последние недели окна под шапку не поднимаются: ниже них содержимого нет, и прокрутка
+    // упирается в конец страницы. Экран тогда остаётся на месяц выше выбранного — это не
+    // переезд внутри ленты, а повод начать её заново с выбранного месяца (вернём `false`).
+    const target = window.scrollY + node.getBoundingClientRect().top - headerBottom();
+    if (target > document.documentElement.scrollHeight - window.innerHeight + 1) return false;
+    // Переносим СРАЗУ, без плавной прокрутки. Плавная здесь не доезжала: пока она шла, лента
+    // успевала подтянуть прошлое, а подгрузка сверху доматывает прокрутку мгновенным
+    // `scrollBy` — и он обрывает плавную на полпути. Замер 10.11.2026 на живой странице: выбор
+    // марта из января оставлял экран в январе, подтянув заодно восемь ненужных недель прошлого.
+    // Мгновенный перенос этого не допускает вовсе: к моменту, когда сработает наблюдатель
+    // верхнего края, экран уже далеко от него.
+    //
+    // Несколько проходов, а не один: липкий слой на самом верху страницы ЕЩЁ НЕ ПРИЛИП — он
+    // стоит в потоке на 25px ниже, чем прилипнув (замер там же), и расчёт по его низу до
+    // переноса промахивается ровно на эту разницу: экран уезжал к февралю вместо марта.
+    // Второй промер делается уже с прилипшим слоем и попадает точно.
+    for (let pass = 0; pass < 3; pass += 1) {
+      const delta = node.getBoundingClientRect().top - headerBottom();
+      if (Math.abs(delta) < 1) break;
+      window.scrollBy({ top: delta, behavior: 'instant' as ScrollBehavior });
+    }
+    return true;
+  };
+
+  /**
+   * Обратная сторона связи: выбранный в полоске месяц уже загружен — переносим к нему экран, а
+   * не начинаем ленту заново. Возвращает `true`, если справились сами и переход по ссылке не
+   * нужен. Месяца в окне нет (или это не лента) — `false`, и ссылка открывается как прежде.
+   *
+   * Но доехать до выбранного месяца — всё равно наша забота: начавшись заново, лента тут же
+   * тянет прошлое, и экран оставался ВЫШЕ выбранного месяца (замер 10.11.2026: выбрали сентябрь
+   * 2027 — под шапкой остаток августовской недели, и полоска честно писала «Август»). Поэтому
+   * запоминаем месяц и доезжаем, как только появится его разметка.
+   */
+  const scrollToMonth = (key: string) => {
+    if (!isRibbon) return false;
+    if (jumpToMonth(key)) return true;
+    pendingPick.current = key;
+    return false;
+  };
+
+  // Что показывает полоска: видимый месяц, пока листаем ленту, иначе — месяц из адреса.
+  const shown = parseMonthKey(visibleMonth ?? filters.month, today);
 
   return (
     <div className="flex flex-col gap-4">
@@ -246,9 +395,20 @@ function Calendar({ params }: { params: RawParams }) {
       {/* Фильтры, полоска месяцев и шапка дней — один липкий слой, как в портале: двумя
           независимыми sticky они наезжают друг на друга, потому что высота строки фильтров
           переменная (она переносится по словам). */}
-      <div className="sticky top-16 z-30 -mx-4 flex flex-col gap-2 bg-background px-4 pb-2 pt-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div
+        ref={stickyRef}
+        className="sticky top-16 z-30 -mx-4 flex flex-col gap-2 bg-background px-4 pb-2 pt-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
+      >
         <FilterBar filters={filters} directories={DIRECTORIES} today={today} />
-        {filters.view !== 'list' && <MonthStrip filters={filters} events={inYear} today={today} />}
+        {filters.view !== 'list' && (
+          <MonthStrip
+            filters={filters}
+            events={inYear}
+            today={today}
+            at={shown}
+            onPick={scrollToMonth}
+          />
+        )}
         {filters.view === 'ribbon' && <CalendarWeekdayHeader />}
       </div>
 

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { memo, useLayoutEffect, useRef, useState } from 'react';
 
 import type { CalendarEvent } from '@/src/lib/data';
+import { monthKey } from '@/src/lib/filters';
 import { formatOrganizers, formatPlace } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
 import { EventKindIcon, KindSuffix, kindWord } from './event-kind';
@@ -748,12 +749,17 @@ export function CalendarGrid({
         // Якорь месяца для полоски-навигатора. Тот же критерий, что у разделителя (layoutRange):
         // неделя принадлежит месяцу своего 1-го числа, если оно в неё попало, иначе — месяцу
         // понедельника. Разъехавшись, якорь и заголовок увозили полоску на строку выше нужной.
+        //
+        // Формат атрибута — ровно тот же 'YYYY-MM', что у параметра `month` в адресе и у ссылок
+        // полоски: по нему страница узнаёт, какой месяц человек сейчас видит, и в него же
+        // переносит экран по щелчку (app/page.tsx). Прежняя запись — номер месяца с нуля и без
+        // ведущего нуля — никому не мешала, пока атрибут никто не читал; теперь читают.
         const anchorDay = week.days.find((d) => d.day === 1) ?? week.days[0];
         return (
           <div
             key={week.weekStart}
             id={`calendar-week-${week.weekStart}`}
-            data-month={`${anchorDay.year}-${anchorDay.month}`}
+            data-month={monthKey(anchorDay.year, anchorDay.month)}
             className="flex flex-col gap-3 scroll-mt-24"
           >
             {week.monthDivider && (

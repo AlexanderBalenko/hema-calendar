@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useRef } from 'react';
 
 import {
   filtersToSearch,
@@ -21,6 +24,11 @@ import { MONTH_TITLES, parseDate } from '@/src/lib/month-layout';
  *
  * Месяцы — ссылки, а не кнопки: сайт статический, состояние живёт в адресе, и ссылку можно
  * открыть в новой вкладке или отдать поисковику.
+ *
+ * Связь с лентой двусторонняя (решение заказчика 10.11.2026). Полоска показывает не тот месяц,
+ * с которого лента начата, а тот, который человек СЕЙЧАС видит: `at` приезжает из страницы, она
+ * следит за прокруткой. В обратную сторону — `onPick`: если выбранный месяц в ленте уже
+ * загружен, страница прокручивает к нему и говорит об этом «да», и переход по ссылке не нужен.
  */
 const MAX_BAR_HEIGHT = 14;
 
@@ -28,13 +36,20 @@ export function MonthStrip({
   filters,
   events,
   today,
+  at,
+  onPick,
 }: {
   filters: CalendarFilters;
   /** Турниры, отобранные фильтрами без учёта дат; неподходящие приезжают, когда включён глазик. */
   events: SelectedEvent[];
   today: string;
+  /** Что показывать подсвеченным: видимый на экране месяц. Нет — показываем месяц из адреса. */
+  at?: { year: number; month: number };
+  /** Прокрутить к месяцу внутри уже загруженной ленты. Вернула `true` — ссылку не открываем. */
+  onPick?: (key: string) => boolean;
 }) {
-  const { year, month } = parseMonthKey(filters.month, today);
+  const fromAddress = parseMonthKey(filters.month, today);
+  const { year, month } = at ?? fromAddress;
 
   const counts = Array.from({ length: 12 }, () => 0);
   let inYear = 0;
@@ -57,11 +72,38 @@ export function MonthStrip({
   const yearLink = (delta: number) =>
     `/${filtersToSearch({ ...filters, ...fresh, month: monthKey(year + delta, month) }, today)}`;
 
+  /** Щелчок по месяцу или по году: сперва пробуем прокрутить, и только иначе уходим по ссылке. */
+  const pick = (event: { preventDefault: () => void }, key: string) => {
+    if (onPick?.(key)) event.preventDefault();
+  };
+
+  // На узком экране двенадцать месяцев в строку не влезают, полоска прокручивается боком — и
+  // подсвеченный месяц уезжает за край ровно тогда, когда он и нужен. Подтягиваем его к центру
+  // сами.
+  //
+  // Двигаем scrollLeft САМОЙ полоски, а не scrollIntoView: тот уводит и страницу по вертикали, а
+  // здесь вертикалью распоряжается человек — он как раз листает ленту, за которой полоска и
+  // следует. Прокрутка в ответ на прокрутку увела бы календарь из-под руки.
+  const scroller = useRef<HTMLDivElement>(null);
+  const active = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    const box = scroller.current;
+    const node = active.current;
+    if (!box || !node) return;
+    const boxBox = box.getBoundingClientRect();
+    const nodeBox = node.getBoundingClientRect();
+    const center = box.scrollLeft + (nodeBox.left - boxBox.left) - (boxBox.width - nodeBox.width) / 2;
+    const target = Math.max(0, Math.min(center, box.scrollWidth - box.clientWidth));
+    // На широком экране прокручивать нечего: scrollWidth равен clientWidth, цель всегда 0.
+    if (Math.abs(target - box.scrollLeft) > 1) box.scrollTo({ left: target, behavior: 'smooth' });
+  }, [year, month]);
+
   return (
     <div className="flex items-center gap-2 rounded-xl bg-background-secondary px-2 py-1.5">
       <div className="flex shrink-0 items-center gap-1">
         <Link
           href={yearLink(-1)}
+          onClick={(event) => pick(event, monthKey(year - 1, month))}
           aria-label={`${year - 1} год`}
           className="rounded-md px-1 text-sm text-text-muted hover:bg-card hover:text-foreground"
         >
@@ -73,6 +115,7 @@ export function MonthStrip({
         </span>
         <Link
           href={yearLink(1)}
+          onClick={(event) => pick(event, monthKey(year + 1, month))}
           aria-label={`${year + 1} год`}
           className="rounded-md px-1 text-sm text-text-muted hover:bg-card hover:text-foreground"
         >
@@ -80,14 +123,16 @@ export function MonthStrip({
         </Link>
       </div>
 
-      <div className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto">
+      <div ref={scroller} className="flex min-w-0 flex-1 gap-0.5 overflow-x-auto">
         {MONTH_TITLES.map((title, index) => {
           const isCurrent = index === month;
           const isEmpty = counts[index] === 0;
           return (
             <Link
               key={title}
+              ref={isCurrent ? active : undefined}
               href={`/${filtersToSearch({ ...filters, ...fresh, month: monthKey(year, index) }, today)}`}
+              onClick={(event) => pick(event, monthKey(year, index))}
               aria-current={isCurrent ? 'date' : undefined}
               aria-label={`${title} ${year}, турниров: ${counts[index]}`}
               className={[

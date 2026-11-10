@@ -52,6 +52,69 @@ test.describe('Календарь', () => {
     await expect(page.getByRole('link', { name: /^Март/ })).toHaveAttribute('aria-current', 'date');
   });
 
+  // Полоска и лента связаны в обе стороны: листаешь — полоска идёт следом, выбираешь месяц —
+  // лента переезжает к нему. Оба теста идут от ДЕКАБРЯ: окно в двенадцать недель от него
+  // заведомо переваливает за Новый год, и видно не только смену месяца, но и смену года — а
+  // месяц берётся от сегодняшнего дня, чтобы проверка не состарилась вместе с годом в коде.
+  const december = () => {
+    // «Сегодня» календарь считает по Москве, а прогон может идти в UTC.
+    const year = new Date(Date.now() + 3 * 60 * 60 * 1000).getUTCFullYear();
+    return { key: `${year}-12`, year, nextYear: year + 1 };
+  };
+
+  test('полоска идёт за прокруткой: подсвечены месяц и год, которые на экране', async ({ page }) => {
+    const { key, nextYear } = december();
+    await page.goto(`?month=${key}`);
+    await page.waitForLoadState('load');
+
+    await expect(page.getByRole('link', { name: new RegExp(`^Декабрь ${nextYear - 1}`) }))
+      .toHaveAttribute('aria-current', 'date');
+
+    // Подводим первую неделю января под липкий слой — и ждём, пока полоска это признает.
+    // Прокручиваем на каждой попытке заново: первое же движение подтягивает недели прошлого,
+    // они встают НАД видимой областью, и разовый расчёт промахнулся бы на их высоту.
+    const january = `${nextYear}-01`;
+    await expect.poll(async () => page.evaluate((month) => {
+      const layer = document.querySelector('div.sticky.top-16')?.getBoundingClientRect().bottom;
+      const week = document.querySelector(`main [data-month="${month}"]`);
+      if (layer === undefined || !week) return 'января нет в ленте';
+      window.scrollBy({ top: week.getBoundingClientRect().top - layer + 2, behavior: 'instant' });
+      return document.querySelector('a[aria-current="date"]')?.getAttribute('aria-label') ?? 'ничего';
+    }, january), 'подсвечен месяц, который под шапкой')
+      // Год в полоске отдельно не спрашиваем: подписи месяцев несут ГОД, который она показывает,
+      // и ссылка «Январь 2028» существует только тогда, когда год в полоске сменился на 2028.
+      .toMatch(new RegExp(`^Январь ${nextYear}`));
+  });
+
+  test('месяц из полоски, уже загруженный в ленте, открывается прокруткой, а не заново', async ({ page }) => {
+    // От января, пролистав ленту вниз: так март оказывается не в хвосте окна, а в середине —
+    // туда можно переехать прокруткой, и перезапускать ленту незачем. Месяц берём того же года,
+    // что и точка отсчёта: полоска показывает двенадцать месяцев ОДНОГО года.
+    const { year } = december();
+    await page.goto(`?month=${year}-01`);
+    await page.waitForLoadState('load');
+
+    const bars = page.locator('a[href*="/events/"]');
+    const before = await bars.count();
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect.poll(() => bars.count()).toBeGreaterThan(before);
+
+    const march = `${year}-03`;
+    await expect(page.locator(`main [data-month="${march}"]`).first()).toBeAttached();
+
+    await page.getByRole('link', { name: new RegExp(`^Март ${year}`) }).click();
+
+    // Лента не начиналась заново: точка отсчёта в адресе прежняя, а экран переехал к марту.
+    // (Подтянутые прокруткой недели в адресе появиться могут — это не перезапуск ленты.)
+    await expect.poll(() => new URL(page.url()).searchParams.get('month')).toBe(`${year}-01`);
+    await expect.poll(async () => page.evaluate(() => {
+      const layer = document.querySelector('div.sticky.top-16')?.getBoundingClientRect().bottom ?? 0;
+      const weeks = Array.from(document.querySelectorAll('main [data-month]'));
+      return weeks.find((week) => week.getBoundingClientRect().bottom > layer)
+        ?.getAttribute('data-month') ?? null;
+    }), 'под шапкой — выбранный месяц').toBe(march);
+  });
+
   test('турнир открывается своей страницей, и она собрана заранее', async ({ page }) => {
     await page.goto('?view=list&period=past');
     const first = page.locator('a[href*="/events/"]').first();
