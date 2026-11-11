@@ -3,12 +3,13 @@
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  CalendarClock, CalendarDays, ChevronDown, Eye, EyeOff, LayoutList, MapPin, Rows3, Search, Sprout,
-  Swords, Tag, UsersRound,
+  CalendarClock, CalendarDays, ChevronDown, Eye, EyeOff, LayoutList, Lock, MapPin, Rows3, Search,
+  SlidersHorizontal, Sprout, Swords, Tag, Unlock, UsersRound,
 } from 'lucide-react';
 
 import { KIND_LABEL, type Directories } from '@/src/lib/data';
 import {
+  countActiveFilters,
   filtersToSearch,
   hasActiveFilters,
   hasPersonalFilters,
@@ -45,6 +46,22 @@ export const FILTER_CONTROL_CLASS =
 const ACTIVE_CLASS = 'bg-primary/15 text-primary ring-primary/40';
 const IDLE_CLASS = 'bg-background text-text-secondary ring-border-light hover:text-foreground';
 
+/**
+ * Телефонная шапка сворачивается сама (просьба заказчика 12.11.2026, docs/Calendar.md §5к).
+ *
+ * COLLAPSE_AT — за сколько точек прокрутки фильтры уезжают и за сколько возвращаются. Число одно
+ * на оба направления: состояние считается ОТ ПОЛОЖЕНИЯ прокрутки, а не от её направления. Шапка,
+ * выскакивающая от каждого движения вверх посреди ленты, — ровно то, на что заказчик и жаловался.
+ *
+ * KEEP_OPEN_SLACK — насколько можно шевелить страницу после того, как фильтры раскрыты кнопкой,
+ * прежде чем они снова уедут. Без запаса первое же касание прокрутки закрывало бы только что
+ * раскрытую панель.
+ */
+const COLLAPSE_AT = 40;
+const KEEP_OPEN_SLACK = 80;
+/** Замок — выбор устройства, а не ссылки: в адресе ему не место, он ничего не отбирает. */
+const PIN_KEY = 'hema-calendar:filters-pinned';
+
 const VIEW_ICON: Record<ViewMode, typeof Rows3> = { ribbon: Rows3, month: CalendarDays, list: LayoutList };
 const VIEW_LABEL: Record<ViewMode, string> = { ribbon: 'Лента недель', month: 'Месяц', list: 'Список' };
 
@@ -64,6 +81,84 @@ export function FilterBar({
   // календарь, поэтому открыт, если по ссылке уже пришёл возраст, пол или снятые смешанные.
   const [personalOpen, setPersonalOpen] = useState(hasPersonalFilters(filters));
 
+  // Свёрнута ли шапка. Начальное значение — «развёрнута», как на сервере: страница собирается
+  // заранее, ширины экрана и прокрутки на сборке нет, и любое другое начальное состояние дало бы
+  // расхождение с разметкой при оживлении.
+  const [collapsed, setCollapsed] = useState(false);
+  const [pinned, setPinned] = useState(false);
+  // Положение прокрутки, от которого отсчитывается запас после раскрытия кнопкой
+  // (см. KEEP_OPEN_SLACK). Берётся не в момент нажатия, а на первом же событии прокрутки после
+  // него: раскрытая панель удлиняет страницу на 152 точки, и браузер сам подвигает прокрутку,
+  // чтобы читатель остался на том же месте. Запомни мы положение до этой поправки — запас
+  // оказался бы уже израсходован, и панель закрылась бы от первого касания.
+  const openedAt = useRef<number | null>(null);
+  const justOpened = useRef(false);
+
+  useEffect(() => {
+    // Приватный режим и запрет сторонних данных бросают прямо на чтении — замок не настолько
+    // важен, чтобы из-за него падала строка фильтров.
+    try {
+      setPinned(window.localStorage.getItem(PIN_KEY) === '1');
+    } catch {
+      /* обойдёмся без памяти */
+    }
+  }, []);
+
+  useEffect(() => {
+    const phone = window.matchMedia('(max-width: 639.98px)');
+    const update = () => {
+      if (pinned || !phone.matches) {
+        setCollapsed(false);
+        return;
+      }
+      const y = window.scrollY;
+      if (justOpened.current) {
+        justOpened.current = false;
+        openedAt.current = y;
+        setCollapsed(false);
+        return;
+      }
+      if (openedAt.current !== null) {
+        if (y <= openedAt.current + KEEP_OPEN_SLACK) {
+          setCollapsed(false);
+          return;
+        }
+        openedAt.current = null;
+      }
+      // Короткую страницу не сворачиваем: свернувшись, она перестала бы прокручиваться, прокрутка
+      // обнулилась бы, фильтры вернулись — и шапка задёргалась бы на месте.
+      const scrollable = document.documentElement.scrollHeight > window.innerHeight + 200;
+      setCollapsed(scrollable && y > COLLAPSE_AT);
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [pinned]);
+
+  const openFilters = () => {
+    justOpened.current = true;
+    openedAt.current = null;
+    setCollapsed(false);
+  };
+
+  const togglePin = () => {
+    setPinned((on) => {
+      const next = !on;
+      try {
+        window.localStorage.setItem(PIN_KEY, next ? '1' : '0');
+      } catch {
+        /* обойдёмся без памяти */
+      }
+      return next;
+    });
+  };
+
+  const activeCount = countActiveFilters(filters);
+
   const apply = (next: CalendarFilters) => {
     startTransition(() => router.push(`${pathname}${filtersToSearch(next, today)}`, { scroll: false }));
   };
@@ -82,7 +177,30 @@ export function FilterBar({
       aria-busy={pending}
       className={`flex flex-col gap-1.5 transition-opacity ${pending ? 'opacity-60' : ''}`}
     >
-      <div className="flex flex-wrap items-center gap-1.5">
+      {/* Свёрнутая шапка — одна строка вместо 184 точек фильтров (липкий блок 283 → 131, замер
+          12.11.2026). Цифра обязательна: без неё свёрнутая шапка прятала бы от читателя сам факт,
+          что выдача отфильтрована, и пустой календарь выглядел бы поломкой. */}
+      {collapsed && (
+        <button
+          type="button"
+          onClick={openFilters}
+          aria-expanded={false}
+          className={`${FILTER_CONTROL_CLASS} self-start font-medium sm:hidden ${
+            activeCount > 0 ? ACTIVE_CLASS : IDLE_CLASS
+          }`}
+        >
+          <SlidersHorizontal className="size-3.5 shrink-0" aria-hidden="true" />
+          Фильтры
+          {activeCount > 0 && (
+            <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
+              {activeCount}
+            </span>
+          )}
+          <ChevronDown className="size-3 shrink-0 opacity-60" aria-hidden="true" />
+        </button>
+      )}
+
+      <div className={`${collapsed ? 'hidden sm:flex' : 'flex'} flex-wrap items-center gap-1.5`}>
       <MultiDropdown
         label="Оружие"
         icon={<Swords className="size-3.5 shrink-0" aria-hidden="true" />}
@@ -216,6 +334,25 @@ export function FilterBar({
       {/* Глазик и виды — одной группой справа: оба про показ, а не про отбор. В портале глазик
           живёт в полоске месяцев, но она у нас не показывается в виде «список», где он нужен
           ровно так же. */}
+      {/* Замок и виды — одной строкой на телефоне: фильтры там сворачиваются прокруткой, и
+          замок говорит «не прячь». `sm:contents` растворяет обёртку на десктопе, где этой строки
+          нет вовсе и группа видов прижата вправо среди чипов, как была. */}
+      <div className="flex w-full items-center gap-2 sm:contents">
+        <button
+          type="button"
+          aria-pressed={pinned}
+          onClick={togglePin}
+          title={pinned ? 'Разрешить прятать фильтры при прокрутке' : 'Не прятать фильтры при прокрутке'}
+          aria-label={pinned ? 'Разрешить прятать фильтры при прокрутке' : 'Не прятать фильтры при прокрутке'}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors sm:hidden ${
+            pinned ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
+          }`}
+        >
+          {pinned
+            ? <Lock className="size-4" aria-hidden="true" />
+            : <Unlock className="size-4" aria-hidden="true" />}
+        </button>
+
       <div className="ml-auto flex items-center gap-0.5">
         <button
           type="button"
@@ -253,9 +390,10 @@ export function FilterBar({
         })}
       </div>
       </div>
+      </div>
 
       {personalOpen && (
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className={`${collapsed ? 'hidden sm:flex' : 'flex'} flex-wrap items-center gap-1.5`}>
           <AgeChip age={filters.age} onChange={(age) => apply({ ...filters, age })} />
 
           <Dropdown

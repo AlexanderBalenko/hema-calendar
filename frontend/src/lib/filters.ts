@@ -226,6 +226,27 @@ export function hasActiveFilters(filters: CalendarFilters): boolean {
 }
 
 /**
+ * Сколько фильтров включено — цифрой на кнопке свёрнутой шапки (телефон, §5к). Считаем критериями,
+ * как их видит читатель: оружие, регион, город, командные, новички, поиск, возраст, пол и снятые
+ * смешанные — каждый за один, сколько бы значений ни было выбрано внутри. Иначе «Оружие: 7»
+ * означало бы семь фильтров там, где читатель поставил один.
+ */
+export function countActiveFilters(filters: CalendarFilters): number {
+  return [
+    filters.kinds !== null,
+    filters.weapons !== null,
+    filters.regions !== null,
+    filters.city !== null,
+    filters.team,
+    filters.beginner !== 'all',
+    filters.q.length > 0,
+    filters.age !== null,
+    filters.gender !== null,
+    !filters.mixed,
+  ].filter(Boolean).length;
+}
+
+/**
  * Критерии участника заданы руками. Нужны строке фильтров: в свёрнутом аккордеоне этих контролов
  * не видно, и без точки-индикатора у стрелки их влияние на выдачу выглядело бы необъяснимым.
  */

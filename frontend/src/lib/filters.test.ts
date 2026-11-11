@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 import {
+  countActiveFilters,
   filtersToSearch,
   hasActiveFilters,
   monthKey,
@@ -248,6 +249,43 @@ const nomination = (over: Partial<CalendarEvent['nominations'][number]> = {}) =>
   isTeam: false,
   isBeginnerFriendly: false,
   ...over,
+});
+
+describe('счётчик включённых фильтров', () => {
+  const none = parseFilters({}, TODAY);
+
+  it('пустой адрес — ноль', () => {
+    assert.equal(countActiveFilters(none), 0);
+    assert.equal(hasActiveFilters(none), false);
+  });
+
+  it('критерий считается один раз, сколько бы значений в нём ни выбрали', () => {
+    assert.equal(countActiveFilters({ ...none, weapons: ['saber'] }), 1);
+    assert.equal(
+      countActiveFilters({ ...none, weapons: ['saber', 'longsword', 'rapier'] }),
+      1,
+      'три вида оружия — это по-прежнему один фильтр',
+    );
+  });
+
+  it('критерии складываются', () => {
+    assert.equal(countActiveFilters({ ...none, weapons: ['saber'], city: 'Москва', team: true, q: 'кубок' }), 4);
+  });
+
+  it('возраст, пол и снятые смешанные — тоже фильтры', () => {
+    assert.equal(countActiveFilters({ ...none, age: 30, gender: 'male', mixed: false }), 3);
+  });
+
+  it('вид, месяц, период и глазик фильтрами не считаются', () => {
+    const shown = {
+      ...none,
+      view: 'list' as const,
+      month: '2027-01',
+      period: 'all' as const,
+      showUnsuitable: true,
+    };
+    assert.equal(countActiveFilters(shown), 0);
+  });
 });
 
 describe('отбор турниров', () => {
