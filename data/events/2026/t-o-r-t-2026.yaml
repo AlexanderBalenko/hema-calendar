@@ -39,11 +39,13 @@ nominations:
   gender: male
   min_age: 12
   max_age: 14
+  beginners: true
   notes: Сабля Юноши (12-14 лет)
 - weapon: saber
   gender: female
   min_age: 12
   max_age: 14
+  beginners: true
   notes: Сабля Юноши (12-14 лет)
 - weapon: saber
   gender: female
@@ -52,31 +54,37 @@ nominations:
   gender: male
   min_age: 15
   max_age: 17
+  beginners: true
   notes: Сабля Девушки (15-17 лет)
 - weapon: saber
   gender: female
   min_age: 15
   max_age: 17
+  beginners: true
   notes: Сабля Девушки (15-17 лет)
 - weapon: sport-epee
   gender: male
   min_age: 15
   max_age: 17
+  beginners: true
   notes: Шпага Девушки (15-17 лет)
 - weapon: sport-epee
   gender: female
   min_age: 15
   max_age: 17
+  beginners: true
   notes: Шпага Девушки (15-17 лет)
 - weapon: sport-epee
   gender: male
   min_age: 12
   max_age: 14
+  beginners: true
   notes: Шпага Юноши (12-14 лет)
 - weapon: sport-epee
   gender: female
   min_age: 12
   max_age: 14
+  beginners: true
   notes: Шпага Юноши (12-14 лет)
 - weapon: saber
   gender: male
