@@ -357,37 +357,40 @@ function BarContent({ event }: { event: GridEvent }) {
           >
             {event.title}
           </span>
-          {/* Название в две строки — строки даты нет, и типу встать некуда; остаётся иконка.
-              Потеря не обидная: здесь уже пропадает дата, а она важнее типа. */}
+          {/* Название в две строки — строки даты нет, и типу встать некуда; остаётся значок
+              (а на телефоне ещё и город, строкой ниже). Потеря не обидная: здесь уже пропадает
+              дата, а она важнее типа. */}
           {singleLine && (
             <span className={`truncate text-[10px] ${SECONDARY_TEXT_CLASS[style]}`}>
               {eventDayRange(event)}
+              {/* Город на телефоне — здесь же, через точку: «7 ноября · Клг» (просьба заказчика
+                  12.11.2026). Сразу ЗА ДАТОЙ, а не в конце строки: строка режется по правому
+                  краю, и в хвосте город терялся бы первым, а тип и без слова виден по значку. */}
+              {placeShort && <span className="sm:hidden"> · {placeShort}</span>}
               <KindSuffix kind={event.kind} />
+            </span>
+          )}
+          {/* Название заняло две строки — даты нет (правило выше), но город остаётся: в ленте
+              он единственное указание места, а дату читатель видит по самой плашке в сетке
+              недели. Высота сходится: 36.7 на название плюс 12.5 на город при 52 доступных. */}
+          {!singleLine && placeShort && (
+            <span className={`truncate text-[10px] sm:hidden ${SECONDARY_TEXT_CLASS[style]}`}>
+              {placeShort}
             </span>
           )}
         </span>
       </span>
 
-      <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
-        {/* Город на телефоне — короткой формой из справочника (просьба заказчика 11.11.2026).
-            Обе формы лежат в разметке, переключает их класс: ширины экрана на сборке нет, а
-            узнавать её в браузере значило бы перерисовывать ленту после первой отрисовки. */}
-        {place && (
-          <>
-            <span className={`w-full truncate sm:hidden ${SECONDARY_TEXT_CLASS[style]}`}>{placeShort}</span>
-            <span className={`hidden w-full truncate sm:block ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>
-          </>
-        )}
+      {/* Правая колонка — только с sm. На телефоне в ней не осталось ничего: клуб спрятан
+          (просьба 11.11.2026 — «Раубриттер (Казань)» отъедал у названия больше, чем город), а
+          город уехал в строку даты. Прячем колонку целиком, а не её содержимое: пустой
+          флекс-элемент забрал бы у названия ещё и зазор gap-1.5. Разметкой, а не условием в JS:
+          лента рисуется на сборке, ширины экрана там нет, и любое «если телефон» в коде было бы
+          догадкой. */}
+      <span className="hidden min-w-0 shrink flex-col items-end text-right leading-tight sm:flex">
+        {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
         {organizers && (
-          // На телефоне клуба нет вовсе (просьба заказчика 11.11.2026): правая колонка плашки
-          // шириной с самую длинную свою строку, и «Раубриттер (Казань)» отъедал у названия
-          // турнира больше, чем город. Прячем разметкой, а не условием в JS: лента рисуется на
-          // сборке, ширины экрана там нет, и любое «если телефон» в коде было бы догадкой.
-          <span
-            className={`hidden w-full truncate text-[10px] sm:block ${TERTIARY_TEXT_CLASS[style]}`}
-          >
-            {organizers}
-          </span>
+          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{organizers}</span>
         )}
       </span>
     </span>
@@ -491,33 +494,25 @@ function ThreadCardContent({ event }: { event: GridEvent }) {
             {event.title}
           </span>
         </span>
-        {/* У нити дата есть всегда — тип встаёт сюда без оговорок. */}
+        {/* У нити дата есть всегда — тип встаёт сюда без оговорок, и город на телефоне тоже
+            (та же просьба 12.11.2026: в ленте город идёт за датой одной строкой). */}
         <span className={`truncate text-[11px] ${SECONDARY_TEXT_CLASS[style]}`}>
           {eventDayRange(event)}
+          {placeShort && <span className="sm:hidden"> · {placeShort}</span>}
           <KindSuffix kind={event.kind} />
         </span>
       </span>
 
-      <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
-        {/* Город на телефоне — короткой формой из справочника (просьба заказчика 11.11.2026).
-            Обе формы лежат в разметке, переключает их класс: ширины экрана на сборке нет, а
-            узнавать её в браузере значило бы перерисовывать ленту после первой отрисовки. */}
-        {place && (
-          <>
-            <span className={`w-full truncate sm:hidden ${SECONDARY_TEXT_CLASS[style]}`}>{placeShort}</span>
-            <span className={`hidden w-full truncate sm:block ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>
-          </>
-        )}
+      {/* Правая колонка — только с sm. На телефоне в ней не осталось ничего: клуб спрятан
+          (просьба 11.11.2026 — «Раубриттер (Казань)» отъедал у названия больше, чем город), а
+          город уехал в строку даты. Прячем колонку целиком, а не её содержимое: пустой
+          флекс-элемент забрал бы у названия ещё и зазор gap-1.5. Разметкой, а не условием в JS:
+          лента рисуется на сборке, ширины экрана там нет, и любое «если телефон» в коде было бы
+          догадкой. */}
+      <span className="hidden min-w-0 shrink flex-col items-end text-right leading-tight sm:flex">
+        {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
         {organizers && (
-          // На телефоне клуба нет вовсе (просьба заказчика 11.11.2026): правая колонка плашки
-          // шириной с самую длинную свою строку, и «Раубриттер (Казань)» отъедал у названия
-          // турнира больше, чем город. Прячем разметкой, а не условием в JS: лента рисуется на
-          // сборке, ширины экрана там нет, и любое «если телефон» в коде было бы догадкой.
-          <span
-            className={`hidden w-full truncate text-[10px] sm:block ${TERTIARY_TEXT_CLASS[style]}`}
-          >
-            {organizers}
-          </span>
+          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{organizers}</span>
         )}
       </span>
     </span>
