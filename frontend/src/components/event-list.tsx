@@ -8,7 +8,7 @@ import {
   parseDate,
   type EventBodyStyle,
 } from '@/src/lib/month-layout';
-import { formatOrganizers, formatPlace, weaponSummary } from '@/src/lib/text';
+import { formatOrganizers, formatPlace, shortPlace, weaponSummary } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
 import { EventKindIcon, kindWord } from './event-kind';
 import { WeaponIcon } from './weapon-icon';
@@ -68,6 +68,7 @@ const SECONDARY_CLASS: Record<EventBodyStyle, string> = {
 function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
   const isPast = event.endsAt < today;
   const place = formatPlace(event.city, event.locationManual);
+  const placeShort = shortPlace(event.cityShort, place);
   const weapons = weaponSummary(event.nominations);
   // Пиктограммы — по порядку номинаций, без повторов: подряд идущие номинации одного вида оружия
   // (личный и командный) не должны съесть все четыре места.
@@ -101,6 +102,16 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
       <span className={`w-[60px] shrink-0 text-right text-[11px] tabular-nums sm:w-28 sm:text-xs ${secondary}`}>
         <span className="sm:hidden">{formatDateRange(event.startsAt, event.endsAt, false, true)}</span>
         <span className="hidden sm:inline">{formatDateRange(event.startsAt, event.endsAt)}</span>
+        {/* Город второй строкой под датой — только на телефоне (просьба заказчика 12.11.2026).
+            До этого в списке на 375px места не было ВОВСЕ: своя колонка приходит только с `sm`,
+            и до телефона из места не доезжало ничего. Здесь город не отнимает у названия ни
+            точки — колонка даты и так 60px, а короткая форма («СПб», «Крд») укладывается в них
+            с запасом. Короткую форму даёт справочник (§5ж), и это второе место, где она
+            работает по прямому назначению.
+            У пяти событий из 415 города в справочнике нет (место задано строкой организатора) —
+            там встаёт сама строка и режется по ширине колонки: обрывок «Алтайск…» говорит
+            читателю больше, чем пустота. */}
+        {placeShort && <span className="block truncate text-[10px] leading-tight sm:hidden">{placeShort}</span>}
       </span>
       <span className="flex min-w-0 flex-1 items-center gap-1.5">
         <EventKindIcon kind={event.kind} />
@@ -111,8 +122,9 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
           <span className={`shrink-0 text-[11px] sm:text-xs ${secondary}`}>· {kindWord(event.kind)}</span>
         )}
       </span>
-      {/* Колонки справа убираются по мере сужения экрана: на телефоне остаются дата и
-          название, остальное есть на странице турнира. Подсказки со списком оружия здесь
+      {/* Колонки справа убираются по мере сужения экрана: на телефоне остаются название и
+          колонка даты, в которой вторая строка — город (см. выше); остальное есть на странице
+          турнира. Подсказки со списком оружия здесь
           больше нет: по наведению на строку встаёт ховер-карточка с полным составом
           номинаций, и две всплывашки спорили бы. */}
       {/* 96px, а не прежние 170: значки занимают максимум 76px (четыре штуки по 16 плюс
