@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { formatPlace, shortPlace, weaponSummary } from './text.ts';
+import { formatPlace, placeForDateColumn, shortPlace, weaponSummary } from './text.ts';
 
 describe('formatPlace', () => {
   it('не повторяет город, который уже есть в адресе', () => {
@@ -30,6 +30,25 @@ describe('shortPlace', () => {
     assert.equal(shortPlace(undefined, 'Москва, Лужники'), 'Москва, Лужники');
     assert.equal(shortPlace('   ', 'Тбилиси'), 'Тбилиси', 'пробелы — не форма');
     assert.equal(shortPlace(null, ''), '');
+  });
+});
+
+describe('placeForDateColumn', () => {
+  it('короткое имя остаётся полным', () => {
+    assert.equal(placeForDateColumn('Москва', 'Мск', 'Москва, Лужники'), 'Москва');
+    assert.equal(placeForDateColumn('Краснодар', 'Крд', 'Краснодар'), 'Краснодар', 'девять букв — предел');
+    assert.equal(placeForDateColumn('Омск', 'Омск', 'Омск'), 'Омск');
+  });
+
+  it('длинное имя уходит в короткую форму', () => {
+    assert.equal(placeForDateColumn('Санкт-Петербург', 'СПб', 'Санкт-Петербург'), 'СПб');
+    assert.equal(placeForDateColumn('Новосибирск', 'Нск', 'Новосибирск'), 'Нск', 'десять и больше — сокращаем');
+    assert.equal(placeForDateColumn('Ростов-на-Дону', 'РнД', 'Ростов-на-Дону'), 'РнД');
+  });
+
+  it('без города показываем то, что есть', () => {
+    assert.equal(placeForDateColumn(null, null, 'Алтайский край'), 'Алтайский край');
+    assert.equal(placeForDateColumn('', '', 'Kazbekovsky District'), 'Kazbekovsky District');
   });
 });
 

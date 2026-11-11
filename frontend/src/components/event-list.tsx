@@ -8,7 +8,7 @@ import {
   parseDate,
   type EventBodyStyle,
 } from '@/src/lib/month-layout';
-import { formatOrganizers, formatPlace, shortPlace, weaponSummary } from '@/src/lib/text';
+import { formatOrganizers, formatPlace, placeForDateColumn, weaponSummary } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
 import { EventKindIcon, kindWord } from './event-kind';
 import { WeaponIcon } from './weapon-icon';
@@ -68,7 +68,7 @@ const SECONDARY_CLASS: Record<EventBodyStyle, string> = {
 function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
   const isPast = event.endsAt < today;
   const place = formatPlace(event.city, event.locationManual);
-  const placeShort = shortPlace(event.cityShort, place);
+  const placeShort = placeForDateColumn(event.city, event.cityShort, place);
   const weapons = weaponSummary(event.nominations);
   // Пиктограммы — по порядку номинаций, без повторов: подряд идущие номинации одного вида оружия
   // (личный и командный) не должны съесть все четыре места.
@@ -106,8 +106,9 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
             До этого в списке на 375px места не было ВОВСЕ: своя колонка приходит только с `sm`,
             и до телефона из места не доезжало ничего. Здесь город не отнимает у названия ни
             точки — колонка даты и так 60px, а короткая форма («СПб», «Крд») укладывается в них
-            с запасом. Короткую форму даёт справочник (§5ж), и это второе место, где она
-            работает по прямому назначению.
+            с запасом. Сокращаются только длинные имена — те, что в колонку не влезают
+            (`CITY_FITS_DATE_COLUMN`, замер по всем городам справочника): «Краснодар» и «Москва»
+            стоят полностью, «Санкт-Петербург» и «Ростов-на-Дону» — формой из справочника (§5ж).
             У пяти событий из 415 города в справочнике нет (место задано строкой организатора) —
             там встаёт сама строка и режется по ширине колонки: обрывок «Алтайск…» говорит
             читателю больше, чем пустота. */}
