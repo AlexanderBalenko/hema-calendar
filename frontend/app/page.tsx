@@ -43,6 +43,23 @@ export default function HomePage() {
   );
 }
 
+/**
+ * Телефон ли это. На первом кадре всегда `false` — ровно то, что лежит в собранной разметке:
+ * ширины экрана на сборке нет, и любой другой ответ разошёлся бы с ней при оживлении. На
+ * телефоне вид подменяется сразу после гидратации.
+ */
+function useIsPhone(): boolean {
+  const [phone, setPhone] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639.98px)');
+    const sync = () => setPhone(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  return phone;
+}
+
 function FromAddress() {
   const search = useSearchParams();
   const params = useMemo(() => Object.fromEntries(search.entries()) as RawParams, [search]);
@@ -70,7 +87,13 @@ function Calendar({ params }: { params: RawParams }) {
   const requestedWeeks = useRef(0);
   const requestedBack = useRef(0);
 
-  const filters = parseFilters(params, today);
+  // На телефоне календарь показывается ТОЛЬКО списком (решение заказчика 12.11.2026): лента
+  // недель и сетка месяца на 375px нечитаемы — ленте на название турнира остаётся треть ширины,
+  // а в клетке месяца не помещается ничего, кроме числа. Вид подменяется только на отрисовке;
+  // разбор адреса не трогаем, и та же ссылка, открытая на компьютере, снова покажет ленту.
+  const phone = useIsPhone();
+  const parsed = parseFilters(params, today);
+  const filters = phone && parsed.view !== 'list' ? { ...parsed, view: 'list' as const } : parsed;
   const { year, month } = parseMonthKey(filters.month, today);
 
   const events = useMemo(() => selectEvents(EVENTS, filters, today),

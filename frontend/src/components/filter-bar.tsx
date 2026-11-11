@@ -380,7 +380,11 @@ export function FilterBar({
               title={VIEW_LABEL[mode]}
               aria-label={VIEW_LABEL[mode]}
               onClick={() => apply({ ...filters, view: mode })}
-              className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+              // Лента и сетка месяца на телефоне не показываются вовсе (решение заказчика
+              // 12.11.2026): выбирать там не из чего, и кнопка вела бы в вид, которого нет.
+              className={`h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                mode === 'list' ? 'flex' : 'hidden sm:flex'
+              } ${
                 active ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
               }`}
             >
