@@ -116,21 +116,27 @@ export const MONTH_TITLES = [
  * Человеческая подпись диапазона: «3 ноября», «3–5 ноября», «29 ноября — 2 декабря».
  * Год по умолчанию не пишется — в сетке месяца и в списке с разделителями месяцев он и так
  * известен, а на странице турнира (куда приходят из поиска) нужен: `withYear`.
+ *
+ * `short` обрезает месяц до трёх букв («3 ноя») — просьба заказчика 11.11.2026 для вида списком
+ * на телефоне: полный месяц держал под дату колонку в 112px из 343, и название турнира резалось
+ * у каждой третьей строки. Обрезка ровно такая же, как у чисел в ленте (MONTH_LABELS.slice(0, 3)),
+ * чтобы два вида одного календаря не сокращали месяц по-разному.
  */
-export function formatDateRange(startsAt: string, endsAt: string, withYear = false): string {
+export function formatDateRange(startsAt: string, endsAt: string, withYear = false, short = false): string {
   const from = parseDate(startsAt);
   const to = parseDate(endsAt);
+  const month = (index: number) => (short ? MONTH_LABELS[index].slice(0, 3) : MONTH_LABELS[index]);
   const year = withYear ? ` ${to.year}` : '';
   if (from.year === to.year && from.month === to.month && from.day === to.day) {
-    return `${from.day} ${MONTH_LABELS[from.month]}${year}`;
+    return `${from.day} ${month(from.month)}${year}`;
   }
   if (from.year === to.year && from.month === to.month) {
-    return `${from.day}–${to.day} ${MONTH_LABELS[from.month]}${year}`;
+    return `${from.day}–${to.day} ${month(from.month)}${year}`;
   }
   // Разные годы — год у конца показываем всегда, иначе «29 декабря — 2 января» читается как
   // один год.
   const tail = from.year === to.year ? year : ` ${to.year}`;
-  return `${from.day} ${MONTH_LABELS[from.month]}${from.year === to.year ? '' : ` ${from.year}`} — ${to.day} ${MONTH_LABELS[to.month]}${tail}`;
+  return `${from.day} ${month(from.month)}${from.year === to.year ? '' : ` ${from.year}`} — ${to.day} ${month(to.month)}${tail}`;
 }
 
 // ---------------------------------------------------------------------------

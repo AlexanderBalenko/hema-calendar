@@ -54,11 +54,16 @@ export type GridEvent = CalendarEvent & {
 // аннексии рисуется отдельным absolute-элементом, ВЫСТУПАЮЩИМ за правую границу контейнера.
 // Шапка дней недели (CalendarWeekdayHeader) использует ЭТОТ ЖЕ шаблон, иначе при ограниченной
 // ширине контейнера заголовки разъезжаются с колонками.
-export const GRID_TEMPLATE = 'repeat(5, 32px) 1fr 1fr';
+//
+// Ширина буднего дня — токен --cal-day (globals.css): 32px, на телефоне 22px. Все три числа
+// ниже считаются ОТ НЕГО и остаются выражениями CSS, а не числами: медиазапрос меняет токен без
+// перерисовки, а расходись они хоть на пиксель — на стыке хвоста появляется шов (прецедент
+// п.3б) или бар перехлёстывает плашку дня.
+export const GRID_TEMPLATE = 'repeat(5, var(--cal-day)) 1fr 1fr';
 
-/** Видимая ширина плашки дня (32px колонка минус margin 0 1px с обеих сторон) — тот же расчёт,
+/** Видимая ширина плашки дня (колонка минус margin 0 1px с обеих сторон) — тот же расчёт,
  *  что и у будних плашек ниже (day.column). Хвост использует её как эталон своей ширины. */
-const DAY_TILE_WIDTH = 30;
+const DAY_TILE_WIDTH = 'calc(var(--cal-day) - 2px)';
 
 /**
  * Ширина выступающего вправо понедельника-хвоста — РОВНО DAY_TILE_WIDTH + 1px (тот же зазор
@@ -74,7 +79,7 @@ const DAY_TILE_WIDTH = 30;
  * колонках). Теперь хвост — точный аналог обычной колонки: рельс перекрывает ту же ширину, что и
  * плашка дня, ничего сверх неё.
  */
-const TAIL_WIDTH = DAY_TILE_WIDTH + 1;
+const TAIL_WIDTH = `calc(${DAY_TILE_WIDTH} + 1px)`;
 /** Внутренний отступ плашки (`px-2`) — числом, потому что его приходится складывать с хвостом. */
 const BAR_PADDING = 8;
 
@@ -91,7 +96,13 @@ export function CalendarWeekdayHeader() {
       {HEADER_LABELS.map((label, i) => (
         <span
           key={label}
-          className={`px-1.5 text-[11px] leading-none ${i >= 5 ? 'text-calendar-weekend' : 'text-text-muted'}`}
+          className={`leading-none ${
+            // Будни на телефоне узкие (--cal-day = 22px), и в прежние px-1.5 с 11px «пн» уже
+            // не помещается. Уикенд не трогаем: ему ширины как раз прибавилось.
+            i >= 5
+              ? 'px-1.5 text-[11px] text-calendar-weekend'
+              : 'px-1 text-[9px] text-text-muted sm:px-1.5 sm:text-[11px]'
+          }`}
         >
           {label}
         </span>
@@ -359,7 +370,15 @@ function BarContent({ event }: { event: GridEvent }) {
       <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
         {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
         {organizers && (
-          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{organizers}</span>
+          // На телефоне клуба нет вовсе (просьба заказчика 11.11.2026): правая колонка плашки
+          // шириной с самую длинную свою строку, и «Раубриттер (Казань)» отъедал у названия
+          // турнира больше, чем город. Прячем разметкой, а не условием в JS: лента рисуется на
+          // сборке, ширины экрана там нет, и любое «если телефон» в коде было бы догадкой.
+          <span
+            className={`hidden w-full truncate text-[10px] sm:block ${TERTIARY_TEXT_CLASS[style]}`}
+          >
+            {organizers}
+          </span>
         )}
       </span>
     </span>
@@ -421,7 +440,7 @@ function Bar({
         // -1px: margin-left:1px сдвигает бокс вправо, не уменьшая ширину, посчитанную от %
         // (containing block — область грида, margin своего элемента на неё не влияет) — без
         // поправки правый край на 1px перехлёстывал правый край хвостовой плашки дня.
-        ...(annexed ? { width: `calc(100% + ${TAIL_WIDTH - 1}px)` } : {}),
+        ...(annexed ? { width: `calc(100% + ${DAY_TILE_WIDTH})` } : {}),
         // Содержимое аннексированного бара не заезжает в зону хвоста: хвостовая плашка
         // непрозрачна и лежит ВЫШЕ бара, поэтому город и организатор, прижатые к правому краю,
         // уходили под неё и обрывались на полуслове («Санкт-Петерб», «FFG (» — замечание
@@ -429,7 +448,7 @@ function Bar({
         // встаёт ровно туда же, где он у обычного бара: ширина хвоста ПЛЮС внутренний отступ
         // плашки (px-2). Без второго слагаемого подписи соседних строк не совпадали на восемь
         // пикселей — это видно глазом, когда баров несколько подряд.
-        ...(annexed ? { paddingRight: TAIL_WIDTH + BAR_PADDING } : {}),
+        ...(annexed ? { paddingRight: `calc(${TAIL_WIDTH} + ${BAR_PADDING}px)` } : {}),
       }}
     >
       <BarContent event={event} />
@@ -472,7 +491,15 @@ function ThreadCardContent({ event }: { event: GridEvent }) {
       <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
         {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
         {organizers && (
-          <span className={`w-full truncate text-[10px] ${TERTIARY_TEXT_CLASS[style]}`}>{organizers}</span>
+          // На телефоне клуба нет вовсе (просьба заказчика 11.11.2026): правая колонка плашки
+          // шириной с самую длинную свою строку, и «Раубриттер (Казань)» отъедал у названия
+          // турнира больше, чем город. Прячем разметкой, а не условием в JS: лента рисуется на
+          // сборке, ширины экрана там нет, и любое «если телефон» в коде было бы догадкой.
+          <span
+            className={`hidden w-full truncate text-[10px] sm:block ${TERTIARY_TEXT_CLASS[style]}`}
+          >
+            {organizers}
+          </span>
         )}
       </span>
     </span>
@@ -657,9 +684,13 @@ const WeekRow = memo(function WeekRow({ week, isCurrent, today }: { week: WeekLa
             >
               <span
                 className={[
-                  'block px-1.5 pt-1 text-[11px] leading-none',
-                  // Будние числа — text-secondary: на плашке дня muted всё ещё терялся.
-                  day.isWeekend ? 'text-calendar-weekend' : 'text-text-secondary',
+                  'block pt-1 leading-none',
+                  // Будние числа — text-secondary: на плашке дня muted всё ещё терялся. На
+                  // телефоне они ещё и мельче: в 22px колонку одиннадцатым кеглем не влезает
+                  // даже двузначное число с отступами (замер 11.11.2026: девятым влезли все 70).
+                  day.isWeekend
+                    ? 'px-1.5 text-[11px] text-calendar-weekend'
+                    : 'px-1 text-[9px] text-text-secondary sm:px-1.5 sm:text-[11px]',
                 ].join(' ')}
               >
                 {/* Месяц у 1-го числа — всегда; у ПЕРВОГО дня строки — когда строка открывает
@@ -693,7 +724,7 @@ const WeekRow = memo(function WeekRow({ week, isCurrent, today }: { week: WeekLa
                   // отступ слева 1px здесь и есть та единица разницы.
                   style={{ left: 'calc(100% + 1px)', width: DAY_TILE_WIDTH, top: 0, height: laneRows * LANE_HEIGHT }}
                 >
-                  <span className="block px-1.5 pt-1 text-[11px] leading-none text-text-secondary">
+                  <span className="block px-1 pt-1 text-[9px] leading-none text-text-secondary sm:px-1.5 sm:text-[11px]">
                     {day === 1 ? `${day} ${MONTH_LABELS[month].slice(0, 3)}` : day}
                   </span>
                 </div>

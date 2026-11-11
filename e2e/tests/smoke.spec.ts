@@ -118,8 +118,13 @@ test.describe('Календарь', () => {
   test('турнир открывается своей страницей, и она собрана заранее', async ({ page }) => {
     await page.goto('?view=list&period=past');
     const first = page.locator('a[href*="/events/"]').first();
-    // В строке списка несколько колонок; название — вторая, после даты.
-    const title = (await first.locator('span').nth(1).innerText()).trim();
+    // В строке списка несколько колонок; название — во второй, после даты.
+    //
+    // Колонки берём ПРЯМЫМИ детьми ссылки, а название — прямым ребёнком колонки. Сквозная
+    // нумерация span по всей строке разъезжается от любой вложенности: 11.11.2026 в колонку
+    // даты легли две формы (короткая для телефона и полная), и `span` номер один стал скрытой
+    // датой — тест сравнивал название страницы с пустой строкой.
+    const title = (await first.locator('> span').nth(1).locator('> span').first().innerText()).trim();
     const href = await first.getAttribute('href');
     await first.click();
 

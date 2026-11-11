@@ -90,14 +90,25 @@ function EventRow({ event, today }: { event: SelectedEvent; today: string }) {
       {...hoverProps(event)}
       className={`group relative flex min-h-11 items-center gap-2 rounded-md px-2 py-1 transition-colors ${row}`}
     >
-      <span className={`w-28 shrink-0 text-right text-xs tabular-nums ${secondary}`}>
-        {formatDateRange(event.startsAt, event.endsAt)}
+      {/* Колонка даты: на телефоне 60px вместо 112 и месяц тремя буквами (просьба заказчика
+          11.11.2026). 60 — это замер, а не круглое число: самая длинная дата КОРОТКОЙ формы при
+          11px — «19–20 дек», а стык месяцев («29 ноя — 2 дек», таких в данных 12 из 415) ложится
+          в две строки и строку не раздувает (44px против 45). Событий, переходящих через год,
+          в данных нет вовсе — на них колонку не закладываем.
+          Обе формы в разметке, а переключает их класс: страница собирается заранее, ширины
+          экрана на сборке нет, а узнавать её в браузере значило бы перерисовывать список после
+          первой отрисовки. */}
+      <span className={`w-[60px] shrink-0 text-right text-[11px] tabular-nums sm:w-28 sm:text-xs ${secondary}`}>
+        <span className="sm:hidden">{formatDateRange(event.startsAt, event.endsAt, false, true)}</span>
+        <span className="hidden sm:inline">{formatDateRange(event.startsAt, event.endsAt)}</span>
       </span>
       <span className="flex min-w-0 flex-1 items-center gap-1.5">
         <EventKindIcon kind={event.kind} />
-        <span className="truncate text-sm font-medium">{event.title}</span>
+        {/* Шрифт строки на телефоне мельче: у проекта свой масштаб (text-sm — это 16.7px,
+            text-xs — 14.7), и в 375px на название оставалось меньше половины строки. */}
+        <span className="truncate text-[14px] font-medium sm:text-sm">{event.title}</span>
         {kindWord(event.kind) && (
-          <span className={`shrink-0 text-xs ${secondary}`}>· {kindWord(event.kind)}</span>
+          <span className={`shrink-0 text-[11px] sm:text-xs ${secondary}`}>· {kindWord(event.kind)}</span>
         )}
       </span>
       {/* Колонки справа убираются по мере сужения экрана: на телефоне остаются дата и
