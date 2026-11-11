@@ -23,6 +23,19 @@ export function formatPlace(city: string | null | undefined, locationManual: str
   return `${left}, ${right}`;
 }
 
+/**
+ * Место для ленты на телефоне: короткое имя города и больше ничего. Уточнение места («Лужники»,
+ * адрес зала) сюда не идёт — в однодневном баре на 375px плашке достаётся 116 точек, и полный
+ * «Санкт-Петербург» съедал из них 85: названию турнира не оставалось ничего ни при каком шрифте
+ * (замер 11.11.2026, docs/Calendar.md §5ж).
+ *
+ * Короткой формы может не быть: город не из справочника или место задано одной строкой без
+ * города. Тогда показываем то, что есть, — пустое место хуже длинного.
+ */
+export function shortPlace(cityShort: string | null | undefined, place: string): string {
+  return (cityShort ?? '').trim() || place;
+}
+
 type NominationLike = { weapon: string; weaponCode: string | null };
 
 /**

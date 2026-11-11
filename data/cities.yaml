@@ -1,187 +1,247 @@
 - name: Абакан
+  short: Абк
   region: Сибирь
   country: RU
 - name: Алматы
+  short: Алм
   region: Зарубежье
   country: KZ
 - name: Альметьевск
+  short: Алт
   region: Поволжье
   country: RU
 - name: Анадырь
+  short: Анд
   region: Дальний Восток
   country: RU
 - name: Ангарск
+  short: Анг
   region: Сибирь
   country: RU
 - name: Арзамас
+  short: Арз
   region: Поволжье
   country: RU
 - name: Армавир
+  short: Арм
   region: Юг европейской части
   country: RU
 - name: Архангельск
+  short: Арх
   region: Север европейской части
   country: RU
 - name: Асбест
+  short: Асб
   region: Урал
   country: RU
 - name: Астана
+  short: Аст
   region: Зарубежье
   country: KZ
 - name: Астрахань
+  short: Асх
   region: Юг европейской части
   country: RU
 - name: Ачинск
+  short: Ачн
   region: Сибирь
   country: RU
 - name: Балаково
+  short: Блк
   region: Поволжье
   country: RU
 - name: Балашиха
+  short: Блш
   region: Центр
   country: RU
 - name: Барнаул
+  short: Брн
   region: Сибирь
   country: RU
 - name: Батайск
+  short: Бтс
   region: Юг европейской части
   country: RU
 - name: Белгород
+  short: Блг
   region: Центр
   country: RU
 - name: Бердск
+  short: Брд
   region: Сибирь
   country: RU
 - name: Березники
+  short: Брз
   region: Урал
   country: RU
 - name: Бийск
   region: Сибирь
   country: RU
 - name: Биробиджан
+  short: Брб
   region: Дальний Восток
   country: RU
 - name: Благовещенск
+  short: Блв
   region: Дальний Восток
   country: RU
 - name: Братск
+  short: Брт
   region: Сибирь
   country: RU
 - name: Брянск
+  short: Брс
   region: Центр
   country: RU
 - name: Великий Новгород
+  short: ВН
   region: Север европейской части
   country: RU
 - name: Владивосток
+  short: Вдв
   region: Дальний Восток
   country: RU
 - name: Владикавказ
+  short: Влк
   region: Юг европейской части
   country: RU
 - name: Владимир
+  short: Влд
   region: Центр
   country: RU
 - name: Волгоград
+  short: Влг
   region: Юг европейской части
   country: RU
 - name: Волгодонск
+  short: Вдн
   region: Юг европейской части
   country: RU
 - name: Волжский
+  short: Влж
   region: Юг европейской части
   country: RU
 - name: Вологда
+  short: Вол
   region: Север европейской части
   country: RU
 - name: Воронеж
+  short: Врн
   region: Центр
   country: RU
 - name: Гатчина
+  short: Гтч
   region: Север европейской части
   country: RU
 - name: Геническ
+  short: Гнч
   region: Юг европейской части
   country: RU
 - name: Горловка
+  short: Грл
   region: Юг европейской части
   country: RU
 - name: Горно-Алтайск
+  short: ГА
   region: Сибирь
   country: RU
 - name: Грозный
+  short: Грз
   region: Юг европейской части
   country: RU
 - name: Дербент
+  short: Дрб
   region: Юг европейской части
   country: RU
 - name: Дзержинск
+  short: Дзр
   region: Поволжье
   country: RU
 - name: Димитровград
+  short: Дмт
   region: Поволжье
   country: RU
 - name: Долгопрудный
+  short: Длг
   region: Центр
   country: RU
 - name: Домодедово
+  short: Дмд
   region: Центр
   country: RU
 - name: Донецк
+  short: Днц
   region: Юг европейской части
   country: RU
 - name: Евпатория
+  short: Евп
   region: Юг европейской части
   country: RU
 - name: Екатеринбург
+  short: Екб
   region: Урал
   country: RU
 - name: Елец
   region: Центр
   country: RU
 - name: Ессентуки
+  short: Есс
   region: Юг европейской части
   country: RU
 - name: Жуковский
+  short: Жкв
   region: Центр
   country: RU
 - name: Златоуст
+  short: Злт
   region: Урал
   country: RU
 - name: Иваново
+  short: Ивн
   region: Центр
   country: RU
 - name: Ижевск
+  short: Ижв
   region: Поволжье
   country: RU
 - name: Иркутск
+  short: Ирк
   region: Сибирь
   country: RU
 - name: Йошкар-Ола
+  short: ЙО
   region: Поволжье
   country: RU
 - name: Казань
+  short: Кзн
   region: Поволжье
   country: RU
 - name: Калининград
+  short: Клгд
   region: Север европейской части
   country: RU
 - name: Калуга
+  short: Клг
   region: Центр
   country: RU
 - name: Каменск-Уральский
+  short: КУ
   region: Урал
   country: RU
 - name: Камышин
+  short: Кмш
   region: Юг европейской части
   country: RU
 - name: Камышлов
+  short: Кмл
   region: Урал
   country: RU
 - name: Каспийск
+  short: Ксп
   region: Юг европейской части
   country: RU
 - name: Кемерово
+  short: Кмр
   region: Сибирь
   country: RU
 - name: Керчь
@@ -191,39 +251,51 @@
   region: Поволжье
   country: RU
 - name: Кисловодск
+  short: Ксл
   region: Юг европейской части
   country: RU
 - name: Ковров
+  short: Квр
   region: Центр
   country: RU
 - name: Коломна
+  short: Клм
   region: Центр
   country: RU
 - name: Комсомольск-на-Амуре
+  short: КнА
   region: Дальний Восток
   country: RU
 - name: Копейск
+  short: Кпс
   region: Урал
   country: RU
 - name: Королёв
+  short: Крл
   region: Центр
   country: RU
 - name: Кострома
+  short: Кст
   region: Центр
   country: RU
 - name: Красногорск
+  short: Крсг
   region: Центр
   country: RU
 - name: Краснодар
+  short: Крд
   region: Юг европейской части
   country: RU
 - name: Краснотурьинск
+  short: Крт
   region: Урал
   country: RU
 - name: Красноярск
+  short: Кря
   region: Сибирь
   country: RU
 - name: Курган
+  short: Крг
   region: Урал
   country: RU
 - name: Курск
@@ -233,138 +305,179 @@
   region: Сибирь
   country: RU
 - name: Липецк
+  short: Лпц
   region: Центр
   country: RU
 - name: Луганск
+  short: Лгн
   region: Юг европейской части
   country: RU
 - name: Люберцы
+  short: Лбр
   region: Центр
   country: RU
 - name: Магадан
+  short: Мгд
   region: Дальний Восток
   country: RU
 - name: Магас
   region: Юг европейской части
   country: RU
 - name: Магнитогорск
+  short: Мгн
   region: Урал
   country: RU
 - name: Майкоп
+  short: Мкп
   region: Юг европейской части
   country: RU
 - name: Макеевка
+  short: Мкв
   region: Юг европейской части
   country: RU
 - name: Мариуполь
+  short: Мрп
   region: Юг европейской части
   country: RU
 - name: Махачкала
+  short: Мхч
   region: Юг европейской части
   country: RU
 - name: Мелитополь
+  short: Млт
   region: Юг европейской части
   country: RU
 - name: Миасс
   region: Урал
   country: RU
 - name: Москва
+  short: Мск
   region: Центр
   country: RU
 - name: Мурманск
+  short: Мрм
   region: Север европейской части
   country: RU
 - name: Муром
   region: Центр
   country: RU
 - name: Мытищи
+  short: Мтщ
   region: Центр
   country: RU
 - name: Набережные Челны
+  short: НЧ
   region: Поволжье
   country: RU
 - name: Назрань
+  short: Нзр
   region: Юг европейской части
   country: RU
 - name: Нальчик
+  short: Нлч
   region: Юг европейской части
   country: RU
 - name: Нарьян-Мар
+  short: НМ
   region: Север европейской части
   country: RU
 - name: Находка
+  short: Нхд
   region: Дальний Восток
   country: RU
 - name: Невинномысск
+  short: Нвн
   region: Юг европейской части
   country: RU
 - name: Нефтекамск
+  short: Нфк
   region: Центр
   country: RU
 - name: Нефтеюганск
+  short: Нфю
   region: Урал
   country: RU
 - name: Нижневартовск
+  short: Нжв
   region: Урал
   country: RU
 - name: Нижнекамск
+  short: Нжк
   region: Поволжье
   country: RU
 - name: Нижний Новгород
+  short: НН
   region: Поволжье
   country: RU
 - name: Нижний Тагил
+  short: НТ
   region: Урал
   country: RU
 - name: Новокузнецк
+  short: Нвк
   region: Сибирь
   country: RU
 - name: Новокуйбышевск
+  short: Нкб
   region: Поволжье
   country: RU
 - name: Новомосковск
+  short: Нвм
   region: Центр
   country: RU
 - name: Новороссийск
+  short: Нвр
   region: Юг европейской части
   country: RU
 - name: Новосибирск
+  short: Нск
   region: Сибирь
   country: RU
 - name: Новочебоксарск
+  short: Нчб
   region: Поволжье
   country: RU
 - name: Новочеркасск
+  short: Нвч
   region: Юг европейской части
   country: RU
 - name: Новый Уренгой
+  short: НУ
   region: Урал
   country: RU
 - name: Ногинск
+  short: Нгн
   region: Центр
   country: RU
 - name: Норильск
+  short: Нрл
   region: Сибирь
   country: RU
 - name: Ноябрьск
+  short: Нбр
   region: Урал
   country: RU
 - name: Обнинск
+  short: Обн
   region: Центр
   country: RU
 - name: Одинцово
+  short: Одн
   region: Центр
   country: RU
 - name: Октябрьский
+  short: Окт
   region: Центр
   country: RU
 - name: Омск
   region: Сибирь
   country: RU
 - name: Оренбург
+  short: Орн
   region: Урал
   country: RU
 - name: Орехово-Зуево
+  short: ОЗ
   region: Центр
   country: RU
 - name: Орск
@@ -377,129 +490,167 @@
   region: Поволжье
   country: RU
 - name: Первоуральск
+  short: Прв
   region: Урал
   country: RU
 - name: Пермь
   region: Урал
   country: RU
 - name: Петрозаводск
+  short: Птр
   region: Север европейской части
   country: RU
 - name: Петропавловск-Камчатский
+  short: ПК
   region: Дальний Восток
   country: RU
 - name: Подольск
+  short: Пдл
   region: Центр
   country: RU
 - name: Прокопьевск
+  short: Прк
   region: Сибирь
   country: RU
 - name: Псков
   region: Север европейской части
   country: RU
 - name: Пушкино
+  short: Пшк
   region: Центр
   country: RU
 - name: Пятигорск
+  short: Птг
   region: Юг европейской части
   country: RU
 - name: Раменское
+  short: Рмн
   region: Центр
   country: RU
 - name: Реутов
+  short: Ртв
   region: Центр
   country: RU
 - name: Ростов-на-Дону
+  short: РнД
   region: Юг европейской части
   country: RU
 - name: Рубцовск
+  short: Рбц
   region: Сибирь
   country: RU
 - name: Рыбинск
+  short: Рбн
   region: Центр
   country: RU
 - name: Рязань
+  short: Рзн
   region: Центр
   country: RU
 - name: Салават
+  short: Слв
   region: Центр
   country: RU
 - name: Салехард
+  short: Слх
   region: Урал
   country: RU
 - name: Самара
+  short: Смр
   region: Поволжье
   country: RU
 - name: Санкт-Петербург
+  short: СПб
   region: Север европейской части
   country: RU
 - name: Саранск
+  short: Срн
   region: Поволжье
   country: RU
 - name: Саратов
+  short: Срт
   region: Поволжье
   country: RU
 - name: Севастополь
+  short: Свс
   region: Юг европейской части
   country: RU
 - name: Северодвинск
+  short: Свд
   region: Север европейской части
   country: RU
 - name: Северск
+  short: Свр
   region: Сибирь
   country: RU
 - name: Сергиев Посад
+  short: СП
   region: Центр
   country: RU
 - name: Серпухов
+  short: Срп
   region: Центр
   country: RU
 - name: Симферополь
+  short: Смф
   region: Юг европейской части
   country: RU
 - name: Смоленск
+  short: Смл
   region: Центр
   country: RU
 - name: Сосновоборск
+  short: Ссн
   region: Сибирь
   country: RU
 - name: Сочи
   region: Юг европейской части
   country: RU
 - name: Ставрополь
+  short: Ств
   region: Юг европейской части
   country: RU
 - name: Старый Оскол
+  short: СО
   region: Центр
   country: RU
 - name: Стерлитамак
+  short: Стр
   region: Центр
   country: RU
 - name: Сургут
+  short: Срг
   region: Урал
   country: RU
 - name: Сызрань
+  short: Сзр
   region: Поволжье
   country: RU
 - name: Сыктывкар
+  short: Скт
   region: Север европейской части
   country: RU
 - name: Таганрог
+  short: Тгн
   region: Юг европейской части
   country: RU
 - name: Тамбов
+  short: Тмб
   region: Центр
   country: RU
 - name: Тбилиси
+  short: Тбс
   region: Зарубежье
   country: GE
 - name: Тверь
   region: Центр
   country: RU
 - name: Тобольск
+  short: Тбл
   region: Урал
   country: RU
 - name: Тольятти
+  short: Тлт
   region: Поволжье
   country: RU
 - name: Томск
@@ -509,48 +660,61 @@
   region: Центр
   country: RU
 - name: Тюмень
+  short: Тмн
   region: Урал
   country: RU
 - name: Улан-Удэ
+  short: УУ
   region: Дальний Восток
   country: RU
 - name: Ульяновск
+  short: Улн
   region: Поволжье
   country: RU
 - name: Урус-Мартан
+  short: УМ
   region: Юг европейской части
   country: RU
 - name: Уссурийск
+  short: Усс
   region: Дальний Восток
   country: RU
 - name: Уфа
   region: Центр
   country: RU
 - name: Хабаровск
+  short: Хбр
   region: Дальний Восток
   country: RU
 - name: Ханты-Мансийск
+  short: ХМ
   region: Урал
   country: RU
 - name: Хасавюрт
+  short: Хсв
   region: Юг европейской части
   country: RU
 - name: Химки
   region: Центр
   country: RU
 - name: Чебаркуль
+  short: Чбр
   region: Урал
   country: RU
 - name: Чебоксары
+  short: Чбк
   region: Поволжье
   country: RU
 - name: Челябинск
+  short: Члб
   region: Урал
   country: RU
 - name: Череповец
+  short: Чрп
   region: Север европейской части
   country: RU
 - name: Черкесск
+  short: Чрк
   region: Юг европейской части
   country: RU
 - name: Чита
@@ -563,23 +727,30 @@
   region: Юг европейской части
   country: RU
 - name: Щёлково
+  short: Щлк
   region: Центр
   country: RU
 - name: Электросталь
+  short: Элк
   region: Центр
   country: RU
 - name: Элиста
+  short: Элс
   region: Юг европейской части
   country: RU
 - name: Энгельс
+  short: Энг
   region: Поволжье
   country: RU
 - name: Южно-Сахалинск
+  short: ЮС
   region: Дальний Восток
   country: RU
 - name: Якутск
+  short: Якт
   region: Дальний Восток
   country: RU
 - name: Ярославль
+  short: Ярс
   region: Центр
   country: RU

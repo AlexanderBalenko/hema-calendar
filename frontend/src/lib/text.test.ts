@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { formatPlace, weaponSummary } from './text.ts';
+import { formatPlace, shortPlace, weaponSummary } from './text.ts';
 
 describe('formatPlace', () => {
   it('не повторяет город, который уже есть в адресе', () => {
@@ -16,6 +16,20 @@ describe('formatPlace', () => {
     assert.equal(formatPlace(null, 'Тбилиси'), 'Тбилиси');
     assert.equal(formatPlace(null, null), '');
     assert.equal(formatPlace('  ', ' Казань '), 'Казань');
+  });
+});
+
+describe('shortPlace', () => {
+  it('на телефоне остаётся только короткий город', () => {
+    assert.equal(shortPlace('СПб', 'Санкт-Петербург, Зал на Васильевском'), 'СПб');
+    assert.equal(shortPlace('Крд', 'Краснодар'), 'Крд');
+  });
+
+  it('без короткой формы показываем то, что есть', () => {
+    assert.equal(shortPlace(null, 'Алтайский край'), 'Алтайский край');
+    assert.equal(shortPlace(undefined, 'Москва, Лужники'), 'Москва, Лужники');
+    assert.equal(shortPlace('   ', 'Тбилиси'), 'Тбилиси', 'пробелы — не форма');
+    assert.equal(shortPlace(null, ''), '');
   });
 });
 

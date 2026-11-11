@@ -80,6 +80,9 @@ def main() -> None:
             "startsAt": iso(event["starts"]),
             "endsAt": iso(event.get("ends", event["starts"])),
             "city": city["name"] if city else None,
+            # Короткое имя — для ленты на телефоне (docs/Calendar.md §5ж). Справочник даёт его
+            # не всем: у города не длиннее пяти букв своей формы нет, и там остаётся название.
+            "cityShort": (city.get("short") or city["name"]) if city else None,
             # Макрорегион у события с городом выводится из справочника, у события с обобщённым
             # местом («Алтайский край», «Калужская область») берётся из поля region: из строки
             # его не вывести. Тот же приём, что у портального MacroRegionOverride.

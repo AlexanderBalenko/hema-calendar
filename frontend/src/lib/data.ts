@@ -42,6 +42,12 @@ export type CalendarEvent = {
   /** Онлайн-событие: места у него нет вовсе, и фильтр по региону оно проходит любой. */
   online?: boolean;
   city: string | null;
+  /**
+   * Город тремя буквами для ленты на телефоне: «СПб», «Крд», «НН». Приходит из справочника
+   * (`data/cities.yaml`, поле `short`); у городов не длиннее пяти букв формы нет, и здесь
+   * лежит само название — «Омск» сокращать некуда.
+   */
+  cityShort: string | null;
   macroRegion: string | null;
   countryCode: string | null;
   locationManual: string | null;

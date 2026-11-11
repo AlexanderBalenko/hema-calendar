@@ -329,6 +329,26 @@ def validate(events: list[dict], cities: list[dict], weapons: list[dict]) -> lis
     def warn(text: str) -> None:
         problems.append(("warning", text))
 
+    # Короткие имена городов (поле short, лента на телефоне). Форма обязана быть одна на город:
+    # механическое сокращение сводило в «Крс» сразу четыре Красно-города и в «Влд» три
+    # Влади-города, и на экране такое «Крс» не значит ничего. Ошибка, а не предупреждение:
+    # перепутанный город — это неверные данные, а не неполные.
+    seen_short: dict[str, str] = {}
+    for city in cities:
+        short = str(city.get("short") or "").strip()
+        if not short:
+            continue
+        name = str(city["name"])
+        if not 2 <= len(short) <= 4:
+            error(f"cities.yaml: короткое имя «{short}» у города {name} — нужно от двух до четырёх букв")
+        if len(short) >= len(name):
+            error(f"cities.yaml: короткое имя «{short}» не короче названия {name} — оно тут лишнее")
+        key = short.casefold()
+        if key in seen_short:
+            error(f"cities.yaml: короткое имя «{short}» занято дважды — {seen_short[key]} и {name}")
+        else:
+            seen_short[key] = name
+
     for event in events:
         where = event["_path"]
         unknown = set(event) - EVENT_KEYS - {"slug", "_path"}

@@ -229,6 +229,7 @@ const event = (over: Partial<CalendarEvent> & { slug: string; startsAt: string }
   endsAt: over.startsAt,
   kind: 'tournament',
   city: null,
+  cityShort: null,
   macroRegion: null,
   countryCode: 'RU',
   locationManual: null,

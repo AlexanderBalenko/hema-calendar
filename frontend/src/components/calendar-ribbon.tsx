@@ -5,7 +5,7 @@ import { memo, useLayoutEffect, useRef, useState } from 'react';
 
 import type { CalendarEvent } from '@/src/lib/data';
 import { monthKey } from '@/src/lib/filters';
-import { formatOrganizers, formatPlace } from '@/src/lib/text';
+import { formatOrganizers, formatPlace, shortPlace } from '@/src/lib/text';
 import { hoverProps } from './event-hover';
 import { EventKindIcon, KindSuffix, kindWord } from './event-kind';
 import {
@@ -342,6 +342,7 @@ function BarContent({ event }: { event: GridEvent }) {
   }, [event.title]);
 
   const place = formatPlace(event.city, event.locationManual);
+  const placeShort = shortPlace(event.cityShort, place);
   const organizers = formatOrganizers(event.organizerName, event.coOrganizers);
   return (
     <span className="flex w-full min-w-0 items-center gap-1.5 overflow-hidden">
@@ -368,7 +369,15 @@ function BarContent({ event }: { event: GridEvent }) {
       </span>
 
       <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
-        {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
+        {/* Город на телефоне — короткой формой из справочника (просьба заказчика 11.11.2026).
+            Обе формы лежат в разметке, переключает их класс: ширины экрана на сборке нет, а
+            узнавать её в браузере значило бы перерисовывать ленту после первой отрисовки. */}
+        {place && (
+          <>
+            <span className={`w-full truncate sm:hidden ${SECONDARY_TEXT_CLASS[style]}`}>{placeShort}</span>
+            <span className={`hidden w-full truncate sm:block ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>
+          </>
+        )}
         {organizers && (
           // На телефоне клуба нет вовсе (просьба заказчика 11.11.2026): правая колонка плашки
           // шириной с самую длинную свою строку, и «Раубриттер (Казань)» отъедал у названия
@@ -471,6 +480,7 @@ function Bar({
 function ThreadCardContent({ event }: { event: GridEvent }) {
   const style = eventBodyStyle(event.isSuitable, event.isPast);
   const place = formatPlace(event.city, event.locationManual);
+  const placeShort = shortPlace(event.cityShort, place);
   const organizers = formatOrganizers(event.organizerName, event.coOrganizers);
   return (
     <span className="flex min-w-0 flex-1 items-center gap-3">
@@ -489,7 +499,15 @@ function ThreadCardContent({ event }: { event: GridEvent }) {
       </span>
 
       <span className="flex min-w-0 shrink flex-col items-end text-right leading-tight">
-        {place && <span className={`w-full truncate ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>}
+        {/* Город на телефоне — короткой формой из справочника (просьба заказчика 11.11.2026).
+            Обе формы лежат в разметке, переключает их класс: ширины экрана на сборке нет, а
+            узнавать её в браузере значило бы перерисовывать ленту после первой отрисовки. */}
+        {place && (
+          <>
+            <span className={`w-full truncate sm:hidden ${SECONDARY_TEXT_CLASS[style]}`}>{placeShort}</span>
+            <span className={`hidden w-full truncate sm:block ${SECONDARY_TEXT_CLASS[style]}`}>{place}</span>
+          </>
+        )}
         {organizers && (
           // На телефоне клуба нет вовсе (просьба заказчика 11.11.2026): правая колонка плашки
           // шириной с самую длинную свою строку, и «Раубриттер (Казань)» отъедал у названия
