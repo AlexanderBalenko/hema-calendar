@@ -96,9 +96,14 @@ function Calendar({ params }: { params: RawParams }) {
   const filters = phone && parsed.view !== 'list' ? { ...parsed, view: 'list' as const } : parsed;
   const { year, month } = parseMonthKey(filters.month, today);
 
+  // Вид — отдельной зависимостью: это единственное, что меняется БЕЗ изменения адреса, потому
+  // что подмена ленты списком на телефоне (выше) включается уже после гидратации. Без него
+  // первый, ленточный просчёт — а у ленты границ по датам нет, она считает окно сама —
+  // доставался списку как есть, и телефон открывал календарь всем архивом с декабря 2019-го
+  // (поймано на живом сайте 12.11.2026).
   const events = useMemo(() => selectEvents(EVENTS, filters, today),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- фильтры пересобираются из адреса
-    [params, today]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- остальное состояние приходит из адреса
+    [params, today, filters.view]);
   // Для полоски месяцев — те же фильтры, но без ограничения по датам: она показывает, в каких
   // месяцах года турниры вообще есть.
   const inYear = useMemo(() => selectEvents(EVENTS, { ...filters, view: 'list', period: 'all' }, today),

@@ -416,6 +416,105 @@ test.describe('Календарь', () => {
   });
 });
 
+/**
+ * Телефон — единственное место, где вид подменяется НЕ адресом, а шириной экрана, и подмена
+ * включается уже после гидратации. Остальной смоук идёт на 1280 и этого не видит.
+ */
+test.describe('Телефон', () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test('календарь открывается ближайшими турнирами, а не архивом', async ({ page }) => {
+    await page.goto('');
+    await page.waitForLoadState('load');
+
+    // Ленты на телефоне нет вовсе — её шапка дней недели самый верный признак.
+    await expect(page.getByText('воскресенье', { exact: true })).toHaveCount(0);
+    await expect(page.locator('a[href*="/events/"]').first()).toBeVisible();
+
+    // Выдача, посчитанная для ленты, однажды досталась списку как есть: у ленты границ по
+    // датам нет, она считает окно сама, — и телефон открывал календарь всем архивом с декабря
+    // 2019-го (поймано на живом сайте 12.11.2026). Разделители месяцев — самый дешёвый
+    // признак: ни одного раньше нынешнего месяца тут быть не может.
+    const moscow = new Date(Date.now() + 3 * 60 * 60 * 1000);
+    const now = moscow.getUTCFullYear() * 12 + moscow.getUTCMonth();
+    const key = (text: string) => Number(text.trim().split(' ').pop()) * 12
+      + MONTHS.findIndex((m) => text.toLowerCase().startsWith(m.toLowerCase()));
+    const dividers = await page.locator('main h2').allInnerTexts();
+    expect(dividers.length).toBeGreaterThan(0);
+    expect(Math.min(...dividers.map(key))).toBeGreaterThanOrEqual(now);
+  });
+
+  test('сужение окна до телефонного переводит ленту в список целиком', async ({ page }) => {
+    // Тот же случай, но наверняка: страница открывается широкой (вид — лента, адрес разобран),
+    // и только потом окно сужается. Загрузка сразу на 375 этого не ловит — там разбор адреса и
+    // замер ширины наперегонки, и на локальной сборке разбор обычно успевает вторым, пересчитывая
+    // выдачу заодно. На живом сайте успевал первым, и список получал ленточный просчёт: календарь
+    // открывался архивом с декабря 2019-го (12.11.2026).
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto('');
+    await page.waitForLoadState('load');
+    await expect(page.getByText('воскресенье', { exact: true })).toBeVisible();
+
+    await page.setViewportSize({ width: 375, height: 812 });
+    await expect(page.getByText('воскресенье', { exact: true })).toHaveCount(0);
+
+    const moscow = new Date(Date.now() + 3 * 60 * 60 * 1000);
+    const now = moscow.getUTCFullYear() * 12 + moscow.getUTCMonth();
+    const key = (text: string) => Number(text.trim().split(' ').pop()) * 12
+      + MONTHS.findIndex((m) => text.toLowerCase().startsWith(m.toLowerCase()));
+    const dividers = await page.locator('main h2').allInnerTexts();
+    expect(dividers.length).toBeGreaterThan(0);
+    expect(Math.min(...dividers.map(key))).toBeGreaterThanOrEqual(now);
+  });
+
+  test('лента и сетка месяца не предлагаются', async ({ page }) => {
+    // Адрес ленты открывается списком: ссылка с компьютера не должна приводить телефон в вид,
+    // которого на нём нет.
+    await page.goto('?view=ribbon');
+    await page.waitForLoadState('load');
+
+    await expect(page.getByTitle('Список')).toBeVisible();
+    await expect(page.getByTitle('Лента недель')).toBeHidden();
+    await expect(page.getByTitle('Месяц')).toBeHidden();
+  });
+
+  test('шапка фильтров уезжает при прокрутке, кнопка возвращает', async ({ page }) => {
+    await page.goto('');
+    await page.waitForLoadState('load');
+
+    const weapons = page.getByTitle(/^Оружие/);
+    await expect(weapons).toBeVisible();
+
+    await page.mouse.move(187, 600);
+    await page.mouse.wheel(0, 400);
+    const chip = page.getByRole('button', { name: /Фильтры/ });
+    await expect(chip).toBeVisible();
+    await expect(weapons).toBeHidden();
+
+    // Кнопка — единственный надёжный путь назад в БУДУЩЕМ списке: он растёт вверх прошлым, и
+    // верх страницы прокруткой не достаётся (замер 12.11.2026 — см. §5к документа).
+    await chip.click();
+    await expect(weapons).toBeVisible();
+  });
+
+  test('у верха страницы фильтры возвращаются прокруткой', async ({ page }) => {
+    // «Прошедшие» вверх не растут (`growsBack` только у будущего), поэтому здесь верх страницы
+    // прокруткой достижим — и видно само правило: выше сорока точек шапка развёрнута.
+    await page.goto('?view=list&period=past');
+    await page.waitForLoadState('load');
+
+    const weapons = page.getByTitle(/^Оружие/);
+    await expect(weapons).toBeVisible();
+
+    await page.mouse.move(187, 600);
+    await page.mouse.wheel(0, 400);
+    await expect(weapons).toBeHidden();
+
+    await page.mouse.wheel(0, -400);
+    await expect(weapons).toBeVisible();
+  });
+});
+
 test.describe('Подача турнира', () => {
   test('страница объясняет оба пути: форму и правку данных', async ({ page }) => {
     await page.goto('submit/');
