@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  CalendarClock, CalendarDays, ChevronDown, Eye, EyeOff, LayoutList, Lock, MapPin, Rows3, Search,
-  SlidersHorizontal, Sprout, Swords, Tag, Unlock, UsersRound,
+  CalendarClock, CalendarDays, ChevronDown, Eye, EyeOff, LayoutList, MapPin, Rows3, Search,
+  SlidersHorizontal, Sprout, Swords, Tag, UsersRound, X,
 } from 'lucide-react';
 
 import { KIND_LABEL, type Directories } from '@/src/lib/data';
@@ -28,17 +28,27 @@ import { WeaponIcon } from './weapon-icon';
  * оружие и регионы свёрнуты в дропдауны-мультиселекты (чипов было слишком много и строка
  * распухала), номинации — тумблеры, всё одной высоты 32px с одинаковой рамкой.
  *
- * Строка — аккордеон, как в портале: критерии турнира (оружие, регион, номинации) видны всегда,
- * критерии УЧАСТНИКА (возраст, пол, смешанные) уезжают за стрелку с точкой-индикатором. В портале
- * они приезжают из профиля и переопределяются руками; у нас аккаунтов нет, поэтому только руками —
- * и в браузере, ничего никуда не отправляя.
+ * На компьютере строка — аккордеон, как в портале: критерии турнира (оружие, регион, номинации)
+ * видны всегда, критерии УЧАСТНИКА (возраст, пол, смешанные) уезжают за стрелку с
+ * точкой-индикатором. В портале они приезжают из профиля и переопределяются руками; у нас
+ * аккаунтов нет, поэтому только руками — и в браузере, ничего никуда не отправляя.
+ *
+ * **На телефоне фильтров в строке нет вовсе** (решение заказчика 13.11.2026, docs/Calendar.md
+ * §5к): там одна кнопка «Фильтры» со счётчиком и глазик, а все контролы живут в шторке снизу.
+ * Девять чипов в столбик съедали 400 точек из 812 — до первой карточки приходилось прокручивать
+ * половину экрана.
+ *
+ * Контролы в обоих местах — одни и те же элементы: десктопный ряд спрятан на телефоне
+ * разметкой (`hidden sm:flex`), шторка рисуется только на телефоне и только раскрытой. Ветки по
+ * ширине экрана в JS здесь нет сознательно — страница собирается заранее, ширины на сборке нет,
+ * и любая такая ветка даёт расхождение с разметкой при оживлении.
  *
  * Чего здесь нет из портального: «уведомлять о новых» и сохранённого фильтра — это про
  * залогиненного человека, которого календарь не знает.
  *
  * Своего состояния строка почти не держит: любое переключение — новый адрес страницы, а
- * перерисовка идёт из уже загруженных данных. Исключение — поля ввода: им нужен локальный
- * текст, иначе каждая буква уезжала бы в историю браузера.
+ * перерисовка идёт из уже загруженных данных. Исключения — поля ввода (им нужен локальный текст,
+ * иначе каждая буква уезжала бы в историю браузера) и раскрытость шторки.
  */
 export const FILTER_CONTROL_CLASS =
   'flex h-8 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-xs ring-1 ring-inset transition-colors';
@@ -46,21 +56,8 @@ export const FILTER_CONTROL_CLASS =
 const ACTIVE_CLASS = 'bg-primary/15 text-primary ring-primary/40';
 const IDLE_CLASS = 'bg-background text-text-secondary ring-border-light hover:text-foreground';
 
-/**
- * Телефонная шапка сворачивается сама (просьба заказчика 12.11.2026, docs/Calendar.md §5к).
- *
- * COLLAPSE_AT — за сколько точек прокрутки фильтры уезжают и за сколько возвращаются. Число одно
- * на оба направления: состояние считается ОТ ПОЛОЖЕНИЯ прокрутки, а не от её направления. Шапка,
- * выскакивающая от каждого движения вверх посреди ленты, — ровно то, на что заказчик и жаловался.
- *
- * KEEP_OPEN_SLACK — насколько можно шевелить страницу после того, как фильтры раскрыты кнопкой,
- * прежде чем они снова уедут. Без запаса первое же касание прокрутки закрывало бы только что
- * раскрытую панель.
- */
-const COLLAPSE_AT = 40;
-const KEEP_OPEN_SLACK = 80;
-/** Замок — выбор устройства, а не ссылки: в адресе ему не место, он ничего не отбирает. */
-const PIN_KEY = 'hema-calendar:filters-pinned';
+/** Ряд шторки: название слева, сам контрол справа — как в телефонных настройках. */
+const SHEET_ROW_CLASS = 'flex items-center justify-between gap-3 border-b border-border py-2.5';
 
 const VIEW_ICON: Record<ViewMode, typeof Rows3> = { ribbon: Rows3, month: CalendarDays, list: LayoutList };
 const VIEW_LABEL: Record<ViewMode, string> = { ribbon: 'Лента недель', month: 'Месяц', list: 'Список' };
@@ -69,10 +66,13 @@ export function FilterBar({
   filters,
   directories,
   today,
+  count,
 }: {
   filters: CalendarFilters;
   directories: Directories;
   today: string;
+  /** Сколько турниров в выдаче — подпись кнопки внизу шторки: «Показать 32 турнира». */
+  count: number;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -80,82 +80,23 @@ export function FilterBar({
   // Свёрнутый аккордеон с заданными критериями участника выглядел бы как необъяснимо урезанный
   // календарь, поэтому открыт, если по ссылке уже пришёл возраст, пол или снятые смешанные.
   const [personalOpen, setPersonalOpen] = useState(hasPersonalFilters(filters));
+  const [sheetOpen, setSheetOpen] = useState(false);
 
-  // Свёрнута ли шапка. Начальное значение — «развёрнута», как на сервере: страница собирается
-  // заранее, ширины экрана и прокрутки на сборке нет, и любое другое начальное состояние дало бы
-  // расхождение с разметкой при оживлении.
-  const [collapsed, setCollapsed] = useState(false);
-  const [pinned, setPinned] = useState(false);
-  // Положение прокрутки, от которого отсчитывается запас после раскрытия кнопкой
-  // (см. KEEP_OPEN_SLACK). Берётся не в момент нажатия, а на первом же событии прокрутки после
-  // него: раскрытая панель удлиняет страницу на 152 точки, и браузер сам подвигает прокрутку,
-  // чтобы читатель остался на том же месте. Запомни мы положение до этой поправки — запас
-  // оказался бы уже израсходован, и панель закрылась бы от первого касания.
-  const openedAt = useRef<number | null>(null);
-  const justOpened = useRef(false);
-
+  // Пока шторка открыта, фон не прокручивается: список под ней растёт вверх прошлым при
+  // прокрутке, и страница уезжала бы под пальцем, пока человек ведёт по шторке.
   useEffect(() => {
-    // Приватный режим и запрет сторонних данных бросают прямо на чтении — замок не настолько
-    // важен, чтобы из-за него падала строка фильтров.
-    try {
-      setPinned(window.localStorage.getItem(PIN_KEY) === '1');
-    } catch {
-      /* обойдёмся без памяти */
-    }
-  }, []);
-
-  useEffect(() => {
-    const phone = window.matchMedia('(max-width: 639.98px)');
-    const update = () => {
-      if (pinned || !phone.matches) {
-        setCollapsed(false);
-        return;
-      }
-      const y = window.scrollY;
-      if (justOpened.current) {
-        justOpened.current = false;
-        openedAt.current = y;
-        setCollapsed(false);
-        return;
-      }
-      if (openedAt.current !== null) {
-        if (y <= openedAt.current + KEEP_OPEN_SLACK) {
-          setCollapsed(false);
-          return;
-        }
-        openedAt.current = null;
-      }
-      // Короткую страницу не сворачиваем: свернувшись, она перестала бы прокручиваться, прокрутка
-      // обнулилась бы, фильтры вернулись — и шапка задёргалась бы на месте.
-      const scrollable = document.documentElement.scrollHeight > window.innerHeight + 200;
-      setCollapsed(scrollable && y > COLLAPSE_AT);
+    if (!sheetOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSheetOpen(false);
     };
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update);
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKey);
     return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      document.body.style.overflow = previous;
+      document.removeEventListener('keydown', onKey);
     };
-  }, [pinned]);
-
-  const openFilters = () => {
-    justOpened.current = true;
-    openedAt.current = null;
-    setCollapsed(false);
-  };
-
-  const togglePin = () => {
-    setPinned((on) => {
-      const next = !on;
-      try {
-        window.localStorage.setItem(PIN_KEY, next ? '1' : '0');
-      } catch {
-        /* обойдёмся без памяти */
-      }
-      return next;
-    });
-  };
+  }, [sheetOpen]);
 
   const activeCount = countActiveFilters(filters);
 
@@ -172,278 +113,461 @@ export function FilterBar({
   const selectedRegions = filters.regions ?? allRegions;
   const selectedKinds = filters.kinds ?? allKinds;
 
+  const reset = () => apply({
+    ...filters,
+    kinds: null, weapons: null, regions: null, city: null, team: false, beginner: 'all', q: '',
+    age: null, gender: null, mixed: true,
+  });
+
+  // --- контролы. Одни и те же элементы и в десктопном ряду, и в телефонной шторке ------------
+
+  const weaponsControl = (
+    <MultiDropdown
+      label="Оружие"
+      icon={<Swords className="size-3.5 shrink-0" aria-hidden="true" />}
+      options={directories.weapons.map((w) => ({
+        value: w.code,
+        label: w.name,
+        icon: <WeaponIcon code={w.code} size={18} />,
+      }))}
+      value={selectedWeapons}
+      onChange={(values) => apply({ ...filters, weapons: values.length === allWeapons.length ? null : values })}
+      // Решение заказчика портала: «показывать не текст, а пиктограммку» — названия видов в
+      // триггер не влезают и распухают строку на второй ряд.
+      renderValue={({ selected, all }) =>
+        all || selected.length === 0 ? (
+          <span className="truncate">{all ? 'все' : 'ничего'}</span>
+        ) : (
+          <span className="flex items-center gap-0.5">
+            {selected.slice(0, 5).map((option) => (
+              <WeaponIcon key={option.value} code={option.value} size={14} />
+            ))}
+            {selected.length > 5 && <span className="leading-none">+{selected.length - 5}</span>}
+          </span>
+        )
+      }
+    />
+  );
+
+  const regionsControl = (
+    <MultiDropdown
+      label="Регион"
+      icon={<MapPin className="size-3.5 shrink-0" aria-hidden="true" />}
+      options={allRegions.map((region) => ({ value: region, label: region }))}
+      value={selectedRegions}
+      onChange={(values) => apply({ ...filters, regions: values.length === allRegions.length ? null : values })}
+    />
+  );
+
+  const teamControl = (
+    <button
+      type="button"
+      aria-pressed={filters.team}
+      onClick={() => apply({ ...filters, team: !filters.team })}
+      className={`${FILTER_CONTROL_CLASS} font-medium ${filters.team ? ACTIVE_CLASS : IDLE_CLASS}`}
+    >
+      <UsersRound className="size-3.5 shrink-0" aria-hidden="true" />
+      Командные
+    </button>
+  );
+
+  const beginnerControl = (
+    <Dropdown
+      value={filters.beginner}
+      onChange={(value) => apply({ ...filters, beginner: value as BeginnerFilter })}
+      icon={<Sprout className="size-3.5 shrink-0" aria-hidden="true" />}
+      ariaLabel="Новичковые номинации"
+      trigger={
+        <span className="truncate">
+          Новички: {filters.beginner === 'only' ? 'только' : filters.beginner === 'hide' ? 'скрыть' : 'все'}
+        </span>
+      }
+      options={[
+        { value: 'all', label: 'Показывать все' },
+        { value: 'only', label: 'Только новичковые' },
+        { value: 'hide', label: 'Скрывать новичковые' },
+      ]}
+      className={`${FILTER_CONTROL_CLASS} ${filters.beginner !== 'all' ? ACTIVE_CLASS : IDLE_CLASS}`}
+    />
+  );
+
+  const cityControl = (
+    <CityFilter cities={directories.cities} city={filters.city} onPick={(city) => apply({ ...filters, city })} />
+  );
+
+  const searchControl = <SearchField value={filters.q} onChange={(q) => apply({ ...filters, q })} />;
+
+  // Пока в календаре один тип, контрола нет вовсе: фильтр с единственным вариантом ничего
+  // не отбирает.
+  const kindControl = allKinds.length > 1 ? (
+    <MultiDropdown
+      label="Тип"
+      icon={<Tag className="size-3.5 shrink-0" aria-hidden="true" />}
+      options={allKinds.map((kind) => ({ value: kind, label: KIND_LABEL[kind] }))}
+      value={selectedKinds}
+      onChange={(values) => apply({ ...filters, kinds: values.length === allKinds.length ? null : values })}
+      // Своя подпись, а не общая «все»: рядом с «Подходит мне» голое «все» ничего не сообщает.
+      renderValue={({ selected, all }) => (
+        <span className="truncate">
+          {all ? 'Тип: всё'
+            : selected.length === 0 ? 'Тип: ничего'
+            : selected.length <= 2 ? selected.map((option) => option.label).join(', ')
+            : `тип: ${selected.length} из ${allKinds.length}`}
+        </span>
+      )}
+    />
+  ) : null;
+
+  const ageControl = <AgeChip age={filters.age} onChange={(age) => apply({ ...filters, age })} />;
+
+  const genderControl = (
+    <Dropdown
+      value={filters.gender ?? ''}
+      onChange={(value) => apply({ ...filters, gender: value === '' ? null : (value as ViewerGender) })}
+      icon={
+        filters.gender === 'male' ? <Mars className="size-3.5 shrink-0" />
+          : filters.gender === 'female' ? <Venus className="size-3.5 shrink-0" />
+            : (
+              <span className="flex shrink-0 items-center -space-x-1">
+                <Venus className="size-3.5" />
+                <Mars className="size-3.5" />
+              </span>
+            )
+      }
+      ariaLabel="Пол участника"
+      trigger={
+        <span className="truncate">
+          {filters.gender === 'male' ? 'мужской' : filters.gender === 'female' ? 'женский' : 'любой пол'}
+        </span>
+      }
+      options={[
+        { value: '', label: 'Любой' },
+        { value: 'male', label: 'Мужской' },
+        { value: 'female', label: 'Женский' },
+      ]}
+      className={`${FILTER_CONTROL_CLASS} ${filters.gender ? ACTIVE_CLASS : IDLE_CLASS}`}
+    />
+  );
+
+  // «Смешанные» — единственный тумблер, включённый по умолчанию: для одних смешанная
+  // номинация — шанс побиться с сильными, для других она просто опасна.
+  const mixedControl = (
+    <button
+      type="button"
+      aria-pressed={filters.mixed}
+      onClick={() => apply({ ...filters, mixed: !filters.mixed })}
+      title="Считать смешанные номинации подходящими"
+      className={`${FILTER_CONTROL_CLASS} font-medium ${filters.mixed ? ACTIVE_CLASS : IDLE_CLASS}`}
+    >
+      <VenusAndMars className="size-3.5 shrink-0" />
+      Смешанные
+    </button>
+  );
+
+  // --- те же фильтры для шторки. Отличие одно: справа стоит ТОЛЬКО значение — название фильтра
+  // уже написано слева в ряду, и «Новички | Новички: все» читалось бы как заикание. В строке на
+  // компьютере подписи слева нет, поэтому там контрол называет себя сам.
+
+  const sheetKindControl = allKinds.length > 1 ? (
+    <MultiDropdown
+      label="Тип"
+      options={allKinds.map((kind) => ({ value: kind, label: KIND_LABEL[kind] }))}
+      value={selectedKinds}
+      onChange={(values) => apply({ ...filters, kinds: values.length === allKinds.length ? null : values })}
+      allLabel="всё"
+      emptyLabel="ничего"
+    />
+  ) : null;
+
+  const sheetBeginnerControl = (
+    <Dropdown
+      value={filters.beginner}
+      onChange={(value) => apply({ ...filters, beginner: value as BeginnerFilter })}
+      ariaLabel="Новичковые номинации"
+      trigger={
+        <span className="truncate">
+          {filters.beginner === 'only' ? 'только они' : filters.beginner === 'hide' ? 'скрыть' : 'все'}
+        </span>
+      }
+      options={[
+        { value: 'all', label: 'Показывать все' },
+        { value: 'only', label: 'Только новичковые' },
+        { value: 'hide', label: 'Скрывать новичковые' },
+      ]}
+      className={`${FILTER_CONTROL_CLASS} ${filters.beginner !== 'all' ? ACTIVE_CLASS : IDLE_CLASS}`}
+    />
+  );
+
+  const sheetGenderControl = (
+    <Dropdown
+      value={filters.gender ?? ''}
+      onChange={(value) => apply({ ...filters, gender: value === '' ? null : (value as ViewerGender) })}
+      ariaLabel="Пол участника"
+      trigger={
+        <span className="truncate">
+          {filters.gender === 'male' ? 'мужской' : filters.gender === 'female' ? 'женский' : 'любой'}
+        </span>
+      }
+      options={[
+        { value: '', label: 'Любой' },
+        { value: 'male', label: 'Мужской' },
+        { value: 'female', label: 'Женский' },
+      ]}
+      className={`${FILTER_CONTROL_CLASS} ${filters.gender ? ACTIVE_CLASS : IDLE_CLASS}`}
+    />
+  );
+
+  const sheetAgeControl = (
+    <AgeChip age={filters.age} emptyLabel="любой" onChange={(age) => apply({ ...filters, age })} />
+  );
+
+  /** Тумблер шторки: «да/нет» справа от подписи ряда — как в настройках телефона. */
+  const sheetToggle = (on: boolean, onToggle: () => void, label: string) => (
+    <button
+      type="button"
+      aria-pressed={on}
+      aria-label={label}
+      onClick={onToggle}
+      className={`${FILTER_CONTROL_CLASS} w-16 justify-center font-medium ${on ? ACTIVE_CLASS : IDLE_CLASS}`}
+    >
+      {on ? 'да' : 'нет'}
+    </button>
+  );
+
+  // Глазик про показ, а не про отбор, поэтому он снаружи шторки: «показать неподходящие» —
+  // ответ на уже увиденную выдачу, ради него лезть в фильтры незачем.
+  const eyeControl = (
+    <button
+      type="button"
+      aria-pressed={filters.showUnsuitable}
+      onClick={() => apply({ ...filters, showUnsuitable: !filters.showUnsuitable })}
+      title={filters.showUnsuitable ? 'Скрывать неподходящие' : 'Показывать неподходящие неактивными'}
+      aria-label={filters.showUnsuitable ? 'Скрывать неподходящие' : 'Показывать неподходящие неактивными'}
+      className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+        filters.showUnsuitable ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
+      }`}
+    >
+      {filters.showUnsuitable
+        ? <Eye className="size-4" aria-hidden="true" />
+        : <EyeOff className="size-4" aria-hidden="true" />}
+    </button>
+  );
+
   return (
     <div
       aria-busy={pending}
       className={`flex flex-col gap-1.5 transition-opacity ${pending ? 'opacity-60' : ''}`}
     >
-      {/* Свёрнутая шапка — одна строка вместо 184 точек фильтров (липкий блок 283 → 131, замер
-          12.11.2026). Цифра обязательна: без неё свёрнутая шапка прятала бы от читателя сам факт,
-          что выдача отфильтрована, и пустой календарь выглядел бы поломкой. */}
-      {collapsed && (
+      {/* Строка одна на оба экрана. На телефоне в ней только кнопка «Фильтры» и глазик, на
+          компьютере — все контролы, как были: десктопные обёртки растворяются в `sm:contents`,
+          поэтому чипы остаются прямыми детьми строки и переносятся по словам, как раньше. Ради
+          этого же и склейка: глазик должен быть ОДНОЙ кнопкой, а не двумя одинаковыми в
+          разметке, из которых одна всегда спрятана. */}
+      <div className="flex flex-wrap items-center gap-1.5">
         <button
           type="button"
-          onClick={openFilters}
-          aria-expanded={false}
-          className={`${FILTER_CONTROL_CLASS} self-start font-medium sm:hidden ${
-            activeCount > 0 ? ACTIVE_CLASS : IDLE_CLASS
-          }`}
+          aria-expanded={sheetOpen}
+          aria-haspopup="dialog"
+          onClick={() => setSheetOpen(true)}
+          className={`${FILTER_CONTROL_CLASS} font-medium sm:hidden ${activeCount > 0 ? ACTIVE_CLASS : IDLE_CLASS}`}
         >
           <SlidersHorizontal className="size-3.5 shrink-0" aria-hidden="true" />
           Фильтры
+          {/* Цифра обязательна: без неё строка прятала бы от читателя сам факт, что выдача
+              отфильтрована, и пустой календарь выглядел бы поломкой. */}
           {activeCount > 0 && (
             <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
               {activeCount}
             </span>
           )}
-          <ChevronDown className="size-3 shrink-0 opacity-60" aria-hidden="true" />
         </button>
-      )}
 
-      <div className={`${collapsed ? 'hidden sm:flex' : 'flex'} flex-wrap items-center gap-1.5`}>
-      <MultiDropdown
-        label="Оружие"
-        icon={<Swords className="size-3.5 shrink-0" aria-hidden="true" />}
-        options={directories.weapons.map((w) => ({
-          value: w.code,
-          label: w.name,
-          icon: <WeaponIcon code={w.code} size={18} />,
-        }))}
-        value={selectedWeapons}
-        onChange={(values) => apply({ ...filters, weapons: values.length === allWeapons.length ? null : values })}
-        // Решение заказчика портала: «показывать не текст, а пиктограммку» — названия видов в
-        // триггер не влезают и распухают строку на второй ряд.
-        renderValue={({ selected, all }) =>
-          all || selected.length === 0 ? (
-            <span className="truncate">{all ? 'все' : 'ничего'}</span>
-          ) : (
-            <span className="flex items-center gap-0.5">
-              {selected.slice(0, 5).map((option) => (
-                <WeaponIcon key={option.value} code={option.value} size={14} />
-              ))}
-              {selected.length > 5 && <span className="leading-none">+{selected.length - 5}</span>}
-            </span>
-          )
-        }
-      />
+        <div className="hidden sm:contents">
+        {weaponsControl}
+        {regionsControl}
+        {teamControl}
+        {beginnerControl}
+        {cityControl}
+        {searchControl}
 
-      <MultiDropdown
-        label="Регион"
-        icon={<MapPin className="size-3.5 shrink-0" aria-hidden="true" />}
-        options={allRegions.map((region) => ({ value: region, label: region }))}
-        value={selectedRegions}
-        onChange={(values) => apply({ ...filters, regions: values.length === allRegions.length ? null : values })}
-      />
+        {/* Переключателя периода здесь больше нет (решение заказчика 08.11.2026): список
+            открывается будущим и подтягивает прошедшее прокруткой вверх, как лента, — спрашивать
+            об этом отдельным контролом стало незачем. Сам параметр `period` остался: он
+            разбирается из адреса, и прежние ссылки на архив работают. */}
 
-      <button
-        type="button"
-        aria-pressed={filters.team}
-        onClick={() => apply({ ...filters, team: !filters.team })}
-        className={`${FILTER_CONTROL_CLASS} font-medium ${filters.team ? ACTIVE_CLASS : IDLE_CLASS}`}
-      >
-        <UsersRound className="size-3.5 shrink-0" aria-hidden="true" />
-        Командные
-      </button>
-
-      <Dropdown
-        value={filters.beginner}
-        onChange={(value) => apply({ ...filters, beginner: value as BeginnerFilter })}
-        icon={<Sprout className="size-3.5 shrink-0" aria-hidden="true" />}
-        ariaLabel="Новичковые номинации"
-        trigger={
-          <span className="truncate">
-            Новички: {filters.beginner === 'only' ? 'только' : filters.beginner === 'hide' ? 'скрыть' : 'все'}
-          </span>
-        }
-        options={[
-          { value: 'all', label: 'Показывать все' },
-          { value: 'only', label: 'Только новичковые' },
-          { value: 'hide', label: 'Скрывать новичковые' },
-        ]}
-        className={`${FILTER_CONTROL_CLASS} ${filters.beginner !== 'all' ? ACTIVE_CLASS : IDLE_CLASS}`}
-      />
-
-      <CityFilter cities={directories.cities} city={filters.city} onPick={(city) => apply({ ...filters, city })} />
-
-      <SearchField value={filters.q} onChange={(q) => apply({ ...filters, q })} />
-
-      {/* Переключателя периода здесь больше нет (решение заказчика 08.11.2026): список
-          открывается будущим и подтягивает прошедшее прокруткой вверх, как лента, — спрашивать
-          об этом отдельным контролом стало незачем. Сам параметр `period` остался: он разбирается
-          из адреса, и прежние ссылки на архив (`?view=list&period=past`) работают. */}
-
-      {/* Стрелка аккордеона: за ней критерии участника. Точка-индикатор обязательна — без неё
-          заданный в свёрнутом состоянии возраст необъяснимо режет выдачу. */}
-      <button
-        type="button"
-        aria-expanded={personalOpen}
-        onClick={() => setPersonalOpen((open) => !open)}
-        title="Критерии участника: возраст, пол, смешанные номинации"
-        aria-label="Критерии участника: возраст, пол, смешанные номинации"
-        className={`${FILTER_CONTROL_CLASS} ${hasPersonalFilters(filters) ? ACTIVE_CLASS : IDLE_CLASS}`}
-      >
-        <ChevronDown
-          className={`size-3.5 shrink-0 transition-transform ${personalOpen ? 'rotate-180' : ''}`}
-          aria-hidden="true"
-        />
-        Подходит мне
-        {hasPersonalFilters(filters) && (
-          <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-        )}
-      </button>
-
-      {/* Тип стоит ПОСЛЕ «Подходит мне» и потому переносится во второй ряд (решение заказчика
-          09.11.2026 по макету). Первым в ряду он по смыслу правильнее — «что это вообще»
-          спрашивают раньше, чем «каким оружием», — но сжал бы поле поиска с 534 до 398 px, а
-          во втором ряду до иконок видов место всё равно пустует. Пока в календаре один тип,
-          контрола нет вовсе: фильтр с единственным вариантом ничего не отбирает. */}
-      {allKinds.length > 1 && (
-        <MultiDropdown
-          label="Тип"
-          icon={<Tag className="size-3.5 shrink-0" aria-hidden="true" />}
-          options={allKinds.map((kind) => ({ value: kind, label: KIND_LABEL[kind] }))}
-          value={selectedKinds}
-          onChange={(values) => apply({ ...filters, kinds: values.length === allKinds.length ? null : values })}
-          // Своя подпись, а не общая «все»: рядом с «Подходит мне» голое «все» ничего не
-          // сообщает, а в первом ряду слово «тип» подсказывает иконка-ярлык вместе с соседями.
-          renderValue={({ selected, all }) => (
-            <span className="truncate">
-              {all ? 'Тип: всё'
-                : selected.length === 0 ? 'Тип: ничего'
-                : selected.length <= 2 ? selected.map((option) => option.label).join(', ')
-                : `тип: ${selected.length} из ${allKinds.length}`}
-            </span>
+        {/* Стрелка аккордеона: за ней критерии участника. Точка-индикатор обязательна — без неё
+            заданный в свёрнутом состоянии возраст необъяснимо режет выдачу. */}
+        <button
+          type="button"
+          aria-expanded={personalOpen}
+          onClick={() => setPersonalOpen((open) => !open)}
+          title="Критерии участника: возраст, пол, смешанные номинации"
+          aria-label="Критерии участника: возраст, пол, смешанные номинации"
+          className={`${FILTER_CONTROL_CLASS} ${hasPersonalFilters(filters) ? ACTIVE_CLASS : IDLE_CLASS}`}
+        >
+          <ChevronDown
+            className={`size-3.5 shrink-0 transition-transform ${personalOpen ? 'rotate-180' : ''}`}
+            aria-hidden="true"
+          />
+          Подходит мне
+          {hasPersonalFilters(filters) && (
+            <span className="size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
           )}
-        />
-      )}
+        </button>
 
-      {hasActiveFilters(filters) && (
-        <button
-          type="button"
-          onClick={() => apply({
-            ...filters,
-            kinds: null, weapons: null, regions: null, city: null, team: false, beginner: 'all', q: '',
-            age: null, gender: null, mixed: true,
+        {/* Тип стоит ПОСЛЕ «Подходит мне» и потому переносится во второй ряд (решение заказчика
+            09.11.2026 по макету). Первым в ряду он по смыслу правильнее — «что это вообще»
+            спрашивают раньше, чем «каким оружием», — но сжал бы поле поиска с 534 до 398 px. */}
+        {kindControl}
+
+        {hasActiveFilters(filters) && (
+          <button type="button" onClick={reset} className="px-2 text-xs text-text-muted hover:text-primary">
+            Сбросить
+          </button>
+        )}
+        </div>
+
+        {/* Глазик и виды — одной группой справа: оба про показ, а не про отбор. В портале глазик
+            живёт в полоске месяцев, но она у нас не показывается в виде «список», где он нужен
+            ровно так же. Видов на телефоне нет совсем: там один вид, выбирать не из чего. */}
+        <div className="ml-auto flex items-center gap-0.5">
+          <span className="mr-1 flex items-center">{eyeControl}</span>
+
+          <span className="hidden sm:contents">
+          {(['ribbon', 'month', 'list'] as ViewMode[]).map((mode) => {
+            const Icon = VIEW_ICON[mode];
+            const active = filters.view === mode;
+            return (
+              <button
+                key={mode}
+                type="button"
+                aria-pressed={active}
+                title={VIEW_LABEL[mode]}
+                aria-label={VIEW_LABEL[mode]}
+                onClick={() => apply({ ...filters, view: mode })}
+                className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                  active ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
+                }`}
+              >
+                <Icon className="size-4" aria-hidden="true" />
+              </button>
+            );
           })}
-          className="px-2 text-xs text-text-muted hover:text-primary"
-        >
-          Сбросить
-        </button>
-      )}
-
-      {/* Глазик и виды — одной группой справа: оба про показ, а не про отбор. В портале глазик
-          живёт в полоске месяцев, но она у нас не показывается в виде «список», где он нужен
-          ровно так же. */}
-      {/* Замок и виды — одной строкой на телефоне: фильтры там сворачиваются прокруткой, и
-          замок говорит «не прячь». `sm:contents` растворяет обёртку на десктопе, где этой строки
-          нет вовсе и группа видов прижата вправо среди чипов, как была. */}
-      <div className="flex w-full items-center gap-2 sm:contents">
-        <button
-          type="button"
-          aria-pressed={pinned}
-          onClick={togglePin}
-          title={pinned ? 'Разрешить прятать фильтры при прокрутке' : 'Не прятать фильтры при прокрутке'}
-          aria-label={pinned ? 'Разрешить прятать фильтры при прокрутке' : 'Не прятать фильтры при прокрутке'}
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors sm:hidden ${
-            pinned ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
-          }`}
-        >
-          {pinned
-            ? <Lock className="size-4" aria-hidden="true" />
-            : <Unlock className="size-4" aria-hidden="true" />}
-        </button>
-
-      <div className="ml-auto flex items-center gap-0.5">
-        <button
-          type="button"
-          aria-pressed={filters.showUnsuitable}
-          onClick={() => apply({ ...filters, showUnsuitable: !filters.showUnsuitable })}
-          title={filters.showUnsuitable ? 'Скрывать неподходящие' : 'Показывать неподходящие неактивными'}
-          aria-label={filters.showUnsuitable ? 'Скрывать неподходящие' : 'Показывать неподходящие неактивными'}
-          className={`mr-1 flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-            filters.showUnsuitable ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
-          }`}
-        >
-          {filters.showUnsuitable
-            ? <Eye className="size-4" aria-hidden="true" />
-            : <EyeOff className="size-4" aria-hidden="true" />}
-        </button>
-
-        {(['ribbon', 'month', 'list'] as ViewMode[]).map((mode) => {
-          const Icon = VIEW_ICON[mode];
-          const active = filters.view === mode;
-          return (
-            <button
-              key={mode}
-              type="button"
-              aria-pressed={active}
-              title={VIEW_LABEL[mode]}
-              aria-label={VIEW_LABEL[mode]}
-              onClick={() => apply({ ...filters, view: mode })}
-              // Лента и сетка месяца на телефоне не показываются вовсе (решение заказчика
-              // 12.11.2026): выбирать там не из чего, и кнопка вела бы в вид, которого нет.
-              className={`h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                mode === 'list' ? 'flex' : 'hidden sm:flex'
-              } ${
-                active ? 'bg-primary/15 text-primary' : 'text-text-muted hover:bg-card hover:text-foreground'
-              }`}
-            >
-              <Icon className="size-4" aria-hidden="true" />
-            </button>
-          );
-        })}
-      </div>
-      </div>
+          </span>
+        </div>
       </div>
 
       {personalOpen && (
-        <div className={`${collapsed ? 'hidden sm:flex' : 'flex'} flex-wrap items-center gap-1.5`}>
-          <AgeChip age={filters.age} onChange={(age) => apply({ ...filters, age })} />
-
-          <Dropdown
-            value={filters.gender ?? ''}
-            onChange={(value) => apply({ ...filters, gender: value === '' ? null : (value as ViewerGender) })}
-            icon={
-              filters.gender === 'male' ? <Mars className="size-3.5 shrink-0" />
-                : filters.gender === 'female' ? <Venus className="size-3.5 shrink-0" />
-                  : (
-                    <span className="flex shrink-0 items-center -space-x-1">
-                      <Venus className="size-3.5" />
-                      <Mars className="size-3.5" />
-                    </span>
-                  )
-            }
-            ariaLabel="Пол участника"
-            trigger={
-              <span className="truncate">
-                {filters.gender === 'male' ? 'мужской' : filters.gender === 'female' ? 'женский' : 'любой пол'}
-              </span>
-            }
-            options={[
-              { value: '', label: 'Любой' },
-              { value: 'male', label: 'Мужской' },
-              { value: 'female', label: 'Женский' },
-            ]}
-            className={`${FILTER_CONTROL_CLASS} ${filters.gender ? ACTIVE_CLASS : IDLE_CLASS}`}
-          />
-
-          {/* «Смешанные» — единственный тумблер, включённый по умолчанию: для одних смешанная
-              номинация — шанс побиться с сильными, для других она просто опасна. Стоит вплотную к полу —
-              уточняет именно его. */}
-          <button
-            type="button"
-            aria-pressed={filters.mixed}
-            onClick={() => apply({ ...filters, mixed: !filters.mixed })}
-            title="Считать смешанные номинации подходящими"
-            className={`${FILTER_CONTROL_CLASS} font-medium ${filters.mixed ? ACTIVE_CLASS : IDLE_CLASS}`}
-          >
-            <VenusAndMars className="size-3.5 shrink-0" />
-            Смешанные
-          </button>
-
+        <div className="hidden flex-wrap items-center gap-1.5 sm:flex">
+          {ageControl}
+          {genderControl}
+          {mixedControl}
           <span className="px-1 text-xs text-text-faint">
             Возраст и пол никуда не отправляются — отбор идёт в браузере.
           </span>
+        </div>
+      )}
+
+      {/* ---- телефон: шторка ---------------------------------------------------------------- */}
+      {sheetOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col justify-end sm:hidden">
+          <button
+            type="button"
+            aria-label="Закрыть фильтры"
+            onClick={() => setSheetOpen(false)}
+            className="absolute inset-0 bg-black/60"
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Фильтры"
+            className="thin-scroll relative max-h-[85vh] overflow-y-auto rounded-t-2xl bg-background-secondary px-4 pb-3 pt-2 ring-1 ring-inset ring-border-light"
+          >
+            <div className="mx-auto mb-2 h-1 w-9 rounded-full bg-border-light" aria-hidden="true" />
+
+            <div className="flex items-center justify-between gap-2 pb-1">
+              <span className="text-sm font-medium text-foreground">Фильтры</span>
+              <span className="flex items-center gap-1">
+                {hasActiveFilters(filters) && (
+                  <button type="button" onClick={reset} className="px-2 text-xs text-text-muted hover:text-primary">
+                    Сбросить
+                  </button>
+                )}
+                <button
+                  type="button"
+                  aria-label="Закрыть фильтры"
+                  onClick={() => setSheetOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:bg-card hover:text-foreground"
+                >
+                  <X className="size-4" aria-hidden="true" />
+                </button>
+              </span>
+            </div>
+
+            {/* Поиск — во всю ширину и первым: искать турнир по имени просят чаще, чем сужать
+                по оружию, а в ряду «подпись слева, контрол справа» полю не хватало бы места. */}
+            <div className="border-b border-border py-2.5">{searchControl}</div>
+
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Оружие</span>
+              {weaponsControl}
+            </div>
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Регион</span>
+              {regionsControl}
+            </div>
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Город</span>
+              {cityControl}
+            </div>
+            {sheetKindControl && (
+              <div className={SHEET_ROW_CLASS}>
+                <span className="text-sm text-text-secondary">Тип</span>
+                {sheetKindControl}
+              </div>
+            )}
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Новички</span>
+              {sheetBeginnerControl}
+            </div>
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Только командные</span>
+              {sheetToggle(filters.team, () => apply({ ...filters, team: !filters.team }), 'Только командные')}
+            </div>
+
+            {/* Критерии участника в шторке стоят открытыми, без аккордеона: он заведён ради
+                горизонтального места в строке, которого здесь не жалко, а лишнее касание — жалко. */}
+            <p className="pt-3 text-xs uppercase tracking-wide text-text-faint">Подходит мне</p>
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Возраст</span>
+              {sheetAgeControl}
+            </div>
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Пол</span>
+              {sheetGenderControl}
+            </div>
+            <div className={SHEET_ROW_CLASS}>
+              <span className="text-sm text-text-secondary">Смешанные подходят</span>
+              {sheetToggle(filters.mixed, () => apply({ ...filters, mixed: !filters.mixed }), 'Считать смешанные номинации подходящими')}
+            </div>
+            <p className="py-2 text-xs text-text-faint">
+              Возраст и пол никуда не отправляются — отбор идёт в браузере.
+            </p>
+
+            {/* Кнопка внизу закрывает шторку, а не применяет: фильтры применяются сразу, как и на
+                компьютере. Число на ней — единственная обратная связь, пока выдача скрыта шторкой. */}
+            <div className="sticky bottom-0 -mx-4 bg-background-secondary px-4 pb-1 pt-2">
+              <button
+                type="button"
+                onClick={() => setSheetOpen(false)}
+                className="w-full rounded-lg bg-primary py-2.5 text-sm font-medium text-primary-foreground"
+              >
+                {count === 0
+                  ? 'Ничего не нашлось'
+                  : `Показать ${count} ${plural(count, ['турнир', 'турнира', 'турниров'])}`}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -454,7 +578,17 @@ export function FilterBar({
  * Возраст — чип, который по клику превращается в поле. Так в портале: ввод нужен редко, а место в
  * строке дорого. Отправляется по уходу из поля и по Enter, иначе адрес менялся бы на каждую цифру.
  */
-function AgeChip({ age, onChange }: { age: number | null; onChange: (age: number | null) => void }) {
+function AgeChip({
+  age,
+  onChange,
+  emptyLabel = 'Возраст',
+}: {
+  age: number | null;
+  onChange: (age: number | null) => void;
+  /** Что написано, пока возраст не задан. В шторке слева уже стоит подпись «Возраст», и
+   *  повторять её на чипе незачем — там «любой». */
+  emptyLabel?: string;
+}) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(age === null ? '' : String(age));
 
@@ -494,7 +628,7 @@ function AgeChip({ age, onChange }: { age: number | null; onChange: (age: number
       className={`${FILTER_CONTROL_CLASS} ${age === null ? IDLE_CLASS : ACTIVE_CLASS}`}
     >
       <CalendarClock className="size-3.5 shrink-0" aria-hidden="true" />
-      {age === null ? 'Возраст' : `${age} ${plural(age, ['год', 'года', 'лет'])}`}
+      {age === null ? emptyLabel : `${age} ${plural(age, ['год', 'года', 'лет'])}`}
     </button>
   );
 }

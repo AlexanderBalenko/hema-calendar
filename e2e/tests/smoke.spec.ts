@@ -467,51 +467,54 @@ test.describe('Телефон', () => {
     expect(Math.min(...dividers.map(key))).toBeGreaterThanOrEqual(now);
   });
 
-  test('лента и сетка месяца не предлагаются', async ({ page }) => {
+  test('ни один вид не предлагается: выбирать не из чего', async ({ page }) => {
     // Адрес ленты открывается списком: ссылка с компьютера не должна приводить телефон в вид,
-    // которого на нём нет.
+    // которого на нём нет. Кнопок видов на телефоне нет вовсе — вид там один.
     await page.goto('?view=ribbon');
     await page.waitForLoadState('load');
 
-    await expect(page.getByTitle('Список')).toBeVisible();
     await expect(page.getByTitle('Лента недель')).toBeHidden();
     await expect(page.getByTitle('Месяц')).toBeHidden();
+    await expect(page.getByTitle('Список')).toBeHidden();
+    await expect(page.locator('a[href*="/events/"]').first()).toBeVisible();
   });
 
-  test('шапка фильтров уезжает при прокрутке, кнопка возвращает', async ({ page }) => {
+  test('фильтры живут в шторке, а не в строке', async ({ page }) => {
     await page.goto('');
     await page.waitForLoadState('load');
 
-    const weapons = page.getByTitle(/^Оружие/);
-    await expect(weapons).toBeVisible();
+    // В строке фильтров нет: девять чипов в столбик съедали 400 точек из 812 (§5к).
+    await expect(page.getByTitle(/^Оружие/)).toBeHidden();
 
-    await page.mouse.move(187, 600);
-    await page.mouse.wheel(0, 400);
     const chip = page.getByRole('button', { name: /Фильтры/ });
     await expect(chip).toBeVisible();
-    await expect(weapons).toBeHidden();
-
-    // Кнопка — единственный надёжный путь назад в БУДУЩЕМ списке: он растёт вверх прошлым, и
-    // верх страницы прокруткой не достаётся (замер 12.11.2026 — см. §5к документа).
     await chip.click();
-    await expect(weapons).toBeVisible();
+
+    const sheet = page.getByRole('dialog', { name: 'Фильтры' });
+    await expect(sheet).toBeVisible();
+    await expect(sheet.getByTitle(/^Оружие/)).toBeVisible();
+    await expect(sheet.getByTitle(/^Регион/)).toBeVisible();
+
+    // Кнопка внизу называет размер выдачи: пока шторка открыта, списка не видно, и это
+    // единственная обратная связь на выбор фильтра.
+    const show = sheet.getByRole('button', { name: /Показать \d+ турнир|Ничего не нашлось/ });
+    await expect(show).toBeVisible();
+    await show.click();
+    await expect(sheet).toBeHidden();
   });
 
-  test('у верха страницы фильтры возвращаются прокруткой', async ({ page }) => {
-    // «Прошедшие» вверх не растут (`growsBack` только у будущего), поэтому здесь верх страницы
-    // прокруткой достижим — и видно само правило: выше сорока точек шапка развёрнута.
-    await page.goto('?view=list&period=past');
+  test('строка фильтров не уезжает при прокрутке', async ({ page }) => {
+    // Прежняя шапка пряталась прокруткой, потому что занимала полэкрана; со шторкой прятать
+    // нечего — одна строка остаётся на месте, и фильтры доступны в любой точке списка.
+    await page.goto('');
     await page.waitForLoadState('load');
 
-    const weapons = page.getByTitle(/^Оружие/);
-    await expect(weapons).toBeVisible();
+    const chip = page.getByRole('button', { name: /Фильтры/ });
+    await expect(chip).toBeVisible();
 
     await page.mouse.move(187, 600);
-    await page.mouse.wheel(0, 400);
-    await expect(weapons).toBeHidden();
-
-    await page.mouse.wheel(0, -400);
-    await expect(weapons).toBeVisible();
+    await page.mouse.wheel(0, 600);
+    await expect(chip).toBeVisible();
   });
 });
 

@@ -427,7 +427,7 @@ function Calendar({ params }: { params: RawParams }) {
         ref={stickyRef}
         className="sticky top-16 z-30 -mx-4 flex flex-col gap-2 bg-background px-4 pb-2 pt-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
       >
-        <FilterBar filters={filters} directories={DIRECTORIES} today={today} />
+        <FilterBar filters={filters} directories={DIRECTORIES} today={today} count={events.length} />
         {filters.view !== 'list' && (
           <MonthStrip
             filters={filters}
