@@ -66,24 +66,42 @@ export function MultiDropdown({
    *
    * Мерим, а не решаем классом: сколько места справа — знает только рантайм. `max-width`
    * ограничивает ширину, но не мешает панели НАЧИНАТЬСЯ там, откуда она уже не помещается.
+   *
+   * Пересчитывается не только на открытии: выбор меняет ШИРИНУ кнопки («все» → пиктограммы
+   * выбранного), а в шторке кнопка прижата к правому краю ряда — значит у неё едет левый край, а
+   * с ним и панель, привязанная к нему сдвигом. Замер 13.11.2026: сняли «длинный меч» — кнопка
+   * 75 → 149, её левый край 284 → 210, панель уехала с 47..367 на −27..293, то есть за экран.
+   * Поэтому размеры слушает ResizeObserver, пока панель открыта.
    */
   const [panelShift, setPanelShift] = useState(0);
 
   useLayoutEffect(() => {
-    if (!open || !panelRef.current) {
+    const host = ref.current;
+    const panel = panelRef.current;
+    if (!open || !host || !panel) {
       setPanelShift(0);
       return;
     }
-    const host = ref.current?.getBoundingClientRect();
-    if (!host) return;
-    const panel = panelRef.current.getBoundingClientRect();
-    // Сдвиг, а не бинарное «прижать вправо»: у кнопки не у правого края панель, прижатая к её
-    // правому краю, вылезла бы уже слева. Считаем смещение от левого края кнопки и клампим
-    // обеими сторонами экрана с запасом 8px — «впритык» читается как обрезанное.
-    const vw = document.documentElement.clientWidth;
-    const wanted = Math.min(0, vw - 8 - (host.left + panel.width));
-    setPanelShift(Math.max(wanted, 8 - host.left));
-  }, [open, options.length]);
+    const measure = () => {
+      const hostBox = host.getBoundingClientRect();
+      const panelBox = panel.getBoundingClientRect();
+      // Сдвиг, а не бинарное «прижать вправо»: у кнопки не у правого края панель, прижатая к её
+      // правому краю, вылезла бы уже слева. Считаем смещение от левого края кнопки и клампим
+      // обеими сторонами экрана с запасом 8px — «впритык» читается как обрезанное.
+      const vw = document.documentElement.clientWidth;
+      const wanted = Math.min(0, vw - 8 - (hostBox.left + panelBox.width));
+      setPanelShift(Math.max(wanted, 8 - hostBox.left));
+    };
+    measure();
+    // Наблюдатель — страховка на остальное (поворот экрана, доехавший шрифт). Главный же случай,
+    // смену выбора, ловит зависимость ниже: наблюдатели размеров живут в цикле отрисовки, а он у
+    // фоновой вкладки может не идти вовсе — проверено 13.11.2026, в неотрисовываемой странице за
+    // полсекунды ноль кадров и ноль срабатываний. Пересчёт по зависимости от кадров не зависит.
+    const observer = new ResizeObserver(measure);
+    observer.observe(host);
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, [open, options.length, value.join(',')]);
 
   const selectedSet = new Set(value);
   const selected = options.filter((o) => selectedSet.has(o.value));

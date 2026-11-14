@@ -74,21 +74,34 @@ export function Dropdown({
   const [panelShift, setPanelShift] = useState(0);
 
   useLayoutEffect(() => {
-    if (!open || !panelRef.current) {
+    const hostNode = ref.current;
+    const panelNode = panelRef.current;
+    if (!open || !hostNode || !panelNode) {
       setPanelShift(0);
       return;
     }
-    const panel = panelRef.current.getBoundingClientRect();
-    const host = ref.current?.getBoundingClientRect();
-    if (!host) return;
-    // Сдвиг, а не бинарное «прижать вправо»: у кнопки не у правого края панель, прижатая к её
-    // правому краю, вылезла бы уже СЛЕВА (host.right − ширина панели < 0) — зеркальная ловушка,
-    // найденная валидацией 28.08.2026. Считаем смещение от левого края кнопки и клампим обеими
-    // сторонами экрана с запасом 8 px: «впритык» читается как обрезанное.
-    const vw = document.documentElement.clientWidth;
-    const wanted = Math.min(0, vw - 8 - (host.left + panel.width));
-    setPanelShift(Math.max(wanted, 8 - host.left));
-  }, [open, options.length]);
+    const measure = () => {
+      const host = hostNode.getBoundingClientRect();
+      const panel = panelNode.getBoundingClientRect();
+      // Сдвиг, а не бинарное «прижать вправо»: у кнопки не у правого края панель, прижатая к её
+      // правому краю, вылезла бы уже СЛЕВА (host.right − ширина панели < 0) — зеркальная ловушка,
+      // найденная валидацией 28.08.2026. Считаем смещение от левого края кнопки и клампим обеими
+      // сторонами экрана с запасом 8 px: «впритык» читается как обрезанное.
+      const vw = document.documentElement.clientWidth;
+      const wanted = Math.min(0, vw - 8 - (host.left + panel.width));
+      setPanelShift(Math.max(wanted, 8 - host.left));
+    };
+    measure();
+    // Выбор меняет ширину кнопки («любой пол» → «мужской»), а в телефонной шторке кнопка прижата
+    // к правому краю ряда — значит едет её левый край, а с ним и панель. Та же беда, что в
+    // MultiDropdown (замер 13.11.2026). Смену выбора ловит зависимость ниже, а наблюдатель —
+    // страховка на остальное: он живёт в цикле отрисовки, который у фоновой вкладки может не
+    // идти вовсе.
+    const observer = new ResizeObserver(measure);
+    observer.observe(hostNode);
+    observer.observe(panelNode);
+    return () => observer.disconnect();
+  }, [open, options.length, value]);
 
   const selected = options.find((o) => o.value === value);
 

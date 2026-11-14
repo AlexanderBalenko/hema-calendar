@@ -541,6 +541,56 @@ test.describe('Телефон', () => {
     expect(await sheet.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(1);
   });
 
+  test('панель не уезжает, когда выбор меняет ширину кнопки', async ({ page }) => {
+    // Наблюдателя размеров на время теста глушим. Он в коде есть — как страховка на поворот
+    // экрана и доехавший шрифт, — но живёт в цикле отрисовки, а тот у неотрисовываемой страницы
+    // может не идти вовсе: замер 13.11.2026 — ноль кадров и ноль срабатываний за полсекунды.
+    // Проверяем поэтому главный путь: пересчёт по смене выбора, который от кадров не зависит.
+    await page.addInitScript(() => {
+      (window as unknown as { ResizeObserver: unknown }).ResizeObserver = class {
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
+    });
+    await page.goto('');
+    await page.waitForLoadState('load');
+    await page.getByRole('button', { name: /Фильтры/ }).click();
+
+    const sheet = page.getByRole('dialog', { name: 'Фильтры' });
+    const weapons = sheet.getByTitle(/^Оружие/);
+    await weapons.click();
+
+    const panelBox = () => page.evaluate(() => {
+      const trigger = document.querySelector('[role="dialog"] button[aria-expanded="true"]');
+      const box = trigger?.parentElement?.querySelector('div[class*="absolute"]');
+      if (!box) return null;
+      const r = box.getBoundingClientRect();
+      const t = trigger!.getBoundingClientRect();
+      return {
+        left: Math.round(r.left), right: Math.round(r.right),
+        chipLeft: Math.round(t.left), chipWidth: Math.round(t.width),
+        vw: window.innerWidth,
+      };
+    });
+
+    const before = await panelBox();
+    expect(before).not.toBeNull();
+
+    // Снимаем одну галочку: кнопка начинает показывать пиктограммы вместо «все» и становится
+    // шире, а в шторке она прижата вправо — значит едет её ЛЕВЫЙ край. Замер 13.11.2026: кнопка
+    // 75 → 149, левый край 284 → 210, и панель, привязанная к нему сдвигом от открытия, уехала с
+    // 47..367 на −27..293, то есть за левый край экрана.
+    await sheet.getByText('Длинный меч', { exact: true }).click();
+    await expect.poll(async () => (await panelBox())?.chipWidth).not.toBe(before!.chipWidth);
+
+    const after = await panelBox();
+    expect(after!.chipLeft).toBeLessThan(before!.chipLeft);
+    expect(after!.left).toBeGreaterThanOrEqual(0);
+    expect(after!.right).toBeLessThanOrEqual(after!.vw);
+    expect(await sheet.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(1);
+  });
+
   test('строка фильтров не уезжает при прокрутке', async ({ page }) => {
     // Прежняя шапка пряталась прокруткой, потому что занимала полэкрана; со шторкой прятать
     // нечего — одна строка остаётся на месте, и фильтры доступны в любой точке списка.
