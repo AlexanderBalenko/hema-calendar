@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Checkbox } from './checkbox';
 
@@ -46,6 +46,7 @@ export function MultiDropdown({
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
@@ -54,6 +55,35 @@ export function MultiDropdown({
     document.addEventListener('mousedown', onClickOutside);
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, []);
+
+  /**
+   * Панель шире кнопки и прижата к её ЛЕВОМУ краю — у кнопки в правой половине экрана это
+   * выносит панель за границу окна. Тот же расчёт, что в `Dropdown` (select-arrow.tsx), куда он
+   * попал по баг-репорту 27.08.2026; сюда его тогда не перенесли, и беда вернулась, когда
+   * телефонные фильтры переехали в шторку и чипы встали к правому краю: замер 13.11.2026 —
+   * панель оружия с левым краем на 284 и шириной 320 при экране 375 давала шторке 229 точек
+   * горизонтальной прокрутки, а сами названия уезжали за край.
+   *
+   * Мерим, а не решаем классом: сколько места справа — знает только рантайм. `max-width`
+   * ограничивает ширину, но не мешает панели НАЧИНАТЬСЯ там, откуда она уже не помещается.
+   */
+  const [panelShift, setPanelShift] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!open || !panelRef.current) {
+      setPanelShift(0);
+      return;
+    }
+    const host = ref.current?.getBoundingClientRect();
+    if (!host) return;
+    const panel = panelRef.current.getBoundingClientRect();
+    // Сдвиг, а не бинарное «прижать вправо»: у кнопки не у правого края панель, прижатая к её
+    // правому краю, вылезла бы уже слева. Считаем смещение от левого края кнопки и клампим
+    // обеими сторонами экрана с запасом 8px — «впритык» читается как обрезанное.
+    const vw = document.documentElement.clientWidth;
+    const wanted = Math.min(0, vw - 8 - (host.left + panel.width));
+    setPanelShift(Math.max(wanted, 8 - host.left));
+  }, [open, options.length]);
 
   const selectedSet = new Set(value);
   const selected = options.filter((o) => selectedSet.has(o.value));
@@ -101,7 +131,11 @@ export function MultiDropdown({
           названия («Спортивная шпага» с пиктограммой) вылезали — к вертикальной полосе прокрутки
           добавлялась горизонтальная. Ширину ограничиваем экраном, а не кнопкой. */}
       {open && (
-        <div className="thin-scroll absolute left-0 top-[calc(100%+4px)] z-40 max-h-72 w-max min-w-[200px] max-w-[min(20rem,90vw)] overflow-y-auto rounded-lg bg-card p-1 shadow-lg ring-1 ring-inset ring-border-light">
+        <div
+          ref={panelRef}
+          style={panelShift !== 0 ? { left: panelShift } : undefined}
+          className="thin-scroll absolute left-0 top-[calc(100%+4px)] z-40 max-h-72 w-max min-w-[200px] max-w-[min(20rem,90vw)] overflow-y-auto rounded-lg bg-card p-1 shadow-lg ring-1 ring-inset ring-border-light"
+        >
           {options.length === 0 && <p className="px-2 py-1.5 text-sm text-text-muted">Нет вариантов</p>}
 
           {options.length > 0 && (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useTransition } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   CalendarClock, CalendarDays, ChevronDown, Eye, EyeOff, LayoutList, MapPin, Rows3, Search,
@@ -701,6 +701,24 @@ function CityFilter({
   const [text, setText] = useState('');
   const selected = city ? cities.find((c) => c.name === city) : undefined;
 
+  // Подсказки городов — такая же панель, как у дропдаунов, и уезжает за край так же: в шторке
+  // поле стоит у правой границы, а список шире его (замер 13.11.2026). Расчёт тот же.
+  const hostRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const [shift, setShift] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!listRef.current || !hostRef.current) {
+      setShift(0);
+      return;
+    }
+    const host = hostRef.current.getBoundingClientRect();
+    const list = listRef.current.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth;
+    const wanted = Math.min(0, vw - 8 - (host.left + list.width));
+    setShift(Math.max(wanted, 8 - host.left));
+  }, [text]);
+
   if (selected) {
     return (
       <span className={`${FILTER_CONTROL_CLASS} ${ACTIVE_CLASS}`}>
@@ -717,7 +735,7 @@ function CityFilter({
   const matches = needle.length < 2 ? [] : cities.filter((c) => c.name.toLowerCase().includes(needle)).slice(0, 8);
 
   return (
-    <div className="relative">
+    <div ref={hostRef} className="relative">
       <span className={`${FILTER_CONTROL_CLASS} w-32 ${IDLE_CLASS}`}>
         <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
         <input
@@ -730,7 +748,11 @@ function CityFilter({
         />
       </span>
       {matches.length > 0 && (
-        <ul className="absolute z-30 mt-1 w-56 overflow-hidden rounded-lg border border-border bg-card py-1 shadow-lg">
+        <ul
+          ref={listRef}
+          style={{ left: shift }}
+          className="absolute z-30 mt-1 w-56 overflow-hidden rounded-lg border border-border bg-card py-1 shadow-lg"
+        >
           {matches.map((match) => (
             <li key={match.id}>
               <button

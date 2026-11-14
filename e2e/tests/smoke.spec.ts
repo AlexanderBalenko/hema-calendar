@@ -503,6 +503,44 @@ test.describe('Телефон', () => {
     await expect(sheet).toBeHidden();
   });
 
+  test('раскрытые списки не вылезают за край экрана', async ({ page }) => {
+    await page.goto('');
+    await page.waitForLoadState('load');
+    await page.getByRole('button', { name: /Фильтры/ }).click();
+
+    const sheet = page.getByRole('dialog', { name: 'Фильтры' });
+    await sheet.getByTitle(/^Оружие/).click();
+
+    // Панель шире чипа, а чип в шторке прижат к правому краю ряда. Без измеренного сдвига она
+    // начиналась от левого края чипа и уезжала за экран: замер 13.11.2026 — левый край 284,
+    // ширина 320 при экране 375, шторке 229 точек горизонтальной прокрутки, названия за краем.
+    const panel = await page.evaluate(() => {
+      const trigger = document.querySelector('[role="dialog"] button[aria-expanded="true"]');
+      const box = trigger?.parentElement?.querySelector('div[class*="absolute"]');
+      if (!box) return null;
+      const r = box.getBoundingClientRect();
+      return { left: Math.round(r.left), right: Math.round(r.right), vw: window.innerWidth };
+    });
+    expect(panel).not.toBeNull();
+    expect(panel!.left).toBeGreaterThanOrEqual(0);
+    expect(panel!.right).toBeLessThanOrEqual(panel!.vw);
+    expect(await sheet.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(1);
+
+    // Подсказки городов — такая же панель и такая же беда.
+    await sheet.getByTitle(/^Оружие/).click();
+    await sheet.getByPlaceholder('Город').fill('Каз');
+    const list = await page.evaluate(() => {
+      const ul = document.querySelector('[role="dialog"] ul');
+      if (!ul) return null;
+      const r = ul.getBoundingClientRect();
+      return { left: Math.round(r.left), right: Math.round(r.right), vw: window.innerWidth };
+    });
+    expect(list).not.toBeNull();
+    expect(list!.left).toBeGreaterThanOrEqual(0);
+    expect(list!.right).toBeLessThanOrEqual(list!.vw);
+    expect(await sheet.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(1);
+  });
+
   test('строка фильтров не уезжает при прокрутке', async ({ page }) => {
     // Прежняя шапка пряталась прокруткой, потому что занимала полэкрана; со шторкой прятать
     // нечего — одна строка остаётся на месте, и фильтры доступны в любой точке списка.
